@@ -1,3 +1,4 @@
+import ImageUploadBox from "../../components/ImageUploadBox.jsx";
 import { RegisterWrapper } from "./Register.style.js";
 function RegisterStep2( {onNext} ) {
   return (
@@ -19,12 +20,12 @@ function RegisterStep2( {onNext} ) {
         <div>
           <label style={{marginBottom:'6px'}}>공연 상세 이미지</label>
           <p>(선택사항)</p>
-          <input type='file' />
+          <ImageUploadBox />
         </div>
         <div>
           <label style={{marginBottom:'6px'}}>공연장 사진</label>
           <p>(사진을 등록하면 자동으로 시야확인에 추가됩니다.)</p>
-          <input type='file' />
+          <ImageUploadBox />
         </div>
         <button type="submit" className="submit" onClick={onNext}>다음</button>
       </form>

@@ -31,7 +31,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  div {
+  > div {
     display: flex;
     flex-direction: column;
     label {
@@ -55,8 +55,36 @@ form {
       line-height: 18px; /* 138.462% */
       letter-spacing: -0.39px;
     }
-    input {
+    > input {
       display: flex;
+      height: 40px;
+      width: 100%;
+      padding: 12px 8px;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      border-radius: 3px;
+      border: none;
+      background: var(--color-gray-200, #F8F8F8);
+      margin-bottom: 8px;
+      color: #000000;
+      font-family: "NanumSquare Neo OTF";
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px; /* 138.462% */
+      letter-spacing: -0.39px;
+      &::placeholder {
+        color: var(--color-gray-400, #929292); /* placeholder만 회색 */
+      }
+        &:focus {
+        outline: none; /* 포커스 시 테두리 없애기 */
+        box-shadow: none; /* 포커스 시 그림자 없애기 */
+      }
+    }
+      .input {
+      display: flex;
+      width: 100%;
       height: 40px;
       padding: 12px 8px;
       align-items: center;
@@ -66,13 +94,20 @@ form {
       border: none;
       background: var(--color-gray-200, #F8F8F8);
       margin-bottom: 8px;
-      color: var(--color-gray-400, #929292);
+      color: #000000;
       font-family: "NanumSquare Neo OTF";
       font-size: 13px;
       font-style: normal;
       font-weight: 400;
       line-height: 18px; /* 138.462% */
       letter-spacing: -0.39px;
+      &::placeholder {
+        color: var(--color-gray-400, #929292); /* placeholder만 회색 */
+      }
+        &:focus {
+        outline: none; /* 포커스 시 테두리 없애기 */
+        box-shadow: none; /* 포커스 시 그림자 없애기 */
+      }
     }
     textarea {
       display: flex;
