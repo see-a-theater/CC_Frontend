@@ -14,7 +14,7 @@ function Summary() {
 	return (
 		<Content>
 			<Top>
-				<img src={chevronLeft} height={15} alt="뒤로가기기" />
+				<img src={chevronLeft} height={15} alt="뒤로가기" />
 			</Top>
 
 			<h1>실종</h1>

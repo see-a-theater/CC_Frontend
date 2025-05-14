@@ -12,6 +12,7 @@ import {
 } from 'react-router-dom';
 
 import Detail from './pages/Detail/Detail';
+import Playlist from './pages/Detail/Playlist';
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -51,6 +52,7 @@ function App() {
 					}
 				/>
 				{/*소극장 상세*/}
+				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
 			</Routes>
 		</>

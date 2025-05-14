@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
 import location from '@/assets/icons/location.svg';
 import time from '@/assets/icons/time.svg';
@@ -7,13 +8,17 @@ import chevronLeftPink from '@/assets/icons/chevronLeftPink.svg';
 
 import poster from '@/assets/mock/images/실종.png';
 
+import Cast from './InfoArea/Cast';
+import Perform from './InfoArea/Perform';
+import Gallery from './InfoArea/Gallery';
+
 function Info() {
 	const mockInfo = [
 		{
 			icon: location,
 			rows: [
 				{
-					value: '홍익대학교 학생회관 3층 소각장',
+					value: '홍익대학교 학생회관 3층 소극장',
 					valueType: 'default',
 				},
 			],
@@ -59,6 +64,8 @@ function Info() {
 		{ label: '구덩이' },
 	];
 
+	const [activeTab, setActiveTab] = useState('perform');
+
 	return (
 		<Container>
 			<Top>
@@ -79,7 +86,7 @@ function Info() {
 						<IconWrapper>
 							<img src={section.icon} height={24} alt="icon" />
 						</IconWrapper>
-						
+
 						<InfoContent>
 							{section.rows.map((row, rIdx) => (
 								<Row key={rIdx}>
@@ -112,6 +119,36 @@ function Info() {
 					</InfoBlock>
 				))}
 			</InfoList>
+
+			<TabBar>
+				<TabItem
+					className={activeTab === 'perform' ? 'active' : ''}
+					onClick={() => setActiveTab('perform')}
+				>
+					공연정보
+				</TabItem>
+				<TabItem
+					className={activeTab === 'cast' ? 'active' : ''}
+					onClick={() => setActiveTab('cast')}
+				>
+					캐스팅
+				</TabItem>
+				<TabItem
+					className={activeTab === 'gallery' ? 'active' : ''}
+					onClick={() => setActiveTab('gallery')}
+				>
+					사진첩
+				</TabItem>
+			</TabBar>
+
+			<ContentArea>
+				{activeTab === 'perform' && <Perform />}
+				{activeTab === 'cast' && <Cast />}
+				{activeTab === 'gallery' && <Gallery />}
+			</ContentArea>
+
+			<BookBtn>예매하러 가기</BookBtn>
+
 		</Container>
 	);
 }
@@ -219,3 +256,60 @@ const StyledText = styled.span`
 		color: ${({ theme }) => theme.colors.gray500};
 	}
 `;
+
+const TabBar = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	margin-top: 30px;
+	border-bottom: 1px solid ${({ theme }) => theme.colors.pink400};
+
+	position: sticky;
+	top: 0;
+	background: ${({ theme }) => theme.colors.ivoryBg};
+	z-index: 10;
+`;
+
+const TabItem = styled.button`
+	flex: 1;
+	padding: 12px 0;
+	font-size: ${({ theme }) => theme.font.fontSize.body14};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink400};
+	border: none;
+	background: transparent;
+	position: relative;
+	cursor: pointer;
+
+	&.active {
+		color: ${({ theme }) => theme.colors.pink600};
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 20%;
+			width: 60%;
+			height: 2px;
+			background: ${({ theme }) => theme.colors.pink600};
+			border-radius: 1px;
+		}
+	}
+`;
+
+const ContentArea = styled.div`
+	padding: 20px 0;
+	width: 100%;
+`;
+const BookBtn = styled.button`
+	width: 100%;
+	padding: 20px 128px;
+	border-radius: 10px;
+
+	background: ${({ theme }) => theme.colors.pink600};
+
+	font-size: ${({ theme }) => theme.font.fontSize.title16};
+	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+	color: ${({ theme }) => theme.colors.grayWhite};
+
+`
