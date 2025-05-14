@@ -4,8 +4,20 @@ import ImageUploadBox from "../../components/ImageUploadBox.jsx";
 import Counter from "../../components/Counter.jsx";
 import DateInput from "../../components/DateInput.jsx";
 import UnitInput from "../../components/UnitInput.jsx";
-
+import { useState } from "react";
 function RegisterStep1( {onNext} ) {
+
+  const [price, setPrice] = useState([{ id: Date.now() }]);
+  const [discount, setDiscount] = useState([{ id: Date.now() + 1 }]); // 다른 id
+
+  const addPrice = () => {
+    setPrice(prev => [...prev, { id: Date.now() }]);
+  };
+
+  const addDiscount = () => {
+    setDiscount(prev => [...prev, { id: Date.now() }]);
+  };
+
   return (
     <RegisterWrapper>
       <h1>기본 정보</h1>
@@ -51,14 +63,20 @@ function RegisterStep1( {onNext} ) {
         </div>
         <div>
           <label>일반 예매</label>
-          <UnitInput placeholder="가격을 입력해주세요" unit="원"/>
-          <button type="button">+ 추가하기</button>
+          {price.map(price => (
+            <UnitInput placeholder="가격을 입력해주세요" unit="원"/>
+          ))}
+          <button type="button" onClick={addPrice}>+ 추가하기</button>
         </div>
         <div>
           <label>할인</label>
-          <input type="text" placeholder="할인명을 입력해주세요" />
-          <UnitInput placeholder="가격을 입력해주세요" unit="원"/>
-          <button type="button">+ 추가하기</button>
+          {discount.map(discount => (
+            <>
+            <input type="text" placeholder="할인명을 입력해주세요" />
+            <UnitInput placeholder="가격을 입력해주세요" unit="원"/>
+            </>
+          ))}
+          <button type="button" onClick={addDiscount}>+ 추가하기</button>
         </div>
         <div>
           <label>계좌번호</label>
