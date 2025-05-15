@@ -5,9 +5,8 @@ import RegisterStep3 from './RegisterStep3';
 import RegisterStep4 from './RegisterStep4';
 import RegisterStep5 from './RegisterStep5';
 import styled from 'styled-components';
-import { lintImport } from 'eslint-plugin-no-relative-import-paths';
 import TopBar from '../../components/TopBar';
-const RegisterShow = () => {
+function SmallTheaterRegister() {
   const [step, setStep] = useState(1);
   console.log(step);
 
@@ -29,10 +28,11 @@ const RegisterShow = () => {
   );
 };
 
-export default RegisterShow;
+export default SmallTheaterRegister;
 
 const Wrapper = styled.div`
   padding: 20px;
+  height: 100vh;
 `
 const ProgressBar = styled.div`
   width: 100%;
