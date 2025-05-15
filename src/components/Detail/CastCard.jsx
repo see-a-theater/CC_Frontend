@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 function CastCard(props) {
-	console.log(props);
 	return (
 		<Card>
 			<img src={props?.path} alt="profile pic" className="profile" />
