@@ -38,7 +38,7 @@ function RegisterStep3( {onNext} ) {
           </DirectorWrapper>
         ))}
         
-          <button type="button" onClick={addStaff} style={{marginBottom: '24px'}}>+ 추가하기</button>
+          <button type="button" onClick={addStaff} style={{marginBottom: '24px', marginTop:'8px'}}>+ 추가하기</button>
         <button type="submit" className="submit" onClick={onNext}>다음</button>
         </div>
       </form>

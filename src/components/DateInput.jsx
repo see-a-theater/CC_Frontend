@@ -41,19 +41,24 @@ function DateInput() {
       </Input>
       {isCalendarOpen && (
         <Area>
-          <Calendar />
-          <Bottom>
-            <button className="primary" onClick={handleNextClick}>다음</button>
-          </Bottom>
+          <Div>
+            <Calendar />
+            <Bottom>
+              <button className="primary" onClick={handleNextClick}>다음</button>
+            </Bottom>
+          </Div>
         </Area>
       )}
       {isTimePickerOpen && (
         <Area>
-          <TimePicker />
+        <Div>
+        <TimePicker />
           <Bottom>
             <button className="secondary" onClick={handlePrevClick}>이전</button>
             <button className="primary" onClick={handleCompleteClick}>완료</button>
           </Bottom>
+        </Div>
+          
         </Area>
       )}
     </Wrapper>
@@ -111,8 +116,15 @@ const Area = styled.div`
   align-items:center; 
   padding: 28px;
   gap: 16px;
+  height: 364px;
+`
+
+const Bottom = styled.div`
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  button {
+  gap: 10px;
+    button {
     flex: 1;  /* 각 버튼이 부모 너비의 동일한 비율을 차지하게 설정 */
     height: 36px;
     padding: 8px;
@@ -130,16 +142,11 @@ const Area = styled.div`
     background: ${({ theme }) => theme.colors.pink600};
     color: #fff;
   }
-
-`
-
-const Bottom = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 10px;
-  
 `;
 
 const TimePickerWrapper = styled.div`
+`
+
+const Div = styled.div`
+  max-width: 300px;
 `

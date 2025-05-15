@@ -47,12 +47,12 @@ function TimePicker() {
 export default TimePicker;
 
 const Wrapper = styled.div`
-  border: 1px solid #dee2e6;
+  /*border: 1px solid #dee2e6;*/
   display: flex;
   flex-direction: column;
   justify-content:center;
   align-items:center;
-  width: 100%;
+  max-width: 350px;
   padding: 20px 28px;
 `
 

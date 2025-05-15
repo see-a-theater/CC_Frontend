@@ -20,7 +20,7 @@ function MyCalendar() {
       formatDay={(locale, date) => date.toLocaleString("en", {day: "numeric"})}
       minDate={today}
       maxDate={oneYearLater}
-      minDetail="year"    // 👉 월까지만 허용 (연도 클릭해도 decade 뷰로 안 넘어감)
+      minDetail="year"    
     />
     </StyledCalendarWrapper>
   );
@@ -30,10 +30,9 @@ export default MyCalendar;
 
 export const StyledCalendarWrapper = styled.div`
 .react-calendar {
-  width: 350px;
-  max-width: 100%;
+  max-width: 350px;
   background: white;
-  border: 1px solid #dee2e6;
+  /*border: 1px solid #dee2e6;*/
   font-family: 'Arial', 'Helvetica', sans-serif;
   line-height: 1.125em;
 }
