@@ -13,10 +13,9 @@ import Logout from './pages/logout/Logout';
 import Withdrawal from './pages/withdrawal/Withdrawal';
 import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
+import Production from './pages/production/Production';
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	return (
 		<>
 			<Routes>
@@ -38,6 +37,7 @@ function App() {
 				<Route path="/menu" element={<FullScreenMenu />} />
 				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
+				<Route path="/production" element={<Production />} />
 			</Routes>
 		</>
 	);

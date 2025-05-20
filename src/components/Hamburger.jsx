@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import HamburgerIcon from '@/assets/icons/hamburger.svg?react';
 import Alrert from '@/assets/icons/alrert.svg?react';
 import Search from '@/assets/icons/search.svg?react';
+import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
 
-function Hamburger({ title }) {
+function Hamburger({ title, back }) {
 	return (
 		<Container>
 			<ButtonArea>
-				<HamburgerIcon alt="햄버거바" height={15} />
+				{back ? (
+					<ChevronLeftPink alt="뒤로가기" height={15} />
+				) : (
+					<HamburgerIcon alt="햄버거바" height={15} />
+				)}
 				{title && <Title>{title}</Title>}
 				<Right>
-					<Alrert alt="알림"/>
+					<Alrert alt="알림" />
 					<Search alt="검색" />
 				</Right>
 			</ButtonArea>
