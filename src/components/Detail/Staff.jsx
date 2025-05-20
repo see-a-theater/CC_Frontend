@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 function Staff(props) {
-	console.log(props);
-
 	return (
 		<Container>
 			<p className="role">{props?.role}</p>

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import location from '@/assets/icons/location.svg';
 import time from '@/assets/icons/time.svg';
 import price from '@/assets/icons/price.svg';
-import chevronLeftPink from '@/assets/icons/chevronLeftPink.svg';
+
+import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
 
 import poster from '@/assets/mock/images/실종.png';
 
@@ -69,7 +70,7 @@ function Info() {
 	return (
 		<Container>
 			<Top>
-				<img src={chevronLeftPink} height={15} alt="이전" className="back" />
+				<ChevronLeftPink height={15} alt="이전" className="back" />
 				<p className="title">실종</p>
 			</Top>
 			<img src={poster} height={220} alt="포스터 이미지" className="poster" />
@@ -92,7 +93,7 @@ function Info() {
 								<Row key={rIdx}>
 									{row.label && (
 										<StyledText
-											className={row.labelType ?? row.valueType ?? 'default'}
+											className={row.labelType ?? row.vaslueType ?? 'default'}
 										>
 											{row.label}
 										</StyledText>
@@ -148,7 +149,6 @@ function Info() {
 			</ContentArea>
 
 			<BookBtn>예매하러 가기</BookBtn>
-
 		</Container>
 	);
 }
@@ -311,5 +311,4 @@ const BookBtn = styled.button`
 	font-size: ${({ theme }) => theme.font.fontSize.title16};
 	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.grayWhite};
-
-`
+`;
