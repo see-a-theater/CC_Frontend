@@ -4,11 +4,12 @@ import HamburgerIcon from '@/assets/icons/hamburger.svg?react';
 import Alrert from '@/assets/icons/alrert.svg?react';
 import Search from '@/assets/icons/search.svg?react';
 
-function Hamburger() {
+function Hamburger({ title }) {
 	return (
 		<Container>
 			<ButtonArea>
 				<HamburgerIcon alt="햄버거바" height={15} />
+				{title && <Title>{title}</Title>}
 				<Right>
 					<Alrert alt="알림"/>
 					<Search alt="검색" />
@@ -38,6 +39,15 @@ const ButtonArea = styled.div`
 	justify-content: space-between;
 
 	align-items: center;
+`;
+const Title = styled.div`
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+
+	font-size: ${({ theme }) => theme.font.fontSize.title16};
+	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+	color: ${({ theme }) => theme.colors.grayMain};
 `;
 const Right = styled.div`
 	display: flex;
