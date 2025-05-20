@@ -6,6 +6,8 @@ import image5 from '@/assets/mock/images/image5.png';
 
 import styled from 'styled-components';
 
+import Masonry from '@/components/Detail/Masonry';
+
 function Gallery() {
 	const imageList = [
 		{ src: image1, text: '실종' },
@@ -17,14 +19,7 @@ function Gallery() {
 
 	return (
 		<Container>
-			<ImageArea>
-				{imageList.map((data, idx) => (
-					<Item key={idx}>
-						<img src={data?.src} alt="공연사진" className="pic" />
-						<p>{data?.text}</p>
-					</Item>
-				))}
-			</ImageArea>
+			<Masonry imageData={imageList} />
 		</Container>
 	);
 }
