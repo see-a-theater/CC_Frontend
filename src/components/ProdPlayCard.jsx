@@ -25,7 +25,7 @@ const PosterCard = styled.div`
 	width: 172px;
 	height: 240px;
 	margin-bottom: 8px;
-	padding: 20px;
+	padding: 12px;
 
 	background-image: ${({ imageUrl }) => `url(${imageUrl})`};
 	background-size: cover;
