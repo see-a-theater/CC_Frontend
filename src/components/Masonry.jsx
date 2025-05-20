@@ -7,7 +7,10 @@ function Masonry(props) {
 				{props.imageData?.map((data, idx) => (
 					<Item key={idx}>
 						<img src={data?.src} alt="공연사진" className="pic" />
-						<p>{data?.text}</p>
+						<Text>
+							<p className="title">{data?.text}</p>
+							{data.theatre && <p className="theatre">{data.theatre}</p>}
+						</Text>
 					</Item>
 				))}
 			</ImageArea>
@@ -35,9 +38,21 @@ const Item = styled.div`
 		object-fit: unset;
 		display: block;
 	}
-	p {
-		margin-top: 2px;
+`;
+const Text = styled.div`
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-top: 8px;
+
+	.title {
 		font-size: ${({ theme }) => theme.font.fontSize.body13};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 		color: ${({ theme }) => theme.colors.gray700};
+	}
+	.theatre {
+		font-size: ${({ theme }) => theme.font.fontSize.body10};
+		color: ${({ theme }) => theme.colors.gray400};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	}
 `;
