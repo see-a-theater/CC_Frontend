@@ -14,6 +14,7 @@ import poster from '@/assets/mock/images/실종.png';
 import Heart from '@/assets/icons/Heart.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import Gallery from '@/assets/icons/Gallery.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 function Production() {
 	const imageList = [
@@ -51,16 +52,22 @@ function Production() {
 	];
 
 	const token = 'producer';
-	const [activeTab, setActiveTab] = useState('plays');
-
 	localStorage.setItem('token', token);
+
+	const [activeTab, setActiveTab] = useState('plays');
+	const navigate = useNavigate();
+	const navigateToDetail = () => {
+		navigate('/production/1');
+	};
 
 	return (
 		<Container>
 			<Hamburger back={true} />
 
 			<Theatre>
-				<h3 className="production">홍익극연구회</h3>
+				<h3 className="production" onClick={navigateToDetail}>
+					홍익극연구회
+				</h3>
 				<Heart />
 			</Theatre>
 			<TabBar>

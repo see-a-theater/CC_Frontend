@@ -14,6 +14,7 @@ import Withdrawal from './pages/withdrawal/Withdrawal';
 import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import Production from './pages/production/Production';
+import ProdDetail from './pages/production/ProdDetail';
 
 function App() {
 	return (
@@ -38,6 +39,7 @@ function App() {
 				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
 				<Route path="/production" element={<Production />} />
+				<Route path="/production/1" element={<ProdDetail />} />
 			</Routes>
 		</>
 	);
