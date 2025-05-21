@@ -12,6 +12,8 @@ import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 import poster from '@/assets/mock/images/실종.png';
 import Heart from '@/assets/icons/Heart.svg?react';
+import Ticket from '@/assets/icons/Ticket.svg?react';
+import Gallery from '@/assets/icons/Gallery.svg?react';
 
 function Production() {
 	const imageList = [
@@ -40,13 +42,22 @@ function Production() {
 			location: '홍익대학교 학생회관 3층 소극장',
 			activeNow: false,
 		},
+		{
+			title: '실종',
+			src: poster,
+			location: '홍익대학교 학생회관 3층 소극장',
+			activeNow: false,
+		},
 	];
 
+	const token = 'producer';
 	const [activeTab, setActiveTab] = useState('plays');
+
+	localStorage.setItem('token', token);
 
 	return (
 		<Container>
-			<Hamburger back={true}/>
+			<Hamburger back={true} />
 
 			<Theatre>
 				<h3 className="production">홍익극연구회</h3>
@@ -71,6 +82,14 @@ function Production() {
 				{activeTab === 'plays' && (
 					<>
 						<SubText>{playList.length}개의 연극</SubText>
+						{token && (
+							<FixedProdButton>
+								<ProdButton>
+									<Ticket height={28} />
+									<p>공연등록</p>
+								</ProdButton>
+							</FixedProdButton>
+						)}
 						<CardArea>
 							{playList?.map((data) => (
 								<ProdPlayCard data={data} />
@@ -81,6 +100,14 @@ function Production() {
 				{activeTab === 'gallery' && (
 					<>
 						<SubText>{imageList.length}개의 사진첩</SubText>
+						{token && (
+							<FixedProdButton>
+								<ProdButton>
+									<Gallery height={28} />
+									<p>사진등록</p>
+								</ProdButton>
+							</FixedProdButton>
+						)}
 						<Masonry imageData={imageList} />
 					</>
 				)}
@@ -163,4 +190,29 @@ const CardArea = styled.div`
 const ContentArea = styled.div`
 	padding: 20px 0;
 	width: 100%;
+`;
+
+const FixedProdButton = styled.div`
+	position: fixed;
+	bottom: 170px;
+	right: 22px;
+	z-index: 100;
+`;
+
+const ProdButton = styled.div`
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	padding: 8px 12px;
+	border-radius: 30px;
+
+	background: ${({ theme }) => theme.colors.pink500};
+	width: fit-content;
+
+	p {
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+		color: ${({ theme }) => theme.colors.grayWhite};
+	}
 `;
