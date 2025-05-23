@@ -80,8 +80,13 @@ const HomeWrapper = styled.div`
 
 const SideMenuWrapper = styled.div`
 	width: 101px;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
 	flex-shrink: 0;
 	display: none;
+	background-color: white;
 	@media (min-width: 768px) {
 		display: block;
 	}
@@ -89,7 +94,10 @@ const SideMenuWrapper = styled.div`
 
 const MainContent = styled.div`
 	flex-grow: 1;
-	min-width: 0; /* 이거 중요! 줄어들 수 있게 해야 overflow 안 남 */
+	min-width: 0;
+	@media (min-width: 768px) {
+		padding-left: 100px;
+	}
 `;
 const Wrapper = styled.div`
 	padding: 28px 20px;
