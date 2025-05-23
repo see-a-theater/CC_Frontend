@@ -3,14 +3,15 @@ import styled from 'styled-components';
 import HamburgerIcon from '@/assets/icons/hamburger.svg?react';
 import Alrert from '@/assets/icons/alrert.svg?react';
 import Search from '@/assets/icons/search.svg?react';
-
-function Hamburger() {
+import Logo from '@/assets/icons/logo.svg?react';
+function Hamburger({ hasLogo }) {
 	return (
 		<Container>
 			<ButtonArea>
-				<HamburgerIcon alt="햄버거바" height={15} />
+				{hasLogo ? <Logo /> : <HamburgerIcon alt="햄버거바" height={15} />}
+
 				<Right>
-					<Alrert alt="알림"/>
+					<Alrert alt="알림" />
 					<Search alt="검색" />
 				</Right>
 			</ButtonArea>

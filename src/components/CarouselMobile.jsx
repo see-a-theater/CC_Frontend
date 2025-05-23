@@ -7,7 +7,7 @@ import Poster from '../assets/images/test-poster2.png';
 
 /*배너 넘어갈 때 border-radius 깜빡거리는 오류 있음 */
 
-function HomeBannerCarouselWeb() {
+function CarouselMobile() {
 	const banners = [
 		{
 			id: 1,
@@ -67,21 +67,22 @@ function HomeBannerCarouselWeb() {
 		</Wrapper>
 	);
 }
-export default HomeBannerCarouselWeb;
+export default CarouselMobile;
 
 const Wrapper = styled.div`
+	margin-bottom: 16px;
 	.slider-container {
-		height: 280px;
+		height: 388px;
 		max-width: 1180px;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		border-radius: 5px;
+		border-radius: 10px;
 	}
 	.slick-initialized {
-		height: 280px;
+		height: 348px;
 		background: gainsboro;
-		border-radius: 5px;
+		border-radius: 10px;
 	}
 	.slick-arrow {
 		width: 530px;
@@ -89,18 +90,16 @@ const Wrapper = styled.div`
 		opacity: 0;
 	}
 	.slick-dots {
-		bottom: 20px;
-		text-align: left;
-		left: 80px;
+		bottom: -36px;
+		text-align: center;
 	}
 	li button::before {
-		color: ${({ theme }) => theme.colors.gray400};
+		color: ${({ theme }) => theme.colors.gray300};
 		opacity: 100% !important;
 	}
 
 	.slick-active button::before {
-		content: '•'; /* 또는 ""이라도 있어야 함 */
-		color: white !important;
+		color: ${({ theme }) => theme.colors.pink500} !important;
 		opacity: 100% !important;
 	}
 `;
@@ -108,9 +107,9 @@ const Wrapper = styled.div`
 const Banner = styled.div`
 	position: relative; /* ::before 절대위치 기준 */
 	width: 100%;
-	height: 280px;
+	height: 348px;
 	overflow: hidden;
-	border-radius: 5px; /* 여기 둥근 모서리 */
+	border-radius: 10px; /* 여기 둥근 모서리 */
 
 	img {
 		width: 100%;
@@ -128,9 +127,9 @@ const Banner = styled.div`
 		height: 100%;
 		/* 여기에 리니어 그라데이션 넣으면 됩니다 */
 		background: linear-gradient(
-			90deg,
-			rgba(0, 0, 0, 0.5) 11.8%,
-			rgba(0, 0, 0, 0) 36.56%
+			0deg,
+			rgba(0, 0, 0, 0.6) 25.94%,
+			rgba(0, 0, 0, 0) 77.94%
 		);
 		border-radius: 5px; /* 그라데이션도 둥글게 */
 		pointer-events: none;
@@ -138,8 +137,8 @@ const Banner = styled.div`
 `;
 const Text = styled.div`
 	position: absolute;
-	bottom: 40px; /* 원하는 위치로 조정 */
-	left: 80px;
+	bottom: 28px; /* 원하는 위치로 조정 */
+	left: 28px;
 	color: white;
 	display: flex;
 	flex-direction: column;

@@ -40,7 +40,7 @@ export default HomeIconMenu;
 
 const Wrapper = styled.div`
 	height: 100%;
-	padding: ${(props) => (props.$isWeb ? '30px' : '0px')};
+	padding: ${(props) => (props.$isWeb ? '30px' : '0px 14px')};
 	padding-top: ${(props) => (props.$isWeb ? '60px' : '0px')};
 	border-right: ${(props) => (props.$isWeb ? '1px solid #DDDDDD' : '')};
 `;
@@ -56,6 +56,7 @@ const MenuWrapper = styled.div`
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		height: 52px;
 		width: 52px;
 		@media (min-width: 768px) {
