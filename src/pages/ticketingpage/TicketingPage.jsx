@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AppContainer, MainContent } from './styles/commonStyles';
+import { AppContainer, MainContent, ScrollableContent } from './styles/commonStyles';
 import Header from './components/Header';
 import Step1 from './pages/Step1';
 import Step2 from './pages/Step2';
@@ -28,9 +28,11 @@ const TicketingPage = () => {
   return (
     <AppContainer>
       <Header onBack={goToPreviousStep} />
-      <MainContent>
-        {renderStep()}
-      </MainContent>
+      <ScrollableContent>
+        <MainContent>
+          {renderStep()}
+        </MainContent>
+      </ScrollableContent>
     </AppContainer>
   );
 };

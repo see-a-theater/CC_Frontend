@@ -113,7 +113,7 @@ const Step1 = ({
         </Input>
       </FormSection>
       
-      <ActionButton isActive={nextActive} onClick={goToNextStep}>
+      <ActionButton isActive={nextActive} onClick={goToNextStep} className="bottom">
         다음
       </ActionButton>
     </>

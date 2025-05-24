@@ -4,12 +4,15 @@ import styled from 'styled-components';
 // 앱 전체 컨테이너
 export const AppContainer = styled.div`
   font-family: NanumSquareNeo-Variable;
-  max-width: 402px;
+  width: 402px;
+  height: 830px;
   margin: 0 auto;
-  height: auto;
   background-color: white;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 // 헤더 관련 스타일
@@ -20,6 +23,7 @@ export const Header = styled.header`
   position: relative;
   height: 72px;
   border-bottom: 1px solid white;
+  flex-shrink: 0;
 `;
 
 export const BackButton = styled.button`
@@ -40,12 +44,31 @@ export const PageTitle = styled.h1`
   font-weight: bold;
 `;
 
+// 스크롤
+export const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  
+  /* 스크롤바 완전히 숨김 */
+  &::-webkit-scrollbar {
+    display: none; /* 웹킷 브라우저에서 스크롤바 숨김 */
+  }
+  
+  /* Firefox에서 스크롤바 숨김 */
+  scrollbar-width: none;
+  
+  /* IE에서 스크롤바 숨김 */
+  -ms-overflow-style: none;
+`;
+
 // 메인 컨텐츠 영역
 export const MainContent = styled.main`
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 100%;
+  position: relative;
 `;
 
 // 포스터 및 공연 정보 영역
@@ -118,8 +141,11 @@ export const ActionButton = styled.button`
 
   &.bottom {
     position: absolute;
-    bottom: 40px;
-    width: calc(100% - 40px);
+    bottom: 30px;
+    width: 362px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
   }
 `;
 
@@ -129,7 +155,7 @@ export const SuccessMessage = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 70vh;
+  flex: 1;
   color: #F67676;
   font-size: 18px;
   font-weight: bold;
