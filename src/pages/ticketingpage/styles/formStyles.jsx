@@ -102,7 +102,7 @@ export const DropdownList = styled.ul`
   border: 1px solid #FFD6D4;
   border-radius: 2px;
   background-color: white;
-  z-index: 10;
+  z-index: 20;
   max-height: 96px;
 
   overflow-y: auto;
