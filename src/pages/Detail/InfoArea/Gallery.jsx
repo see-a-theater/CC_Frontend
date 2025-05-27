@@ -6,7 +6,7 @@ import image5 from '@/assets/mock/images/image5.png';
 
 import styled from 'styled-components';
 
-import Masonry from '@/components/Detail/Masonry';
+import Masonry from '@/components/Masonry';
 
 function Gallery() {
 	const imageList = [
