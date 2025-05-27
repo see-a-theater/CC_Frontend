@@ -7,7 +7,7 @@ import NowShowing from '@/components/Detail/NowShowing';
 
 function Playlist() {
 	const sampleList = [1, 2, 3, 4, 5];
-	const [current, setCurrent] = useState(0); // 인덱스는 0부터 시작
+	const [current, setCurrent] = useState(0); 
 
 	return (
 		<Container>

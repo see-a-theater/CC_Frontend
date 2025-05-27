@@ -15,6 +15,7 @@ import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
+import UploadPic from './pages/production/UploadPic';
 
 function App() {
 	return (
@@ -40,6 +41,7 @@ function App() {
 				<Route path="/detail" element={<Detail />} />
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/1" element={<ProdDetail />} />
+				<Route path="/production/upload_photo" element={<UploadPic />} />
 			</Routes>
 		</>
 	);
