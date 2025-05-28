@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Hamburger from '@/components/Hamburger';
 import Masonry from '@/components/Masonry';
@@ -11,10 +12,11 @@ import image3 from '@/assets/mock/images/image3.png';
 import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 import poster from '@/assets/mock/images/실종.png';
+
 import Heart from '@/assets/icons/Heart.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import Gallery from '@/assets/icons/Gallery.svg?react';
-import { useNavigate } from 'react-router-dom';
+
 
 function Production() {
 	const imageList = [

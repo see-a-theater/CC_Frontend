@@ -4,10 +4,14 @@ import { useState } from 'react';
 import Hamburger from '@/components/Hamburger';
 import PlayCard from '@/components/Detail/PlayCard';
 import NowShowing from '@/components/Detail/NowShowing';
+import Ticket from '@/assets/icons/Ticket.svg?react';
 
 function Playlist() {
 	const sampleList = [1, 2, 3, 4, 5];
-	const [current, setCurrent] = useState(0); 
+	const [current, setCurrent] = useState(0);
+
+	const token = 'producer';
+	localStorage.setItem('token', token);
 
 	return (
 		<Container>
@@ -42,6 +46,15 @@ function Playlist() {
 					<NowShowing />
 				</MappingArea>
 			</Now>
+
+			{token && (
+				<FixedProdButton>
+					<ProdButton>
+						<Ticket height={28} />
+						<p>공연등록</p>
+					</ProdButton>
+				</FixedProdButton>
+			)}
 		</Container>
 	);
 }
@@ -109,4 +122,28 @@ const MappingArea = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+`;
+const FixedProdButton = styled.div`
+	position: fixed;
+	bottom: 170px;
+	right: 22px;
+	z-index: 100;
+`;
+
+const ProdButton = styled.div`
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	padding: 8px 12px;
+	border-radius: 30px;
+
+	background: ${({ theme }) => theme.colors.pink500};
+	width: fit-content;
+
+	p {
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+		color: ${({ theme }) => theme.colors.grayWhite};
+	}
 `;
