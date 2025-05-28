@@ -51,6 +51,8 @@ function Production() {
 		},
 	];
 
+
+
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
@@ -59,6 +61,9 @@ function Production() {
 	const navigateToDetail = () => {
 		navigate('/production/1');
 	};
+	const navigateToUpload =() => {
+		navigate('/production/upload_photo')
+	}
 
 	return (
 		<Container>
@@ -109,7 +114,7 @@ function Production() {
 						<SubText>{imageList.length}개의 사진첩</SubText>
 						{token && (
 							<FixedProdButton>
-								<ProdButton>
+								<ProdButton onClick={navigateToUpload}>
 									<Gallery height={28} />
 									<p>사진등록</p>
 								</ProdButton>

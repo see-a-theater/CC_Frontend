@@ -1,10 +1,12 @@
 //yarn add react-select
-
+import { useState } from 'react';
 import styled from 'styled-components';
+import Select from 'react-select';
+
 import ImageUploadBox from '@/components/ImageUploadBox';
 import TopBar from '@/components/TopBar';
-import { useState } from 'react';
-import Select from 'react-select';
+import Modal from '@/components/Production/Modal';
+import MyCalendar from '@/components/Calendar';
 
 function UploadPic() {
 	const data = [
@@ -13,7 +15,11 @@ function UploadPic() {
 		{ title: '킬링시저', date: '25.06.10~25.06.13' },
 	];
 
-	const options = data.map((item) => ({
+	const [selected, setSelected] = useState(null);
+	const [menuOpen, setMenuOpen] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+
+	const baseOptions = data.map((item) => ({
 		value: `${item.title}-${item.date}`,
 		label: (
 			<LabelWrapper>
@@ -23,31 +29,42 @@ function UploadPic() {
 		),
 	}));
 
-	const [selected, setSelected] = useState(null);
-	const [menuOpen, setMenuOpen] = useState(false);
+	const options = [
+		...baseOptions,
+		{
+			value: 'custom',
+			label: <Title>직접 입력</Title>,
+		},
+	];
+
+	const handleSelectChange = (option) => {
+		if (option.value === 'custom') {
+			setShowModal(true);
+			setMenuOpen(false);
+			return;
+		}
+		setSelected(option);
+	};
 
 	return (
 		<Container>
-			{menuOpen && <Overlay />}
+			{menuOpen && <Overlay onClick={() => setMenuOpen(false)} />}
 			<TopBar> 사진 등록 </TopBar>
 			<Content>
 				<StyledSelect
 					options={options}
 					value={selected}
-					onChange={setSelected}
+					onChange={handleSelectChange}
 					placeholder="공연을 선택해주세요"
 					isSearchable={false}
-					components={{
-						IndicatorSeparator: () => null,
-					}}
-					classNamePrefix="custom"
-                    onMenuOpen={() => setMenuOpen(true)}
+					components={{ IndicatorSeparator: () => null }}
+					onMenuOpen={() => setMenuOpen(true)}
 					onMenuClose={() => setMenuOpen(false)}
 				/>
-
 				<ImageUploadBox size="362px" aspect-ratio="1" />
 				<p className="add">공연에서 있었던 이야기를 작성해 주세요</p>
 			</Content>
+			{showModal && <Modal onClose={() => setShowModal(false)} />}
 		</Container>
 	);
 }
@@ -109,7 +126,6 @@ const StyledSelect = styled(Select).attrs({
 
 	.custom__menu {
 		border-radius: 3px;
-		//box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 		z-index: 100;
 	}
 
