@@ -21,6 +21,7 @@ const theme = {
 
 	font: {
 		fontSize: {
+			headline80: '80px',
 			headline36: '36px',
 			headline24: '24px',
 			headline20: '20px',

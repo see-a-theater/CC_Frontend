@@ -21,6 +21,7 @@ function Masonry(props) {
 export default Masonry;
 
 const ImageArea = styled.div`
+	//고정 너비에서 수정 필요
 	column-width: 176px;
 	column-gap: 11px;
 `;
