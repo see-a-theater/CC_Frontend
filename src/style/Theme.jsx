@@ -15,6 +15,7 @@ const theme = {
 		gray400: '#929292',
 		gray500: '#696969',
 		grayMain: '#000000',
+		grayOutline: '#E6E6E6',
 
 		redWarning: '#FF3737',
 	},
