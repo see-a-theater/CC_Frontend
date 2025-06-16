@@ -7,9 +7,35 @@ import BoardPreviewCardList from '../../components/BoardPreviewCardList';
 import BoardPreviewList from '../../components/BoardPreviewList';
 import BoardPreviewCardWeb from '../../components/BoardPreviewCardWeb';
 import SearchBar from '../../components/SearchBar';
-import HomeBannerCarouselWeb from '../../components/HomeBannerCarouselWeb';
-
+import CarouselWeb from '../../components/CarouselWeb';
+import CarouselMobile from '../../components/CarouselMobile';
+import Hamburger from '../../components/Hamburger';
+import Poster from '../../assets/images/test-poster2.png';
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
+const banners = [
+	{
+		id: 1,
+		imgSrc: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
+		title: '실종',
+		location: '홍익대학교 학생회관 3층 소극장',
+		date: '2024.10.03 (목) 19:00',
+	},
+	{
+		id: 2,
+		imgSrc: Poster,
+		title: '공연2',
+		location: '장소2',
+		date: '2024.11.15 (금) 20:00',
+	},
+	{
+		id: 3,
+		imgSrc: Poster,
+		title: '공연3',
+		location: '장소3',
+		date: '2024.12.01 (일) 18:30',
+	},
+];
+
 function Home() {
 	return (
 		<HomeWrapper>
@@ -17,6 +43,9 @@ function Home() {
 				<HomeIconMenu isWeb={true} />
 			</SideMenuWrapper>
 			<MainContent>
+				<div className="only-mobile">
+					<Hamburger hasLogo={true} />
+				</div>
 				<Wrapper>
 					<div
 						className="only-web"
@@ -26,7 +55,10 @@ function Home() {
 					</div>
 					<h1>오늘 마감인 공연</h1>
 					<div className="only-web">
-						<HomeBannerCarouselWeb />
+						<CarouselWeb banners={banners} />
+					</div>
+					<div className="only-mobile">
+						<CarouselMobile banners={banners} />
 					</div>
 					<div className="only-mobile">
 						<HomeIconMenu />
@@ -100,7 +132,7 @@ const MainContent = styled.div`
 	}
 `;
 const Wrapper = styled.div`
-	padding: 28px 20px;
+	padding: 28px 20px 12px 20px;
 	@media (min-width: 768px) {
 		padding: 60px;
 		padding-bottom: 0px;
@@ -115,7 +147,8 @@ const Wrapper = styled.div`
 		margin-bottom: 24px;
 		@media (min-width: 768px) {
 			font-size: ${({ theme }) => theme.font.fontSize.headline20} !important;
-		}
+		}import { Hamburger } from '@/components/Hamburger';
+
 	}
 	button {
 		display: flex;

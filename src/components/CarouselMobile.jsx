@@ -7,30 +7,7 @@ import Poster from '../assets/images/test-poster2.png';
 
 /*배너 넘어갈 때 border-radius 깜빡거리는 오류 있음 */
 
-function CarouselMobile() {
-	const banners = [
-		{
-			id: 1,
-			imgSrc: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
-			title: '실종',
-			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
-		},
-		{
-			id: 2,
-			imgSrc: Poster,
-			title: '공연2',
-			location: '장소2',
-			date: '2024.11.15 (금) 20:00',
-		},
-		{
-			id: 3,
-			imgSrc: Poster,
-			title: '공연3',
-			location: '장소3',
-			date: '2024.12.01 (일) 18:30',
-		},
-	];
+function CarouselMobile({ banners }) {
 	let sliderRef = useRef(null);
 	const play = () => {
 		sliderRef.slickPlay();
