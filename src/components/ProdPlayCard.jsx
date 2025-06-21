@@ -10,6 +10,8 @@ function ProdPlayCard({ data }) {
 			</PosterCard>
 			<Title>{data.title}</Title>
 			<Location>{data.location}</Location>
+
+			<Date>{data.date}</Date>
 		</Container>
 	);
 }
@@ -18,6 +20,8 @@ export default ProdPlayCard;
 
 const Container = styled.div`
 	margin-bottom: 19px;
+	@media (min-width: 768px) {
+	}
 `;
 
 const PosterCard = styled.div`
@@ -44,6 +48,12 @@ const PosterCard = styled.div`
 		background: linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 31.73%);
 		z-index: 0;
 	}
+
+	@media (min-width: 768px) {
+		width: 230px;
+		height: 320px;
+		border-radius: 5px;
+	}
 `;
 
 const Tag = styled.div`
@@ -66,10 +76,32 @@ const Title = styled.h3`
 	font-size: ${({ theme }) => theme.font.fontSize.title16};
 	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		margin-bottom: 12px;
+		font-size: ${({ theme }) => theme.font.fontSize.headline20};
+	}
 `;
 
 const Location = styled.p`
 	font-size: ${({ theme }) => theme.font.fontSize.body12};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.gray400};
+
+	@media (min-width: 768px) {
+		margin-bottom: 8px;
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+`;
+
+const Date = styled.p`
+	display: none;
+
+	@media (min-width: 768px) {
+		display: flex;
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.gray400};
+	}
 `;
