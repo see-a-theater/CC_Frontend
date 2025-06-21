@@ -47,13 +47,13 @@ const Text = styled.div`
 	margin-top: 8px;
 
 	.title {
-		font-size: ${({ theme }) => theme.font.fontSize.body13};
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
-		color: ${({ theme }) => theme.colors.gray700};
+		color: ${({ theme }) => theme.colors.grayMain};
 	}
 	.theatre {
 		font-size: ${({ theme }) => theme.font.fontSize.body10};
 		color: ${({ theme }) => theme.colors.gray400};
-		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		font-weight: ${({ theme }) => theme.font.fontWeight.regular};
 	}
 `;
