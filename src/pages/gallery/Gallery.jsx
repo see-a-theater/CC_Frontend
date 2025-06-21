@@ -23,6 +23,10 @@ function Gallery() {
 		{ src: image4, text: '실종', theatre: '홍익극연구회' },
 		{ src: image5, text: '킬링시저', theatre: '설렘' },
 	];
+
+	const token = 'producer';
+	localStorage.setItem('token', token);
+
 	return (
 		<>
 			<Mobile>
@@ -34,7 +38,11 @@ function Gallery() {
 				<SideBar />
 				<Container>
 					<SearchBar />
-					<h3>사진첩</h3>
+					<TitleArea>
+						<h3>사진첩</h3>
+						<Button>사진 등록</Button>
+					</TitleArea>
+
 					<MasonryWeb imageData={imageList} />
 				</Container>
 			</Web>
@@ -79,4 +87,23 @@ const Container = styled.div`
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
+`;
+const TitleArea = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+const Button = styled.button`
+	display: flex;
+	align-items: center;
+
+	padding: 5px 12px;
+	border-radius: 3px;
+
+	background: ${({ theme }) => theme.colors.pink500};
+	width: fit-content;
+
+	font-size: ${({ theme }) => theme.font.fontSize.body14};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.grayWhite};
 `;
