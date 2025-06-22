@@ -329,13 +329,13 @@ const ProdButton = styled.div`
 	}
 `;
 const SideBar = styled.div`
-	// 이후 실제 컴포넌트로 수정 필요
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100px;
 	height: 100vh;
-	background-color: ${({ theme }) => theme.colors.gray200};
+	background-color: ${({ theme }) => theme.colors.grayWhite};
+	border-right: 1px solid ${({ theme }) => theme.colors.gray300};
 	z-index: 100;
 `;
 const AreaSelect = styled.div`
