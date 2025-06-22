@@ -306,6 +306,7 @@ const Production = styled.div`
 	}
 `;
 const Intro = styled.div`
+	width: 100%;
 	display: flex;
 	gap: 40px;
 
