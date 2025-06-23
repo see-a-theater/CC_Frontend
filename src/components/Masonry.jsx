@@ -21,6 +21,7 @@ function Masonry(props) {
 export default Masonry;
 
 const ImageArea = styled.div`
+	//고정 너비에서 수정 필요
 	column-width: 176px;
 	column-gap: 11px;
 `;
@@ -46,13 +47,13 @@ const Text = styled.div`
 	margin-top: 8px;
 
 	.title {
-		font-size: ${({ theme }) => theme.font.fontSize.body13};
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
-		color: ${({ theme }) => theme.colors.gray700};
+		color: ${({ theme }) => theme.colors.grayMain};
 	}
 	.theatre {
 		font-size: ${({ theme }) => theme.font.fontSize.body10};
 		color: ${({ theme }) => theme.colors.gray400};
-		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		font-weight: ${({ theme }) => theme.font.fontWeight.regular};
 	}
 `;
