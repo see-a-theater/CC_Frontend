@@ -40,42 +40,52 @@ const PostCreatePage = () => {
   });
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [historyPushed, setHistoryPushed] = useState(false);  //히스토리 엔트리 추가 여부를 추적
   const { isOpen: isExitModalOpen, openModal: openExitModal, closeModal: closeExitModal } = useModal();
 
-  // 폼 데이터 변경 감지 및 페이지 이탈 방지
+  // hasUnsavedChanges 계산을 별도 useEffect로
   useEffect(() => {
     const hasContent = formData.title.trim() || formData.content.trim() || formData.images.length > 0;
     setHasUnsavedChanges(hasContent);
+  }, [formData]);
 
-    // 브라우저 뒤로가기/새로고침 방지
+  // 브라우저 이벤트 처리
+  useEffect(() => {
+    // 페이지 진입 시 히스토리 엔트리를 한 번만 추가
+    if (!historyPushed) {
+      window.history.pushState(null, '', window.location.href);
+      setHistoryPushed(true);
+    }
+
+    // 브라우저 새로고침/탭 닫기 방지
     const handleBeforeUnload = (e) => {
-      if (hasContent) {
+      if (hasUnsavedChanges) {
         e.preventDefault();
         e.returnValue = '';
       }
     };
 
+    // 브라우저 뒤로가기 방지
     const handlePopState = (e) => {
-      if (hasContent) {
-        e.preventDefault();
-        openExitModal();
-        // 히스토리를 다시 push해서 페이지 이탈 방지
-        window.history.pushState(null, '', window.location.href);
+      e.preventDefault(); // 항상 뒤로가기 방지
+      
+      if (hasUnsavedChanges) {
+        openExitModal(); // 작성 중이면 확인 모달
+      } else {
+        navigate('/board'); // 빈 상태면 바로 이동
       }
     };
 
-    if (hasContent) {
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      window.addEventListener('popstate', handlePopState);
-      // 히스토리에 현재 상태 push
-      window.history.pushState(null, '', window.location.href);
-    }
+    // 이벤트 리스너 등록
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
 
+    // 클린업 함수
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [formData, openExitModal]);
+  }, [hasUnsavedChanges, openExitModal, navigate, historyPushed]); // 필요한 의존성만 포함
 
   // 카테고리 표시 텍스트
   const getCategoryDisplayName = (cat) => {
@@ -164,9 +174,9 @@ const PostCreatePage = () => {
   // 뒤로가기 핸들러
   const handleBack = () => {
     if (hasUnsavedChanges) {
-      openExitModal();
+      openExitModal(); // 작성 중이면 확인 모달
     } else {
-      navigate('/board');
+      navigate('/board'); // 빈 상태면 바로 이동
     }
   };
 
@@ -192,6 +202,7 @@ const PostCreatePage = () => {
       <Header
         title="create"
         showBack={true}
+        onBack={handleBack}
         onComplete={handleSubmit}
         completeDisabled={!isFormValid}
       />

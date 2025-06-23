@@ -27,12 +27,17 @@ const Header = ({
   myPost ,
   onSearchClick,
   onComplete, 
-  completeDisabled = false // 완료 버튼 비활성화 상태
+  completeDisabled = false, // 완료 버튼 비활성화 상태
+  onBack  // 게시글 작성 중 뒤로가기(작성취소)
 }) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(-1);
+    if (onBack) {
+      onBack(); // 부모 컴포넌트의 커스텀 핸들러 실행
+    } else {
+      navigate('/board'); // 기본 브라우저 뒤로가기
+    }
   };
 
   const Title = {
