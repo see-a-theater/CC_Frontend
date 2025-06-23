@@ -15,10 +15,14 @@ const theme = {
 		gray400: '#929292',
 		gray500: '#696969',
 		grayMain: '#000000',
+
+		redWarning: '#FF3737',
 	},
 
 	font: {
 		fontSize: {
+			headline80: '80px',
+			headline36: '36px',
 			headline24: '24px',
 			headline20: '20px',
 			title16: '16px',
