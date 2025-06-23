@@ -63,22 +63,91 @@ const PostDetailPage = () => {
   const [selectedComment, setSelectedComment] = useState(null);
 
   const currentUserId = 'currentUser';
-
+  
+  // 게시글 및 댓글 데이터 로드
   useEffect(() => {
     const foundPost = getPost(id);
     const foundComments = getComments(id);
     
     if (foundPost) {
       setPost({ ...foundPost, isLiked: false });
-      setComments(foundComments.map(comment => ({ ...comment, isLiked: false })));
+      const sortedComments = sortCommentsAsTree(foundComments.map(comment => ({ 
+        ...comment, 
+        isLiked: false 
+      })));   
+      setComments(sortedComments);  // 댓글을 트리 구조로 정렬
     } else {
       navigate('/board');
     }
   }, [id, getPost, getComments, navigate]);
 
-  if (!post) return null;
+  // 댓글을 트리 구조로 정렬하는 함수
+  const sortCommentsAsTree = (commentList) => {
+    const result = [];
+    const commentMap = new Map();
+    // 모든 댓글을 Map에 저장
+    commentList.forEach(comment => {
+      commentMap.set(comment.id, { ...comment, children: [] });
+    });
+    // 부모-자식 관계 설정 및 루트 댓글 수집
+    commentList.forEach(comment => {
+      if (comment.parentId === null) {
+        // 루트 댓글 (일반 댓글)
+        result.push(commentMap.get(comment.id));
+      } else {
+        // 대댓글인 경우 부모의 children에 추가
+        const parent = commentMap.get(comment.parentId);
+        if (parent) {
+          parent.children.push(commentMap.get(comment.id));
+        }
+      }
+    });
+    // 트리를 평면 배열로 변환 (깊이 우선 탐색)
+    const flattenTree = (nodes, level = 0) => {
+      const flattened = [];
+      nodes.forEach(node => {
+        // 현재 노드 추가
+        flattened.push({ ...node, replyLevel: level });
+        // 자식 노드들 재귀적으로 추가
+        if (node.children && node.children.length > 0) {
+          flattened.push(...flattenTree(node.children, level + 1));
+        }
+      });
+      return flattened;
+    };
+    
+    return flattenTree(result);
+  };
 
-  const isMyPost = post.userId === currentUserId;
+  // 댓글 추가 시 트리 구조 유지
+  const handleCommentSubmit = () => {
+    if (!commentText.trim()) return;
+    // 깊이 제한 적용 (최대 4단계)
+    const newReplyLevel = replyingTo ? Math.min(replyingTo.replyLevel + 1, 4) : 0;
+    // 깊이 제한 초과 시 경고
+    if (replyingTo && replyingTo.replyLevel >= 4) {
+      alert('대댓글은 최대 4단계까지만 작성할 수 있습니다.');
+      return;
+    }
+
+    const newComment = {
+      id: Date.now(),
+      author: '익명',
+      content: commentText,
+      date: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
+      userId: currentUserId,
+      replyLevel: newReplyLevel,
+      parentId: replyingTo ? replyingTo.id : null,
+      likes: 0,
+      isLiked: false
+    };
+    // 새 댓글 추가 후 트리 구조로 재정렬
+    const updatedComments = [...comments.map(c => ({ ...c, replyLevel: undefined })), newComment];
+    const sortedComments = sortCommentsAsTree(updatedComments);
+    setComments(sortedComments);
+    setCommentText('');
+    setReplyingTo(null);
+  };
 
   // 게시글 좋아요 토글
   const handlePostLike = () => {
@@ -103,30 +172,36 @@ const PostDetailPage = () => {
     }));
   };
 
-  // 댓글 작성
-  const handleCommentSubmit = () => {
-    if (!commentText.trim()) return;
-
-    const newComment = {
-      id: Date.now(),
-      author: '익명',
-      content: commentText,
-      date: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
-      userId: currentUserId,
-      replyLevel: replyingTo ? replyingTo.replyLevel + 1 : 0,
-      parentId: replyingTo ? replyingTo.id : null,
-      likes: 0,
-      isLiked: false
-    };
-
-    setComments(prev => [...prev, newComment]);
-    setCommentText('');
-    setReplyingTo(null);
-  };
-
-  // 댓글 삭제
+  // 댓글 삭제 - 대댓글 유무에 따른 처리 분기
   const handleCommentDelete = (commentId) => {
-    setComments(prev => prev.filter(comment => comment.id !== commentId));
+    // 삭제할 댓글의 대댓글 존재 여부 확인
+    const hasReplies = comments.some(comment => comment.parentId === commentId);
+    
+    if (hasReplies) {
+      // 대댓글이 있는 경우: 삭제 표시만 하고 댓글 유지
+      const updatedComments = comments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            isDeleted: true,
+            content: '', // 내용 제거
+            author: '', // 작성자 제거
+          };
+        }
+        return comment;
+      }).map(c => ({ ...c, replyLevel: undefined }));
+      
+      const sortedComments = sortCommentsAsTree(updatedComments);
+      setComments(sortedComments);
+    } else {
+      // 대댓글이 없는 경우: 완전 삭제
+      const updatedComments = comments
+        .filter(comment => comment.id !== commentId)
+        .map(c => ({ ...c, replyLevel: undefined }));
+      const sortedComments = sortCommentsAsTree(updatedComments);
+      setComments(sortedComments);
+    }
+    
     closeDeleteModal();
   };
 
@@ -134,6 +209,9 @@ const PostDetailPage = () => {
   const handleReply = (comment) => {
     setReplyingTo(comment);
   };
+
+  if (!post) return null;
+  const isMyPost = post.userId === currentUserId;
 
   // 게시글 옵션 액션시트
   const postActions = [
@@ -236,61 +314,82 @@ const PostDetailPage = () => {
               <CommentItem key={comment.id} replyLevel={comment.replyLevel}>
                 {comment.replyLevel > 0 && (
                   <ReplyIndicator>
-                    {Array.from({ length: comment.replyLevel }, (_, i) => (
-                      <img key={i} src={Tab} alt="대댓글" width="20" height="20" />
+                    {Array.from({ length: comment.replyLevel - 1 }).map((_, index) => (
+                      <div key={index} style={{ width: '20px', height: '20px' }} />
                     ))}
+                    {/* 마지막 단계만 Tab 아이콘 */}
+                    <img src={Tab} alt="대댓글" width="20" height="20" />
                   </ReplyIndicator>
                 )}
-                
-                <CommentHeader>
-                  <div>
-                    <CommentAuthor>
-                      {comment.userId === post.userId ? '작성자' : comment.author}
-                    </CommentAuthor>
-                    <CommentDate>{comment.date}</CommentDate>
-                  </div>
-                  
-                  <CommentHeaderActions>
-                    {comment.userId !== currentUserId && (
-                      <CommentButton onClick={() => handleCommentLike(comment.id)}>
-                        <CommentIcon 
-                          src={comment.isLiked ? LikePink : Like} 
-                          alt="좋아요" 
-                        />
-                      </CommentButton>
-                    )}
-                    
-                    <CommentButton onClick={() => handleReply(comment)}>
-                      <CommentIcon src={Comment} alt="대댓글" />
-                    </CommentButton>
+                <div style={{ flex: 1 }}>
+                  {/* 삭제된 댓글 표시 처리 */}
+                  {comment.isDeleted ? (
+                    // 삭제된 댓글 표시
+                    <div style={{
+                      padding: '12px 0',
+                      color: '#999',
+                      fontStyle: 'italic',
+                      fontSize: '13px'
+                    }}>
+                      삭제된 댓글입니다.
+                    </div>
+                  ) : (
+                    <>
+                      <CommentHeader>
+                        <div>
+                          <CommentAuthor>
+                            {comment.userId === post.userId ? '작성자' : comment.author}
+                          </CommentAuthor>
+                          <CommentDate>{comment.date}</CommentDate>
+                        </div>
+                        
+                        <CommentHeaderActions>
+                          {comment.userId !== currentUserId && (
+                            <CommentButton onClick={() => handleCommentLike(comment.id)}>
+                              <CommentIcon 
+                                src={comment.isLiked ? LikePink : Like} 
+                                alt="좋아요" 
+                              />
+                            </CommentButton>
+                          )}
+                          
+                          {/* 깊이 제한 - 4단계 미만일 때만 대댓글 버튼 표시 */}
+                          {comment.replyLevel < 4 && (
+                            <CommentButton onClick={() => handleReply(comment)}>
+                              <CommentIcon src={Comment} alt="대댓글" />
+                            </CommentButton>
+                          )}
 
-                    {comment.userId === currentUserId && (
-                      <>
-                        <CommentActionButton onClick={() => console.log('수정')}>
-                          수정
-                        </CommentActionButton>
-                        <CommentActionButton 
-                          onClick={() => {
-                            setSelectedComment(comment);
-                            openDeleteModal();
-                          }}
-                          className="delete"
-                        >
-                          삭제
-                        </CommentActionButton>
-                      </>
-                    )}
-                  </CommentHeaderActions>
-                </CommentHeader>
-                
-                <CommentContent>{comment.content}</CommentContent>
-                
-                {comment.likes > 0 && (
-                  <CommentLikeInfo>
-                    <img src={LikePink} alt="좋아요" width="20" height="20" />
-                    <span>{comment.likes}</span>
-                  </CommentLikeInfo>
-                )}
+                          {comment.userId === currentUserId && (
+                            <>
+                              <CommentActionButton onClick={() => console.log('수정')}>
+                                수정
+                              </CommentActionButton>
+                              <CommentActionButton 
+                                onClick={() => {
+                                  setSelectedComment(comment);
+                                  openDeleteModal();
+                                }}
+                                className="delete"
+                              >
+                                삭제
+                              </CommentActionButton>
+                            </>
+                          )}
+                        </CommentHeaderActions>
+                      </CommentHeader>
+                      
+                      <CommentContent>{comment.content}</CommentContent>
+                      
+                      {comment.likes > 0 && (
+                        <CommentLikeInfo>
+                          <img src={LikePink} alt="좋아요" width="20" height="20" />
+                          <span>{comment.likes}</span>
+                        </CommentLikeInfo>
+                      )}
+                    </>
+                  )}
+                </div>
               </CommentItem>
             ))}
           </CommentsSection>
