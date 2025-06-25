@@ -275,7 +275,25 @@ const usePosts = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const [userType] = useState('organizer'); // 'general' | 'organizer'
+  const [userType] = useState('normalUser'); // 'normalUser' | 'registerUser'   - 임시 하드코딩, 추후 api
+  /*
+  const getUserType = useCallback(async () => {
+    try {
+      // const response = await api.get('/user/profile');
+      // return response.data.userType;
+      return 'normalUser'; // 임시
+    } catch (error) {
+      console.error('Failed to get user type:', error);
+      return 'normalUser';
+    }
+  }, []);
+  */
+ const canCreatePost = useCallback((category) => {
+    if (category === 'promotion') {
+      return userType === 'registerUser';
+    }
+    return true; // 일반탭, Hot탭은 모든 유저 가능
+  }, [userType]);
 
   const loadPosts = useCallback(async (category = 'general', pageNum = 1, reset = false) => {
     setLoading(true);
@@ -381,6 +399,7 @@ const usePosts = () => {
     loading,
     hasMore,
     userType,
+    canCreatePost,
     loadPosts,
     loadMore,
     setPage,

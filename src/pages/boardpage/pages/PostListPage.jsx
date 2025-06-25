@@ -21,6 +21,7 @@ const PostListPage = () => {
     loading,
     hasMore,
     userType,
+    canCreatePost,
     loadPosts,
     loadMore,
     setPage
@@ -46,12 +47,7 @@ const PostListPage = () => {
     // 검색 기능 구현
   };
 
-  const showFloatingButton = () => {
-    if (activeTab === 'promotion') {
-      return userType === 'organizer';
-    }
-    return true;
-  };
+  const showFloatingButton = canCreatePost(activeTab);
 
   return (
     <Container>
@@ -94,7 +90,10 @@ const PostListPage = () => {
         )}
       </ContentArea>
       
-      <FloatingButton show={showFloatingButton()} category={activeTab} />
+      <FloatingButton 
+        show={showFloatingButton} 
+        category={activeTab} 
+      />
     </Container>
   );
 };
