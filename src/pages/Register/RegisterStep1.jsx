@@ -5,10 +5,11 @@ import Counter from '../../components/Counter.jsx';
 import DateInput from '../../components/DateInput.jsx';
 import UnitInput from '../../components/UnitInput.jsx';
 import { useState } from 'react';
-function RegisterStep1({ onNext }) {
+import { useOutletContext } from 'react-router-dom';
+function RegisterStep1() {
 	const [price, setPrice] = useState([{ id: Date.now() }]);
 	const [discount, setDiscount] = useState([{ id: Date.now() + 1 }]); // 다른 id
-
+	const { nextStep } = useOutletContext();
 	const addPrice = () => {
 		setPrice((prev) => [...prev, { id: Date.now() }]);
 	};
@@ -114,7 +115,7 @@ function RegisterStep1({ onNext }) {
 				style={{ marginTop: '44px' }}
 				type="submit"
 				className="btn-primary"
-				onClick={onNext}
+				onClick={nextStep}
 			>
 				다음
 			</button>
