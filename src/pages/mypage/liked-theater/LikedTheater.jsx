@@ -2,6 +2,7 @@ import TopBar from '../../../components/TopBar';
 import Poster from '../../../assets/images/test-poster2.png';
 import styled from 'styled-components';
 import HeartFull from '@/assets/icons/heart-full.svg?react';
+import TopBarWeb from '../../../components/TopBarWeb';
 function LikedTheater() {
 	const theaters = [
 		{
@@ -42,8 +43,13 @@ function LikedTheater() {
 		},
 	];
 	return (
-		<>
-			<TopBar>좋아요한 극단</TopBar>
+		<LikedTheaterWrapper>
+			<div className="only-mobile">
+				<TopBar>좋아요한 극단</TopBar>
+			</div>
+			<div className="only-web-flex">
+				<TopBarWeb>좋아요한 극단</TopBarWeb>
+			</div>
 			<Wrapper>
 				<CardWrapper>
 					{theaters.map((theater) => (
@@ -57,20 +63,35 @@ function LikedTheater() {
 					))}
 				</CardWrapper>
 			</Wrapper>
-		</>
+		</LikedTheaterWrapper>
 	);
 }
 export default LikedTheater;
 
+const LikedTheaterWrapper = styled.div`
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	@media (min-width: 768px) {
+		padding: 100px 0px 0px 70px;
+	}
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+	}
+`;
 const Wrapper = styled.div`
 	display: flex;
 
+	@media (min-width: 768px) {
+		padding: 30px 0px 0px 110px;
+	}
+	@media (max-width: 768px) {
+		padding: 28px 20px;
+	}
 	flex-direction: column;
-	align-items: center;
-	justify-content: center;
 `;
 const CardWrapper = styled.div`
-	padding: 28px 20px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
