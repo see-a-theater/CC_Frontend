@@ -5,7 +5,7 @@ function SearchBar() {
 	return (
 		<Wrapper>
 			<IconWrapper>
-				<Search height={24}/>
+				<Search height={24} />
 			</IconWrapper>
 			<Bar placeholder="보고 싶은 연극이나 공연진을 입력하세요." />
 		</Wrapper>
@@ -27,7 +27,7 @@ const IconWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	pointer-events: none; 
+	pointer-events: none;
 `;
 
 const Bar = styled.input`

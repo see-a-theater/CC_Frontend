@@ -12,8 +12,11 @@ import Info from './pages/info/Info';
 import MyPage from './pages/mypage/MyPage';
 import Logout from './pages/logout/Logout';
 import Withdrawal from './pages/withdrawal/Withdrawal';
+import MyTickets from './pages/mypage/ticket/MyTickets';
 import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
+import TicketDetail from './pages/mypage/ticket/TicketDetail';
+import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
 import UploadPic from './pages/production/UploadPic';
@@ -39,6 +42,9 @@ function App() {
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/withdrawal" element={<Withdrawal />} />
 				<Route path="/menu" element={<FullScreenMenu />} />
+				<Route path="/mypage/tickets" element={<MyTickets />} />
+				<Route path="/mypage/tickets/1" element={<TicketDetail />} />
+				<Route path="/mypage/liked-theater" element={<LikedTheater />} />
 				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
 				<Route path="/production" element={<Production />} />
