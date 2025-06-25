@@ -78,6 +78,7 @@ function Home() {
 						</button>
 					</div>
 				</Wrapper>
+				{/*게시판 섹선*/}
 				<Wrapper style={{ paddingRight: '0px' }}>
 					<h1 className="only-mobile">게시판</h1>
 					<Bar>
@@ -118,7 +119,7 @@ const SideMenuWrapper = styled.div`
 	left: 0;
 	flex-shrink: 0;
 	display: none;
-	background-color: white;
+	background-color: ${({ theme }) => theme.colors.grayWhite};
 	@media (min-width: 768px) {
 		display: block;
 	}
@@ -163,7 +164,6 @@ const Wrapper = styled.div`
 	.light {
 		color: ${({ theme }) => theme.colors.pink600};
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
-		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		line-height: normal;
 		letter-spacing: -0.42px;

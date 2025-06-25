@@ -9,6 +9,7 @@ import image3 from '@/assets/mock/images/image3.png';
 import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 import styled from 'styled-components';
+import HomeIconMenu from '../../components/HomeIconMenu';
 
 function Gallery() {
 	const imageList = [
@@ -29,13 +30,15 @@ function Gallery() {
 
 	return (
 		<>
+			<SideMenuWrapper>
+				<HomeIconMenu isWeb={true} selectedMenu="gallery" />
+			</SideMenuWrapper>
 			<Mobile>
 				<Hamburger title={'사진첩'} />
 				<Masonry imageData={imageList} />
 			</Mobile>
 
 			<Web>
-				<SideBar />
 				<Container>
 					<SearchBar />
 					<TitleArea>
@@ -50,6 +53,20 @@ function Gallery() {
 	);
 }
 export default Gallery;
+
+const SideMenuWrapper = styled.div`
+	width: 101px;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	flex-shrink: 0;
+	display: none;
+
+	@media (min-width: 768px) {
+		display: block;
+	}
+`;
 
 const Web = styled.div`
 	display: none;
