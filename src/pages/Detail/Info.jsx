@@ -69,86 +69,177 @@ function Info() {
 
 	return (
 		<Container>
-			<Top>
-				<ChevronLeftPink height={15} alt="이전" className="back" />
-				<p className="title">실종</p>
-			</Top>
-			<img src={poster} height={220} alt="포스터 이미지" className="poster" />
-			<h3 className="title">실종</h3>
-			<TagList>
-				{mockGenre.map((genre, index) => (
-					<Tag key={index}>{genre.label}</Tag>
-				))}
-			</TagList>
+			<Mobile>
+				<Top>
+					<ChevronLeftPink height={15} alt="이전" className="back" />
+					<p className="title">실종</p>
+				</Top>
+				<img src={poster} height={220} alt="포스터 이미지" className="poster" />
+				<h3 className="title">실종</h3>
+				<TagList>
+					{mockGenre.map((genre, index) => (
+						<Tag key={index}>{genre.label}</Tag>
+					))}
+				</TagList>
 
-			<InfoList>
-				{mockInfo.map((section, idx) => (
-					<InfoBlock key={idx}>
-						<IconWrapper>
-							<img src={section.icon} height={24} alt="icon" />
-						</IconWrapper>
+				<InfoList>
+					{mockInfo.map((section, idx) => (
+						<InfoBlock key={idx}>
+							<IconWrapper>
+								<img src={section.icon} height={24} alt="icon" />
+							</IconWrapper>
 
-						<InfoContent>
-							{section.rows.map((row, rIdx) => (
-								<Row key={rIdx}>
-									{row.label && (
-										<StyledText
-											className={row.labelType ?? row.vaslueType ?? 'default'}
-										>
-											{row.label}
-										</StyledText>
-									)}
-
-									{Array.isArray(row.values) ? (
-										row.values.map((item, i) => (
+							<InfoContent>
+								{section.rows.map((row, rIdx) => (
+									<Row key={rIdx}>
+										{row.label && (
 											<StyledText
-												key={i}
-												className={item.valueType ?? 'default'}
-												style={i === 0 ? { marginRight: 'auto' } : undefined}
+												className={row.labelType ?? row.vaslueType ?? 'default'}
 											>
-												{item.value}
+												{row.label}
 											</StyledText>
-										))
-									) : (
-										<StyledText className={row.valueType ?? 'default'}>
-											{row.value}
-										</StyledText>
-									)}
-								</Row>
-							))}
-						</InfoContent>
-					</InfoBlock>
-				))}
-			</InfoList>
+										)}
 
-			<TabBar>
-				<TabItem
-					className={activeTab === 'perform' ? 'active' : ''}
-					onClick={() => setActiveTab('perform')}
-				>
-					공연정보
-				</TabItem>
-				<TabItem
-					className={activeTab === 'cast' ? 'active' : ''}
-					onClick={() => setActiveTab('cast')}
-				>
-					캐스팅
-				</TabItem>
-				<TabItem
-					className={activeTab === 'gallery' ? 'active' : ''}
-					onClick={() => setActiveTab('gallery')}
-				>
-					사진첩
-				</TabItem>
-			</TabBar>
+										{Array.isArray(row.values) ? (
+											row.values.map((item, i) => (
+												<StyledText
+													key={i}
+													className={item.valueType ?? 'default'}
+													style={i === 0 ? { marginRight: 'auto' } : undefined}
+												>
+													{item.value}
+												</StyledText>
+											))
+										) : (
+											<StyledText className={row.valueType ?? 'default'}>
+												{row.value}
+											</StyledText>
+										)}
+									</Row>
+								))}
+							</InfoContent>
+						</InfoBlock>
+					))}
+				</InfoList>
 
-			<ContentArea>
-				{activeTab === 'perform' && <Perform />}
-				{activeTab === 'cast' && <Cast />}
-				{activeTab === 'gallery' && <Gallery />}
-			</ContentArea>
+				<TabBar>
+					<TabItem
+						className={activeTab === 'perform' ? 'active' : ''}
+						onClick={() => setActiveTab('perform')}
+					>
+						공연정보
+					</TabItem>
+					<TabItem
+						className={activeTab === 'cast' ? 'active' : ''}
+						onClick={() => setActiveTab('cast')}
+					>
+						캐스팅
+					</TabItem>
+					<TabItem
+						className={activeTab === 'gallery' ? 'active' : ''}
+						onClick={() => setActiveTab('gallery')}
+					>
+						사진첩
+					</TabItem>
+				</TabBar>
 
-			<BookBtn>예매하러 가기</BookBtn>
+				<ContentArea>
+					{activeTab === 'perform' && <Perform />}
+					{activeTab === 'cast' && <Cast />}
+					{activeTab === 'gallery' && <Gallery />}
+				</ContentArea>
+
+				<BookBtn>예매하러 가기</BookBtn>
+			</Mobile>
+
+			<Web>
+				<h3 className="title">실종</h3>
+				<WebContent>
+					<WebLeft>
+						<WebInfo>
+							<img
+								src={poster}
+								height={220}
+								alt="포스터 이미지"
+								className="poster"
+							/>
+
+							<InfoList>
+								{mockInfo.map((section, idx) => (
+									<InfoBlock key={idx}>
+										<IconWrapper>
+											<img src={section.icon} height={24} alt="icon" />
+										</IconWrapper>
+
+										<InfoContent>
+											{section.rows.map((row, rIdx) => (
+												<Row key={rIdx}>
+													{row.label && (
+														<StyledText
+															className={
+																row.labelType ?? row.vaslueType ?? 'default'
+															}
+														>
+															{row.label}
+														</StyledText>
+													)}
+
+													{Array.isArray(row.values) ? (
+														row.values.map((item, i) => (
+															<StyledText
+																key={i}
+																className={item.valueType ?? 'default'}
+																style={
+																	i === 0 ? { marginRight: 'auto' } : undefined
+																}
+															>
+																{item.value}
+															</StyledText>
+														))
+													) : (
+														<StyledText className={row.valueType ?? 'default'}>
+															{row.value}
+														</StyledText>
+													)}
+												</Row>
+											))}
+										</InfoContent>
+									</InfoBlock>
+								))}
+							</InfoList>
+						</WebInfo>
+
+						<TabBar>
+							<TabItem
+								className={activeTab === 'perform' ? 'active' : ''}
+								onClick={() => setActiveTab('perform')}
+							>
+								공연정보
+							</TabItem>
+							<TabItem
+								className={activeTab === 'cast' ? 'active' : ''}
+								onClick={() => setActiveTab('cast')}
+							>
+								캐스팅
+							</TabItem>
+							<TabItem
+								className={activeTab === 'gallery' ? 'active' : ''}
+								onClick={() => setActiveTab('gallery')}
+							>
+								사진첩
+							</TabItem>
+						</TabBar>
+
+						<ContentArea>
+							{activeTab === 'perform' && <Perform />}
+							{activeTab === 'cast' && <Cast />}
+							{activeTab === 'gallery' && <Gallery />}
+						</ContentArea>
+					</WebLeft>
+
+					<BookBtn>예매하러 가기</BookBtn>
+				</WebContent>
+			</Web>
 		</Container>
 	);
 }
@@ -157,11 +248,12 @@ export default Info;
 
 const Container = styled.div`
 	background: ${({ theme }) => theme.colors.ivoryBg};
-	padding: 0 20px;
+`;
+const Mobile = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-
+	padding: 0 20px;
 	.poster {
 		border-radius: 3px;
 	}
@@ -171,7 +263,11 @@ const Container = styled.div`
 		font-weight: ${({ theme }) => theme.font.fontWeight.ExtraBold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
+	@media (min-width: 768px) {
+		display: none;
+	}
 `;
+
 const Top = styled.div`
 	position: relative;
 	width: 100%;
@@ -213,6 +309,10 @@ const InfoList = styled.div`
 	width: 100%;
 	background: ${({ theme }) => theme.colors.pink100};
 	padding: 16px 20px;
+
+	@media (min-width: 768px) {
+		margin-top: 0px;
+	}
 `;
 
 const InfoBlock = styled.div`
@@ -311,4 +411,40 @@ const BookBtn = styled.button`
 	font-size: ${({ theme }) => theme.font.fontSize.title16};
 	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.grayWhite};
+
+	@media (min-width: 768px) {
+		padding: 4px 12px;
+		width: 300px;
+		height: 40px;
+	}
+`;
+const Web = styled.div`
+	display: none;
+	@media (min-width: 768px) {
+		display: flex;
+		flex-direction: column;
+		padding: 40px 100px 0px 160px;
+
+		.poster {
+			border-radius: 3px;
+		}
+		h3 {
+			font-size: ${({ theme }) => theme.font.fontSize.headline36};
+			font-weight: ${({ theme }) => theme.font.fontWeight.ExtraBold};
+			color: ${({ theme }) => theme.colors.grayMain};
+			margin-bottom: 28px;
+		}
+	}
+`;
+const WebContent = styled.div`
+	display: flex;
+	gap: 65px;
+`;
+const WebLeft = styled.div`
+	width: 839px;
+`;
+const WebInfo = styled.div`
+	display: flex;
+	align-items: flex-start;
+	gap: 40px;
 `;

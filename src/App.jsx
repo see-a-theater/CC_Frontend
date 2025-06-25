@@ -5,6 +5,7 @@ import FullScreenMenu from './components/FullScreenMenu';
 import Home from './pages/home/Home';
 import SmallTheaterCurrent from './pages/theater/SmallTheaterCurrent';
 import SmallTheaterRegister from './pages/register/SmallTheaterRegister';
+import TicketingPage from './pages/ticketingpage/TicketingPage.jsx';
 import Board from './pages/board/Board';
 import Gallery from './pages/gallery/Gallery';
 import Info from './pages/info/Info';
@@ -16,7 +17,10 @@ import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import TicketDetail from './pages/mypage/ticket/TicketDetail';
 import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
-// App.jsx
+import Production from './pages/production/Production';
+import ProdDetail from './pages/production/ProdDetail';
+import UploadPic from './pages/production/UploadPic';
+
 function App() {
 	return (
 		<>
@@ -30,6 +34,7 @@ function App() {
 					path="/small-theater/register"
 					element={<SmallTheaterRegister />}
 				/>
+				<Route path="/ticketing" element={<TicketingPage />} />
 				<Route path="/board" element={<Board />} />
 				<Route path="/gallery" element={<Gallery />} />
 				<Route path="/info" element={<Info />} />
@@ -42,6 +47,9 @@ function App() {
 				<Route path="/mypage/liked-theater" element={<LikedTheater />} />
 				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
+				<Route path="/production" element={<Production />} />
+				<Route path="/production/1" element={<ProdDetail />} />
+				<Route path="/production/upload_photo" element={<UploadPic />} />
 			</Routes>
 		</>
 	);

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import sampleImg from '@/assets/mock/images/실종.png';
-import chevronLeft from '@/assets/icons/chevronLeft.svg';
-import chevronDown from '@/assets/icons/chevronDown.svg';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+import ChevronDown from '@/assets/icons/chevronDown.svg?react';
 
 function Summary() {
 	const mockGenre = [
@@ -12,44 +12,66 @@ function Summary() {
 	];
 
 	return (
-		<Content>
-			<Top>
-				<img src={chevronLeft} height={15} alt="뒤로가기" />
-			</Top>
+		<Container>
+			<Mobile>
+				<Content>
+					<Top>
+						<ChevronLeft height={15} alt="뒤로가기" />
+					</Top>
 
-			<h1>실종</h1>
+					<h1>실종</h1>
 
-			<TagList>
-				{mockGenre.map((genre, index) => (
-					<Tag key={index}>{genre.label}</Tag>
-				))}
-			</TagList>
+					<TagList>
+						{mockGenre.map((genre, index) => (
+							<Tag key={index}>{genre.label}</Tag>
+						))}
+					</TagList>
 
-			<p className="summary">
-				1998년 가을,
-				<br />
-				<br />
-				‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을 추구하는
-				사회에서 학생은 적응하지 못한다.
-			</p>
-			<img src={chevronDown} height={7} alt="스크롤" className="chevronDown" />
-		</Content>
+					<p className="summary">
+						1998년 가을,
+						<br />
+						<br />
+						‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을
+						추구하는 사회에서 학생은 적응하지 못한다.
+					</p>
+					<ChevronDown height={7} alt="스크롤" className="chevronDown" />
+				</Content>
+			</Mobile>
+
+			<Web>
+				<Content>
+					<Top>
+						<ChevronLeft height={19} alt="뒤로가기" />
+					</Top>
+
+					<h1>실종</h1>
+
+					<TagList>
+						{mockGenre.map((genre, index) => (
+							<Tag key={index}>{genre.label}</Tag>
+						))}
+					</TagList>
+
+					<p className="summary">
+						1998년 가을,
+						<br />
+						<br />
+						‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을
+						추구하는 사회에서 학생은 적응하지 못한다.
+					</p>
+					<ChevronDown height={28} alt="스크롤" className="chevronDown" />
+				</Content>
+			</Web>
+		</Container>
 	);
 }
 
 export default Summary;
 
-const Top = styled.div`
-	padding-top: 44px;
-	height: 87px;
+const Container = styled.div``;
+const Mobile = styled.div`
 	display: flex;
-	align-items: center;
-`;
-const Content = styled.div`
 	padding: 0 20px 0 20px;
-
-	width: 100vw;
-	height: 100vh;
 	background: linear-gradient(0deg, rgba(0, 0, 0, 0.75)), url('${sampleImg}');
 	background-size: cover;
 
@@ -73,13 +95,32 @@ const Content = styled.div`
 		left: 50%;
 		transform: translateX(-50%);
 	}
+
+	@media (min-width: 768px) {
+		display: none;
+	}
 `;
 
+const Content = styled.div`
+	width: 100vw;
+	height: 100vh;
+`;
+const Top = styled.div`
+	padding-top: 44px;
+	height: 87px;
+	display: flex;
+	align-items: center;
+`;
 const TagList = styled.div`
 	margin-top: 20px;
 
 	display: flex;
 	gap: 8px;
+
+	@media (min-width: 768px) {
+		display: flex;
+		gap: 12px;
+	}
 `;
 const Tag = styled.div`
 	display: inline-block;
@@ -90,4 +131,44 @@ const Tag = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body12};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.grayWhite};
+
+	@media (min-width: 768px) {
+		padding: 1px 40px;
+		border-radius: 3px;
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayWhite};
+	}
+`;
+const Web = styled.div`
+	display: none;
+
+	@media (min-width: 768px) {
+		display: flex;
+		width: 100%;
+		padding: 100px 100px 0px 160px;
+		background: linear-gradient(0deg, rgba(0, 0, 0, 0.75)), url('${sampleImg}');
+		background-size: cover;
+
+		h1 {
+			font-size: ${({ theme }) => theme.font.fontSize.headline80};
+			font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+			color: ${({ theme }) => theme.colors.grayWhite};
+			margin-top: 140px;
+		}
+		p {
+			font-size: ${({ theme }) => theme.font.fontSize.headline20};
+			font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+			color: ${({ theme }) => theme.colors.grayWhite};
+		}
+		.summary {
+			margin-top: 60px;
+		}
+		.chevronDown {
+			position: absolute;
+			bottom: 44px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
 `;

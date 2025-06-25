@@ -33,14 +33,20 @@ function Perform() {
 					{content.title == '줄거리' && <Summary>{content.content}</Summary>}
 					{content.title == '공연시간 정보' && <Text>{content.content}</Text>}
 					{content.title == '공연장 정보' && (
-						<Location>
-							<div className="textArea">
-								<p className="additional">{content.additionalTitle}</p>
+						<>
+							<Location>
+								<div className="textArea">
+									<p className="additional">{content.additionalTitle}</p>
+									<p>{content.content}</p>
+									<p className="copy">복사</p>
+								</div>
+								<div className="map"></div>
+							</Location>
+							<WebLocation>
 								<p>{content.content}</p>
-								<p className="copy">복사</p>
-							</div>
-							<div className="map"></div>
-						</Location>
+								<div className="map"></div>
+							</WebLocation>
+						</>
 					)}
 					{content.title == '포스터' && (
 						<img src={content.content} className="Poster" alt="포스터" />
@@ -66,6 +72,11 @@ const Content = styled.div`
 	.Poster {
 		width: 80%;
 		align-self: center;
+
+		@media (min-width: 768px) {
+			width: 400px;
+			border-radius: 5px;
+		}
 	}
 `;
 
@@ -73,6 +84,12 @@ const Title = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body16};
 	font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.pink500};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.body16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 const Summary = styled.div`
 	width: 100%;
@@ -84,6 +101,12 @@ const Summary = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body13};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 const Text = styled.div`
 	width: 100%;
@@ -91,6 +114,12 @@ const Text = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body13};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 const Location = styled.div`
 	.textArea {
@@ -112,4 +141,26 @@ const Location = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body13};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		display: none;
+	}
+`;
+const WebLocation = styled.div`
+	display: none;
+
+	@media (min-width: 768px) {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+		.map {
+			width: 100%;
+			height: 148px;
+			background: ${({ theme }) => theme.colors.gray300};
+		}
+	}
 `;
