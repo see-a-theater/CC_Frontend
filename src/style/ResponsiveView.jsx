@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const ResponsiveView = createGlobalStyle`
   .only-mobile {
@@ -23,9 +23,16 @@ const ResponsiveView = createGlobalStyle`
       display: inline !important;
     }
   }
+  .only-web-flex {
+    display: none !important;
 
+    @media (min-width: 768px) {
+      display: flex !important;
+    }
+}
   .only-web {
     display: none !important;
+
 
     @media (min-width: 768px) {
       display: block !important;
