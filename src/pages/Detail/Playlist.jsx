@@ -8,6 +8,7 @@ import WebPlayCard from '@/components/Detail/WebPlayCard';
 import WebListCard from '@/components/Detail/WebListCard';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import SearchBar from '@/components/SearchBar';
+import HomeIconMenu from '@/components/HomeIconMenu';
 
 import SamplePoster from '@/assets/mock/images/실종.png';
 
@@ -44,7 +45,9 @@ function Playlist() {
 	return (
 		<Container>
 			<Web>
-				<Sidebar />
+				<SideMenuWrapper>
+					<HomeIconMenu isWeb={true} />
+				</SideMenuWrapper>
 				<WebContent>
 					<SearchBar />
 					<WebHot>
@@ -134,13 +137,13 @@ const Web = styled.div`
 
 	@media (min-width: 768px) {
 		display: flex;
-
 		width: 100%;
 	}
 `;
 const WebContent = styled.div`
 	display: flex;
 	padding: 60px 100px 100px 60px;
+	margin-left: 100px;
 	flex-direction: column;
 	gap: 40px;
 
@@ -165,14 +168,18 @@ const BoxWrapper = styled.div`
 	display: flex;
 	gap: 80px;
 `;
-const Sidebar = styled.div`
-	display: block;
-	flex-shrink: 0;
-	width: 100px;
+const SideMenuWrapper = styled.div`
+	width: 101px;
 	height: 100vh;
-	background-color: ${({ theme }) => theme.colors.gray200};
-	position: sticky;
+	position: fixed;
 	top: 0;
+	left: 0;
+	flex-shrink: 0;
+	display: none;
+	background-color: white;
+	@media (min-width: 768px) {
+		display: block;
+	}
 `;
 
 const Mobile = styled.div`

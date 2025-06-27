@@ -149,7 +149,9 @@ function Production() {
 							</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
-						{token && activeTab === 'gallery' && <Button onClick={navigateToUpload}>사진 등록</Button>}
+						{token && activeTab === 'gallery' && (
+							<Button onClick={navigateToUpload}>사진 등록</Button>
+						)}
 					</Theatre>
 					<AreaSelect>
 						<TabItemWeb
