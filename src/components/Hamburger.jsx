@@ -21,6 +21,7 @@ function Hamburger({ hasLogo, title, back }) {
 
 	const goBack = () => {
 		navigate(-1);
+		window.scrollTo(0, 0);
 	};
 
 	// 풀스크린 메뉴 활성 시 전체 교체
