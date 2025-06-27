@@ -73,6 +73,7 @@ function Production() {
 	};
 	const navigateToUpload = () => {
 		navigate('/production/upload_photo');
+		window.scrollTo(0, 0);
 	};
 
 	return (
@@ -148,7 +149,7 @@ function Production() {
 							</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
-						{token && activeTab === 'gallery' && <Button>사진 등록</Button>}
+						{token && activeTab === 'gallery' && <Button onClick={navigateToUpload}>사진 등록</Button>}
 					</Theatre>
 					<AreaSelect>
 						<TabItemWeb
