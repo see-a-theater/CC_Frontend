@@ -19,21 +19,21 @@ function Playlist() {
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 1,
 		},
 		{
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 2,
 		},
 		{
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 3,
 		},
 	];
@@ -102,9 +102,9 @@ function Playlist() {
 				<Now>
 					<h3 className="onGoing"> 현재 진행중 </h3>
 					<MappingArea>
-						<NowShowing />
-						<NowShowing />
-						<NowShowing />
+						{mockList.map((data) => (
+							<NowShowing data={data} key={data.id} />
+						))}
 					</MappingArea>
 				</Now>
 				{token && (
