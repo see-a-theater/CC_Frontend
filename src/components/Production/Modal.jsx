@@ -1,22 +1,37 @@
 import styled from 'styled-components';
+import MyCalendar from '@/components/Calendar';
 import { useState } from 'react';
 
 function Modal() {
 	const [inputValue, setInputValue] = useState('');
+	const [step, setStep] = useState('input');
+
+	const handleNext = () => {
+		setStep('calendar');
+	};
 
 	return (
 		<Backdrop>
 			<ModalBox>
-				<Top>
-					<h3>공연 이름 입력</h3>
-					<p>다음</p>
-				</Top>
+				{step === 'input' ? (
+					<>
+						<Top>
+							<h3>공연 이름 입력</h3>
+							<Button onClick={handleNext}>다음</Button>
+						</Top>
 
-				<Input
-					type="text"
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-				/>
+						<Input
+							type="text"
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							placeholder="공연 이름을 입력하세요"
+						/>
+					</>
+				) : (
+					<>
+						<MyCalendar />
+					</>
+				)}
 			</ModalBox>
 		</Backdrop>
 	);
@@ -65,8 +80,12 @@ const Input = styled.input`
 	border: none;
 	background: ${({ theme }) => theme.colors.grayWhite};
 `;
-const Actions = styled.div`
-	display: flex;
-	justify-content: flex-end;
-	gap: 10px;
+const Button = styled.p`
+	cursor: pointer;
+	color: #007bff;
+	user-select: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
 `;

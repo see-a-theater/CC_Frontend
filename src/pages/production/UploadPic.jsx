@@ -6,7 +6,6 @@ import Select from 'react-select';
 import ImageUploadBox from '@/components/ImageUploadBox';
 import TopBar from '@/components/TopBar';
 import Modal from '@/components/Production/Modal';
-import MyCalendar from '@/components/Calendar';
 
 function UploadPic() {
 	const data = [
