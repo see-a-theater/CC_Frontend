@@ -20,6 +20,10 @@ import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
 import UploadPic from './pages/production/UploadPic';
+import Dashboard from './pages/admin/Dashboard.jsx';
+import Users from './pages/admin/Users.jsx';
+import AdminGallery from './pages/admin/AdminGallery.jsx';
+import UsersDetail from './pages/admin/UsersDetail.jsx';
 
 function App() {
 	return (
@@ -50,6 +54,11 @@ function App() {
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/1" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
+
+				<Route path="/admin" element={<Dashboard />} />
+				<Route path="/admin/users" element={<Users />} />
+				<Route path="/admin/gallery" element={<AdminGallery />} />
+				<Route path="/admin/users/:userId" element={<UsersDetail />} />w
 			</Routes>
 		</>
 	);
