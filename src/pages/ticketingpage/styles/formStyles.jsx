@@ -1,6 +1,12 @@
 
 import styled from 'styled-components';
 
+// 반응형 미디어쿼리 상수
+const media = {
+  mobile: `@media (max-width: 767px)`,
+  pc: `@media (min-width: 768px)`,
+};
+
 // 입력 영역 관련 스타일
 export const Input = styled.div`
   position: relative;
@@ -8,6 +14,10 @@ export const Input = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
+  ${media.pc} {
+    margin-bottom: 40px;
+  }
 `;
 
 export const Label = styled.label`
@@ -15,7 +25,11 @@ export const Label = styled.label`
   font-weight: 500;
   color: #929292;
   display: block;
-  margin-bottom: 8px;
+
+  ${media.pc} {
+    font-size: 16px;
+    color: #000000;
+  }
 `;
 
 export const DatePickerContainer = styled.div`
@@ -116,6 +130,11 @@ export const RadioButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  ${media.pc} {
+    margin-top: 14px;
+    margin-left: 0px;
+    gap: 8px;
+  }
 `;
 
 export const RadioOption = styled.div`
@@ -130,6 +149,11 @@ export const RadioCircle = styled.div`
   border-radius: 50%;
   border: 1px solid #FF8585;
   position: relative;
+  cursor: pointer;
+  ${media.pc} {
+    width: 20px;
+    height: 20px;
+  }
   
   &.selected {
     border-color: #F67676;
@@ -144,12 +168,19 @@ export const RadioCircle = styled.div`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      ${media.pc} {
+        width: 14px;
+        height: 14px;
+      }
     }
   }
 `;
 
 export const RadioLabel = styled.label`
   font-size: 14px;
+  ${media.pc} {
+    font-size: 16px;
+  }
 `;
 
 // 구분선 
@@ -158,6 +189,7 @@ export const Divider = styled.div`
   background-color: #FFF1EF;
   width: 402px;
   margin-left: -20px;
+  margin-bottom: 20px;
 `;
 
 // additional contents 관련 스타일들
@@ -168,6 +200,10 @@ export const AdditionalInputField = styled.div`
   height: 34px;
   background: #F8F8F8;
   border-radius: 3px;
+  ${media.pc} {
+    width: 315px;
+    margin-left: 40px;
+  }
   
   input {
     width: 100%;
@@ -175,7 +211,7 @@ export const AdditionalInputField = styled.div`
     border: none;
     background: transparent;
     outline: none;
-    font-size: 13px;
+    font-size: 14px;
     color: #000000;
     
     &::placeholder {
@@ -206,6 +242,10 @@ export const CheckboxContainer = styled.div`
   height: 28px;
   background: #F8F8F8;
   border-radius: 3px;
+  ${media.pc} {
+    width: 398px;
+    margin-top: 10px;
+  }
 `;
 
 // 커스텀 체크박스 입력
@@ -219,6 +259,10 @@ export const CheckboxInput = styled.input`
   border-radius: 1px;
   position: relative;
   cursor: pointer;
+  ${media.pc} {
+    width: 16px;
+    height: 16px;
+  }
   
   &:checked {
     &:after {
@@ -231,6 +275,10 @@ export const CheckboxInput = styled.input`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      ${media.pc} {
+        width: 8px;
+        height: 8px;
+      }
     }
   }
 `;
@@ -240,6 +288,9 @@ export const CheckboxLabel = styled.div`
   margin-left: 8px;
   font-size: 12px;
   color: #929292;
+  ${media.pc} {
+    font-size: 14px;
+  }
 `;
 
 // 약관 링크
@@ -248,4 +299,7 @@ export const Showmore = styled.img`
   cursor: pointer;
   width: 6px;
   height: 12px;
+  ${media.pc} {
+    margin-left: 165px;
+  }
 `;

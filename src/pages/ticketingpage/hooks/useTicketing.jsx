@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import useResponsive from './useResponsive';
 
 const useTicketing = () => {
   // 공연의 날짜+시간 MOCK data
@@ -29,27 +30,81 @@ const useTicketing = () => {
   const [studentId, setStudentId] = useState(''); // 학번 입력
   const [depositorName, setDepositorName] = useState(''); // 입금자명 입력
   const [termsAgreed, setTermsAgreed] = useState(false); // 약관 동의 체크
+  const isPC = useResponsive(); //반응형
+
+  // 최대 단계 수 계산
+  const getMaxSteps = () => isPC ? 5 : 3; // PC: 1날짜,인원→2할인→3수령→4결제→5완료, 모바일: 1날짜→2옵션들→3완료
+  // 현재 단계의 컨텐츠 타입 반환
+  const getCurrentStepContent = () => {
+    if (!isPC) {
+      switch(step) {
+        case 1: return 'datetime';  // 날짜 인원
+        case 2: return 'options';   // 할인+수령+결제 통합
+        case 3: return 'complete';
+        default: return 'datetime';
+      }
+    } else {
+      switch(step) {
+        case 1: return 'datetime';  // 날짜 인원
+        case 2: return 'discount';  // 할인
+        case 3: return 'delivery';  // 수령
+        case 4: return 'payment';   // 결제
+        case 5: return 'complete';
+        default: return 'datetime';
+      }
+    }
+  };
 
   // 다음 버튼 활성화 여부 확인
   useEffect(() => {
-    if (step === 1) {
-      setNextActive(dateTime && people);
-    } else if (step === 2) {
-      let isValid = discountType !== null && paymentType !== null && deliveryType !== null;
-      
-      if (discountType === 'standard') {
-        isValid = isValid && studentId.trim() !== '';   // 홍대생 할인 선택 시 학번 입력
-      }
-      if (paymentType === 'bank') {
-        isValid = isValid && depositorName.trim() !== '';   // 입금 선택 시 입금자명 입력
-      }
-      if (paymentType === 'pay') {
-        isValid = isValid && termsAgreed;   // 카카오페이 선택 시 약관 동의 
-      }
-      
-      setNextActive(isValid);
+    const currentContent = getCurrentStepContent();
+    
+    switch(currentContent) {
+      case 'datetime':
+        setNextActive(dateTime && people);
+        break;
+        
+      case 'discount':  //pc 할인
+        let discountValid = discountType !== null;
+        if (discountType === 'standard') {
+          discountValid = discountValid && studentId.trim() !== '';
+        }
+        setNextActive(discountValid);
+        break;
+        
+      case 'delivery':  //pc 수령
+        setNextActive(deliveryType !== null);
+        break;
+        
+      case 'payment':   //pc 결제
+        let paymentValid = paymentType !== null;
+        if (paymentType === 'bank') {
+          paymentValid = paymentValid && depositorName.trim() !== '';
+        }
+        if (paymentType === 'pay') {
+          paymentValid = paymentValid && termsAgreed;
+        }
+        setNextActive(paymentValid);
+        break;
+        
+      case 'options': // 모바일 통합 단계
+        let optionsValid = discountType !== null && paymentType !== null && deliveryType !== null;
+        if (discountType === 'standard') {
+          optionsValid = optionsValid && studentId.trim() !== '';
+        }
+        if (paymentType === 'bank') {
+          optionsValid = optionsValid && depositorName.trim() !== '';
+        }
+        if (paymentType === 'pay') {
+          optionsValid = optionsValid && termsAgreed;
+        }
+        setNextActive(optionsValid);
+        break;
+        
+      default:
+        setNextActive(false);
     }
-  }, [step, dateTime, people, discountType, paymentType, deliveryType, studentId, depositorName, termsAgreed]);
+  }, [step, dateTime, people, discountType, paymentType, deliveryType, studentId, depositorName, termsAgreed, isPC]);
 
   // 다음 단계로 이동
   const goToNextStep = () => {
@@ -74,6 +129,7 @@ const useTicketing = () => {
   const eventInfo = {
     title: '실종',
     venue: '홍익대학교 학생회관 3층 소극장',
+    period: '2025.05.14 ~ 2025.05.18',
     posterUrl: ''
   };
 
@@ -105,6 +161,7 @@ const useTicketing = () => {
     studentId,
     depositorName,
     termsAgreed,
+    isPC,
     
     // 액션
     setDateTime,
@@ -119,8 +176,10 @@ const useTicketing = () => {
     setDepositorName,
     setTermsAgreed,
     
-    // 계산된 값
-    calculatePayment
+    // 유틸리티
+    calculatePayment,
+    getCurrentStepContent,
+    getMaxSteps,
   };
 };
 
