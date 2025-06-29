@@ -15,8 +15,8 @@ const UserTable = ({
 
 	const allHeaders = Object.keys(data[0]);
 
-	const handleDetailClick = (userId) => {
-		navigate(`/admin/users/${userId}`);
+	const handleDetailClick = (link, id) => {
+		navigate(link+id);
 	};
 
 	return (
@@ -39,7 +39,7 @@ const UserTable = ({
 									return null;
 								return key === 'manage' ? (
 									<td key={key}>
-										<DetailButton onClick={() => handleDetailClick(user.id)}>
+										<DetailButton onClick={() => handleDetailClick(user.manage, user.id)}>
 											상세
 										</DetailButton>
 									</td>

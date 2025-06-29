@@ -20,7 +20,7 @@ function Users() {
 			email: 'cc1234@gmail.com',
 			number: '010-1234-5567',
 			gender: '여',
-			manage: ' ',
+			manage: '/admin/users/',
 		},
 		{
 			id: 'cc1234',
@@ -28,7 +28,7 @@ function Users() {
 			email: 'cc1234@gmail.com',
 			number: '010-1234-5567',
 			gender: '여',
-			manage: ' ',
+			manage: '/admin/users/',
 		},
 		{
 			id: 'cc1234',
@@ -36,7 +36,7 @@ function Users() {
 			email: 'cc1234@gmail.com',
 			number: '010-1234-5567',
 			gender: '여',
-			manage: ' ',
+			manage: '/admin/users/',
 		},
 		{
 			id: 'cc1234',
@@ -44,7 +44,7 @@ function Users() {
 			email: 'cc1234@gmail.com',
 			number: '010-1234-5567',
 			gender: '여',
-			manage: ' ',
+			manage: '/admin/users/',
 		},
 		{
 			id: 'cc1234',
@@ -52,7 +52,7 @@ function Users() {
 			email: 'cc1234@gmail.com',
 			number: '010-1234-5567',
 			gender: '여',
-			manage: ' ',
+			manage: '/admin/users/',
 		},
 		{
 			id: 'cc1234',
