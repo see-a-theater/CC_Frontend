@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
+import TopBar from '../../../../components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
 import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
-import TopBarWeb from '../../../components/TopBarWeb';
-import Alert from './TicketCancel';
+import TopBarWeb from '../../../../components/TopBarWeb';
+import chroma from 'chroma-js';
+import Select from 'react-select';
 import React, { useState, useEffect } from 'react';
+import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 
 const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
 const details = {
@@ -28,7 +30,7 @@ const details = {
 	},
 };
 
-function TicketDetail() {
+function RegisteredDetail() {
 	const navigate = useNavigate();
 	// 모달창 관련 함수
 	const [showAlert, setShowAlert] = useState(false);
@@ -58,123 +60,113 @@ function TicketDetail() {
 	} = details;
 	const header = ticketHeaders;
 
+	const options = [
+		{
+			value: '2025.10.03 (목) 17:00',
+			label: (
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					<span style={{ fontWeight: 'bold' }}>1회차</span>
+					<span>2025.10.03 (목) 17:00</span>
+				</div>
+			),
+		},
+		{
+			value: '2025.10.04 (금) 17:00',
+			label: (
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					<span style={{ fontWeight: 'bold' }}>2회차</span>
+					<span>2025.10.04 (금) 17:00</span>
+				</div>
+			),
+		},
+	];
+
 	//
 	return (
 		<>
 			<MyTicketsWrapper>
 				{/*모바일 상단바*/}
 				<div className="only-mobile">
-					<TopBar onPrev={onPrev}>티켓 예매 내역</TopBar>
+					<TopBar onPrev={onPrev}>예매 내역</TopBar>
 				</div>
 				{/*웹 상단바 */}
 				<div className="only-web-flex">
-					<TopBarWeb>티켓 예매 내역</TopBarWeb>
+					<TopBarWeb>예매 내역</TopBarWeb>
 				</div>
 				{/*본문*/}
 				<Wrapper>
-					{/* 모바일 포스터 */}
-					<div
-						className="only-mobile"
-						style={{ display: 'flex', justifyContent: 'center' }}
-					>
-						<div
-							style={{
-								display: 'flex',
-								flexDirection: 'column',
-								alignItems: 'center',
-							}}
-						>
-							<img src={imgSrc} />
-							<h1>실종 2매</h1>
-							<p className="color-pink">예매 완료</p>
-						</div>
-					</div>
 					{/*웹 포스터*/}
 					<div className="only-web">
 						<img src={imgSrc} />
 					</div>
 					{/*티켓 정보 */}
 					<DetailWrapper>
-						<Table>
-							<tbody>
-								<tr>
-									<th>예매일</th>
-									<td>{bookingDate}</td>
-								</tr>
-								<tr>
-									<th>장소</th>
-									<td>{place}</td>
-								</tr>
-								<tr>
-									<th>관람일시</th>
-									<td>{performanceDate}</td>
-								</tr>
-								<tr>
-									<th>상태</th>
-									<td>{status}</td>
-								</tr>
-								<tr>
-									<th>취소가능일시</th>
-									<td>
-										{cancelDeadline.deadline}
-										{cancelDeadline?.extra?.map((e) => (
-											<div style={{ display: 'flex' }}>
-												<span>{e.date}</span>
-												<span className="color-pink">{e.fee}</span>
-											</div>
-										))}
-									</td>
-								</tr>
-							</tbody>
-						</Table>
 						<div
 							style={{
 								display: 'flex',
-								flexDirection: 'column',
-								gap: '8px',
-								marginBottom: '34px',
+								flexDirection: 'row',
+								alignItems: 'center',
+								gap: '4px',
+								marginBottom: '32px',
 							}}
 						>
-							<h3>참고 사항</h3>
-							<span>
-								예매 수수료는 예매일 이후 취소 시에는 환불되지 않습니다.
-							</span>
-							<span>
-								단, 예매 당일 밤 12시 이전 취소 시에는 취소 수수료가 없음 (취소
-								기한내에 한함)
-							</span>
-							<span>
-								취소수수료는 취소시점에 따라 달라지며, 취소 진행 시 확인 하실 수
-								있습니다.
-							</span>
+							<h1>실종</h1>
+							<ChevronRightGray />
 						</div>
-						<div
-							className="checkbox"
-							style={{
-								marginBottom: '60px',
-							}}
-						>
-							<label
-								style={{
-									textAlign: 'center',
-									display: 'flex',
-									justifyContent: 'center',
-								}}
-							>
-								취소 수수료를 확인하였으며, 이에 동의합니다
-								<input type="checkbox" />
-							</label>
-						</div>
-						<button className="btn-light" onClick={() => navigate('cancel')}>
-							예매 취소
-						</button>
+						<p style={{ marginBottom: '10px' }}>
+							홍익대학교 학생회관 3층 소극장
+						</p>
+						<p className="color-gray400" style={{ marginBottom: '16px' }}>
+							2024.10.03 ~2024.10.05
+						</p>
+						<Hr />
+						<Table>
+							<tbody>
+								<tr>
+									<th>날짜</th>
+									<th>인원누적</th>
+									<th>누적수익</th>
+								</tr>
+								<tr>
+									<td>1회차ㅣ2025.10.03</td>
+									<td>2</td>
+									<td>2,000</td>
+								</tr>
+								<tr>
+									<td>1회차ㅣ2025.10.03</td>
+									<td>2</td>
+									<td>2,000</td>
+								</tr>
+							</tbody>
+						</Table>
+						셀렉트박스 스타일링 필요
+						<Select options={options} />
+						<Table>
+							<tbody>
+								<tr>
+									<th>예매자</th>
+									<th>인원수</th>
+									<th>결제상태</th>
+								</tr>
+								<tr>
+									<td>홍길동</td>
+									<td>2</td>
+									<td>완료</td>
+								</tr>
+								<tr>
+									<td>홍길동</td>
+									<td>2</td>
+									<td>완료</td>
+								</tr>
+							</tbody>
+						</Table>
 					</DetailWrapper>
 				</Wrapper>
 			</MyTicketsWrapper>
 		</>
 	);
 }
-export default TicketDetail;
+export default RegisteredDetail;
 const Wrapper = styled.div`
 	padding: 20px;
 	width: 100%;
@@ -183,18 +175,17 @@ const Wrapper = styled.div`
 
 	@media (min-width: 768px) {
 		flex-direction: row;
-		gap: clamp(40px, 15vw, 220px);
+		gap: clamp(40px, 15vw, 100px);
 		padding: 30px 110px;
 	}
 
 	h1 {
 		color: ${({ theme }) => theme.colors.grayMain};
-		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-size: ${({ theme }) => theme.font.fontSize.headline24};
 		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		line-height: normal;
-		letter-spacing: -0.48px;
-		margin-bottom: 16px;
+		letter-spacing: -0.72px;
 	}
 
 	h3 {
@@ -207,23 +198,23 @@ const Wrapper = styled.div`
 	}
 
 	p {
-		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		color: ${({ theme }) => theme.colors.grayMain};
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
 		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 		line-height: normal;
-		letter-spacing: -0.42px;
-		color: ${({ theme }) => theme.colors.grayMain};
+		letter-spacing: -0.48px;
 	}
 
 	span {
 		color: ${({ theme }) => theme.colors.gray400};
-		font-family: 'NanumSquare Neo OTF';
 		font-size: ${({ theme }) => theme.font.fontSize.body10};
 		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 		line-height: normal;
 		letter-spacing: -0.3px;
 		display: block;
+		font-family: 'NanumSquare Neo OTF';
 	}
 
 	img {
@@ -242,35 +233,38 @@ const Wrapper = styled.div`
 `;
 
 const Table = styled.table`
-	width: 100%;
-	border-collapse: collapse;
-	display: flex;
-	gap: 8px;
-	font-size: ${({ theme }) => theme.font.fontSize.body14};
-	font-style: normal;
-	line-height: normal;
-	letter-spacing: -0.42px;
-	margin-top: 27px;
+	margin: 32px 0px;
 
 	th {
-		width: 104px;
-		text-align: left;
-		vertical-align: top;
-		color: ${({ theme }) => theme.colors.gray400};
+		width: 580px;
+		padding: 8px;
+		align-items: center;
+		gap: 147px;
+		border-radius: 3px;
+		background: ${({ theme }) => theme.colors.gray200};
+		color: ${({ theme }) => theme.colors.gray500};
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
-		padding: 10px 0px;
+		line-height: normal;
+		letter-spacing: -0.42px;
 	}
 
 	td {
 		color: ${({ theme }) => theme.colors.grayMain};
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		text-align: center;
+		font-style: normal;
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
-		padding: 10px 0px;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
+		line-height: normal;
+		letter-spacing: -0.48px;
+		padding: 12px;
+		border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+		background: ${({ theme }) => theme.colors.grayWhite};
 
 		span {
 			display: block;
+
 			&:nth-child(1) {
 				width: 145px;
 			}
@@ -296,6 +290,9 @@ const MyTicketsWrapper = styled.div`
 	@media (min-width: 768px) {
 		padding: 100px 70px;
 	}
+	@media (max-width: 768px) {
+		flex-direction: column;
+	}
 `;
 
 const DetailWrapper = styled.div`
@@ -304,7 +301,13 @@ const DetailWrapper = styled.div`
 	flex-direction: column;
 
 	@media (min-width: 768px) {
-		max-width: 430px;
-		min-width: 360px;
+		max-width: 580px;
+		min-width: 480px;
 	}
+`;
+
+const Hr = styled.div`
+	border: none;
+	min-height: 1px;
+	background-color: ${({ theme }) => theme.colors.gray500};
 `;

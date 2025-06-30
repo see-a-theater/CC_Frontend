@@ -13,6 +13,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'NanumSquareNeo-Variable';
   }
 
   body {
@@ -21,8 +22,16 @@ export const GlobalStyle = createGlobalStyle`
     line-height: 1.4;
     letter-spacing: -0.025em; 
   }
+  button {
+    font-family: 'NanumSquareNeo-Variable';
+    font-style: normal;
+    line-height: 1.4;
+    letter-spacing: -0.025em; 
+  }
+
 
   p, h1, h2, h3 {
+      font-family: 'NanumSquareNeo-Variable';
     margin: 0;
     padding: 0;
   }
@@ -56,6 +65,9 @@ export const GlobalStyle = createGlobalStyle`
     	.bold {
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	}
+  .color-gray400 {
+    color: ${({ theme }) => theme.colors.gray400} !important;
+  }
   .btn-light {
     display: flex;
     height: 60px;
@@ -78,6 +90,25 @@ export const GlobalStyle = createGlobalStyle`
       background: ${({ theme }) => theme.colors.gray200};
       color: ${({ theme }) => theme.colors.gray400};
     }
+  }
+    .btn {
+    display: flex;
+    height: 60px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-outline, #E6E6E6);
+    
+    color: ${({ theme }) => theme.colors.pink600};
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: -0.48px;
+
   }
 
   .btn-primary {
@@ -109,7 +140,7 @@ export const GlobalStyle = createGlobalStyle`
       display: flex;
       flex-direction: row;
       width: 100%;
-      justify-content: center;
+
       color: ${({ theme }) => theme.colors.pink500} !important;
       font-size: ${({ theme }) => theme.font.fontSize.body14};
       font-style: normal;
@@ -117,11 +148,16 @@ export const GlobalStyle = createGlobalStyle`
       line-height: normal;
       letter-spacing: -0.42px;
       margin: 0;
-
+  @media (min-width: 768px) {
+  font-size: ${({ theme }) => theme.font.fontSize.title16};
+  }
       input[type='checkbox'] {
-        margin-left: 12px;
         width: 16px;
         height: 16px;
+          @media (min-width: 768px) {
+         width: 20px;
+        height: 20px;
+  }
         accent-color: ${({ theme }) => theme.colors.pink600};
         cursor: pointer;
       }

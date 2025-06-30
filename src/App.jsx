@@ -5,7 +5,6 @@ import FullScreenMenu from './components/FullScreenMenu';
 import Home from './pages/home/Home';
 import SmallTheaterCurrent from './pages/theater/SmallTheaterCurrent';
 import SmallTheaterRegister from './pages/register/SmallTheaterRegister';
-import TicketingPage from './pages/ticketingpage/TicketingPage.jsx';
 import Board from './pages/board/Board';
 import Gallery from './pages/gallery/Gallery';
 import Info from './pages/info/Info';
@@ -17,6 +16,24 @@ import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import TicketDetail from './pages/mypage/ticket/TicketDetail';
 import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
+import MyPageMenu from './pages/mypage/MypageMenu';
+import Notification from './pages/notification/Notification';
+import AboutCC from './pages/mypage/about-cc/AboutCC';
+import RegisterStep1 from './pages/register/RegisterStep1';
+import RegisterStep2 from './pages/register/RegisterStep2';
+import RegisterStep3 from './pages/register/RegisterStep3';
+import RegisterStep4 from './pages/register/RegisterStep4';
+import RegisterStep5 from './pages/register/RegisterStep5';
+import TicketCancelComplete from './pages/mypage/ticket/TicketCancelComplete';
+import TicketCancel from './pages/mypage/ticket/TicketCancel';
+import AccountConnection from './pages/mypage/account-connection/AccountConnection';
+import RegisteredPerformances from './pages/mypage/ADMIN/resigsterd-performances/RegisteredPerformances';
+import RegisteredDetail from './pages/mypage/ADMIN/resigsterd-performances/RegisteredDetail';
+import BookingHistory from './pages/mypage/booking-history/BookingHistory';
+import Admin from './pages/admin/Admin';
+import Dashboard from './pages/admin/Dashboard';
+import UploadPic from './pages/production/UploadPic';
+import ProdDetail from './pages/production/ProdDetail';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
 import UploadPic from './pages/production/UploadPic';
@@ -40,23 +57,53 @@ function App() {
 					path="/small-theater/current"
 					element={<SmallTheaterCurrent />}
 				/>
+				<Route path="/ticketing" element={<TicketingPage />} />
 				<Route
 					path="/small-theater/register"
 					element={<SmallTheaterRegister />}
-				/>
-				<Route path="/ticketing" element={<TicketingPage />} />
+				>
+					<Route path="step1" element={<RegisterStep1 />} />
+					<Route path="step2" element={<RegisterStep2 />} />
+					<Route path="step3" element={<RegisterStep3 />} />
+					<Route path="step4" element={<RegisterStep4 />} />
+					<Route path="step5" element={<RegisterStep5 />} />
+				</Route>
 				<Route path="/board" element={<Board />} />
 				<Route path="/gallery" element={<Gallery />} />
 				<Route path="/info" element={<Info />} />
-				<Route path="/mypage" element={<MyPage />} />
+
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/withdrawal" element={<Withdrawal />} />
 				<Route path="/menu" element={<FullScreenMenu />} />
-				<Route path="/mypage/tickets" element={<MyTickets />} />
-				<Route path="/mypage/tickets/1" element={<TicketDetail />} />
-				<Route path="/mypage/liked-theater" element={<LikedTheater />} />
+
+				<Route path="/mypage" element={<MyPage />}>
+					<Route index element={<MyPageMenu />} />
+					<Route path="tickets" element={<MyTickets />} />
+					<Route path="tickets/1" element={<TicketDetail />} />
+					<Route path="tickets/1/cancel" element={<TicketCancel />} />
+					<Route
+						path="tickets/1/cancel/complete"
+						element={<TicketCancelComplete />}
+					/>
+					<Route path="account-connection" element={<AccountConnection />} />
+					<Route path="liked-theater" element={<LikedTheater />} />
+					<Route path="about-cc" element={<AboutCC />} />
+					<Route
+						path="registered-performances"
+						element={<RegisteredPerformances />}
+					/>
+					<Route
+						path="registered-performances/1"
+						element={<RegisteredDetail />}
+					/>
+					<Route path="booking-history" element={<BookingHistory />} />
+				</Route>
 				<Route path="/plays" element={<Playlist />} />
 				<Route path="/detail" element={<Detail />} />
+				<Route path="/notification" element={<Notification />} />
+				<Route path="/admin" element={<Admin />}>
+					<Route path="dashboard" element={<Dashboard />} />
+				</Route>
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/1" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />

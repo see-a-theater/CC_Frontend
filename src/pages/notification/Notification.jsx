@@ -1,19 +1,19 @@
 import HomeIconMenu from '../../components/HomeIconMenu';
 import styled from 'styled-components';
-function Board() {
+
+function Notification() {
 	return (
 		<>
 			<SideMenuWrapper>
-				<HomeIconMenu isWeb={true} selectedMenu="board" />
+				<HomeIconMenu isWeb={true} selectedMenu="notification" />
 			</SideMenuWrapper>
 			<Wrapper>
-				<h1>게시판</h1>
+				<h1>알림</h1>
 			</Wrapper>
 		</>
 	);
 }
-export default Board;
-
+export default Notification;
 const SideMenuWrapper = styled.div`
 	width: 101px;
 	height: 100vh;
@@ -22,7 +22,7 @@ const SideMenuWrapper = styled.div`
 	left: 0;
 	flex-shrink: 0;
 	display: none;
-	background: ${({ theme }) => theme.colors.grayWhite};
+	background-color: ${({ theme }) => theme.colors.grayWhite};
 	@media (min-width: 768px) {
 		display: block;
 	}

@@ -36,6 +36,7 @@ const SideMenu = styled.div`
 	width: 160px;
 	border-right: 1px solid black;
 	padding: 26px 20px;
+
 	h1 {
 		color: #8f8e94;
 		font-size: 24px;
