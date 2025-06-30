@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ChevronUp from '@/assets/icons/ChevronUpWhite.svg?react';
 import ChevronDown from '@/assets/icons/ChevronDown.svg?react';
+import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
@@ -13,10 +14,14 @@ function Admin() {
 	const [openSubMenu, setOpenSubMenu] = useState(false);
 	const handleMenuClick = (menu, path) => {
 		setSelectedMenu(menu);
-		// navigate(path);
+		navigate(path);
 	};
 	return (
 		<>
+			<Top>
+				<h1>MUIT</h1>
+				<Search />
+			</Top>
 			<SideMenuWrapper>
 				<Menu>
 					<li
@@ -41,7 +46,6 @@ function Admin() {
 						className={selectedMenu === 'performances' ? 'selected' : ''}
 						onClick={() => {
 							setOpenSubMenu(!openSubMenu);
-							handleMenuClick('performances', '/admin/performances');
 						}}
 					>
 						소극장 공연 관리
@@ -62,7 +66,7 @@ function Admin() {
 								onClick={() =>
 									handleMenuClick(
 										'register-requests',
-										'/admin/performances/register-requests',
+										'/admin/register-requests',
 									)
 								}
 								className={
@@ -72,28 +76,21 @@ function Admin() {
 								등록 요청 관리
 							</SubLi>
 							<SubLi
-								onClick={() =>
-									handleMenuClick('tickets', '/admin/performances/tickets')
-								}
+								onClick={() => handleMenuClick('tickets', '/admin/tickets')}
 								className={selectedMenu === 'tickets' ? 'selected' : ''}
 							>
 								소극장 티켓 관리
 							</SubLi>
 							<SubLi
 								onClick={() =>
-									handleMenuClick(
-										'reservations',
-										'/admin/performances/reservations',
-									)
+									handleMenuClick('reservations', '/admin/reservations')
 								}
 								className={selectedMenu === 'reservations' ? 'selected' : ''}
 							>
 								예약 내역 관리
 							</SubLi>
 							<SubLi
-								onClick={() =>
-									handleMenuClick('refunds', '/admin/performances/refunds')
-								}
+								onClick={() => handleMenuClick('refunds', '/admin/refunds')}
 								className={selectedMenu === 'refunds' ? 'selected' : ''}
 							>
 								환불 내역 관리
@@ -115,7 +112,7 @@ function Admin() {
 					</li>
 					<li
 						className={selectedMenu === 'mypage' ? 'selected' : ''}
-						onClick={() => handleMenuClick('mypage', '/mypage')}
+						onClick={() => handleMenuClick('mypage', '/admin/mypage')}
 					>
 						마이페이지
 					</li>
@@ -128,17 +125,28 @@ function Admin() {
 	);
 }
 export default Admin;
+const Top = styled.div`
+	background: ${({ theme }) => theme.colors.grayWhite};
+	position: fixed;
+	display: flex;
+	width: 100%;
+	height: 108px;
+	z-index: 5;
+	padding: 24px 110px;
+	align-items: center;
+	justify-content: space-between;
+`;
 const SideMenuWrapper = styled.div`
 	width: 290px;
 	height: 100vh;
 	position: fixed;
-	padding: 27px 18px;
+	padding: 140px 42px 27px 18px;
 	top: 0;
 	left: 0;
 	flex-shrink: 0;
 	display: none;
 	background: #8f8e94;
-
+	z-index: 1;
 	@media (min-width: 768px) {
 		display: block;
 	}
@@ -151,6 +159,7 @@ const Wrapper = styled.div`
 
 	@media (min-width: 768px) {
 		padding-left: 290px;
+		padding-top: 108px;
 	}
 `;
 

@@ -20,7 +20,17 @@ import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
 import UploadPic from './pages/production/UploadPic';
-
+import Admin from './pages/admin/Admin.jsx';
+import Dashboard from './pages/admin/Dashboard.jsx';
+import RegistrationManagement from './pages/admin/register-request/RegisterRequests.jsx';
+import RegisterRequests from './pages/admin/register-request/RegisterRequests.jsx';
+import RegisterRequestDetail from './pages/admin/register-request/RegisterRequestDetail.jsx';
+import TicketManagement from './pages/admin/tickets/TicketManagement.jsx';
+import ReservationManagement from './pages/admin/reservation/ReservationManagement.jsx';
+import RefundManagement from './pages/admin/refund/RefundManagement.jsx';
+import MyPageManagement from './pages/admin/mypage/MypageManagement.jsx';
+import TicketManagementDetail from './pages/admin/tickets/TicketManagementDetail.jsx';
+import ReservationManagementDetail from './pages/admin/reservation/ReservationManagementDetail.jsx';
 function App() {
 	return (
 		<>
@@ -50,6 +60,23 @@ function App() {
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/1" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
+				<Route path="admin" element={<Admin />}>
+					<Route path="dashboard" element={<Dashboard />} />
+					<Route path="register-requests" element={<RegisterRequests />} />
+					<Route
+						path="register-requests/1"
+						element={<RegisterRequestDetail />}
+					/>
+					<Route path="tickets" element={<TicketManagement />} />
+					<Route path="tickets/1" element={<TicketManagementDetail />} />
+					<Route path="reservations" element={<ReservationManagement />} />
+					<Route
+						path="reservations/1"
+						element={<ReservationManagementDetail />}
+					/>
+					<Route path="refunds" element={<RefundManagement />} />
+					<Route path="mypage" element={<MyPageManagement />} />
+				</Route>
 			</Routes>
 		</>
 	);
