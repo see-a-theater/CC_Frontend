@@ -1,6 +1,8 @@
 import ImageUploadBox from '../../components/ImageUploadBox.jsx';
 import { RegisterWrapper } from './Register.style.js';
-function RegisterStep2({ onNext }) {
+import { useOutletContext } from 'react-router-dom';
+function RegisterStep2() {
+	const { nextStep } = useOutletContext();
 	return (
 		<RegisterWrapper>
 			<form>
@@ -36,7 +38,7 @@ function RegisterStep2({ onNext }) {
 				style={{ marginTop: '44px' }}
 				type="submit"
 				className="btn-primary"
-				onClick={onNext}
+				onClick={nextStep}
 			>
 				다음
 			</button>

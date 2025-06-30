@@ -2,10 +2,11 @@ import ImageUploadBox from '../../components/ImageUploadBox.jsx';
 import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
 import { useState } from 'react';
-function RegisterStep3({ onNext }) {
+import { useOutletContext } from 'react-router-dom';
+function RegisterStep3() {
 	const [actors, setActors] = useState([{ id: Date.now() }]);
 	const [staffs, setStaffs] = useState([{ id: Date.now() + 1 }]); // 다른 id
-
+	const { nextStep } = useOutletContext();
 	const addActor = () => {
 		setActors((prev) => [...prev, { id: Date.now() }]);
 	};
@@ -72,7 +73,7 @@ function RegisterStep3({ onNext }) {
 				style={{ marginTop: '44px' }}
 				type="submit"
 				className="btn-primary"
-				onClick={onNext}
+				onClick={nextStep}
 			>
 				다음
 			</button>
@@ -101,11 +102,11 @@ const DirectorWrapper = styled.div`
 	flex-direction: row;
 	gap: 16px;
 	& .input:first-child {
-		flex: 1; /* 역할 */
+		flex: 1;
 	}
 
 	& .input:last-child {
-		flex: 2; /* 이름 */
+		flex: 2;
 	}
 `;
 
