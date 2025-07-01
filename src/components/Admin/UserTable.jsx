@@ -18,6 +18,8 @@ const UserTable = ({
 	const handleDetailClick = (link, id) => {
 		navigate(link+id);
 	};
+	//현재 페이지에서 링크, id를 받아오는 형식
+	//나중에 데이터 확인 후 사용자/사진첩 관리에 따라서 내부에서 링크 설정 가능하게 할 듯 
 
 	return (
 		<Wrapper>
