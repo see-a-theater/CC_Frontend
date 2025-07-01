@@ -23,7 +23,10 @@ import UploadPic from './pages/production/UploadPic';
 import Dashboard from './pages/admin/Dashboard.jsx';
 import Users from './pages/admin/Users.jsx';
 import AdminGallery from './pages/admin/AdminGallery.jsx';
+import AdminPlays from './pages/admin/AdminPlays.jsx';
 import UsersDetail from './pages/admin/UsersDetail.jsx';
+import GalleryDetail from './pages/admin/GalleryDetail.jsx';
+import PlaysDetail from './pages/admin/PlaysDetail.jsx';
 
 function App() {
 	return (
@@ -58,7 +61,11 @@ function App() {
 				<Route path="/admin" element={<Dashboard />} />
 				<Route path="/admin/users" element={<Users />} />
 				<Route path="/admin/gallery" element={<AdminGallery />} />
-				<Route path="/admin/users/:userId" element={<UsersDetail />} />w
+				<Route path="/admin/plays" element={<AdminPlays />} />
+				<Route path="/admin/users/:userId" element={<UsersDetail />} />
+				<Route path="/admin/gallery/:galleryId" element={<GalleryDetail />} />
+				<Route path="/admin/plays/:playId" element={<PlaysDetail />} />
+
 			</Routes>
 		</>
 	);
