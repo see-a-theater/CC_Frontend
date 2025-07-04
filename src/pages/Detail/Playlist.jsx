@@ -10,6 +10,8 @@ import Ticket from '@/assets/icons/Ticket.svg?react';
 import SearchBar from '@/components/SearchBar';
 import HomeIconMenu from '@/components/HomeIconMenu';
 
+import useCustomFetch from '@/utils/hooks/useAxios';
+
 import SamplePoster from '@/assets/mock/images/실종.png';
 
 function Playlist() {
@@ -41,6 +43,13 @@ function Playlist() {
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
+
+	const { data: todayData, error, loading } = useCustomFetch(`/amateurs/today`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', todayData);
+	// 아직 api에 데이터가 없어 mock으로 대체
 
 	return (
 		<Container>

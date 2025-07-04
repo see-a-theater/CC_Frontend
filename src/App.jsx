@@ -53,9 +53,9 @@ function App() {
 				<Route path="/mypage/tickets/1" element={<TicketDetail />} />
 				<Route path="/mypage/liked-theater" element={<LikedTheater />} />
 				<Route path="/plays" element={<Playlist />} />
-				<Route path="/detail" element={<Detail />} />
+				<Route path="/plays/detail/:playId" element={<Detail />} />
 				<Route path="/production" element={<Production />} />
-				<Route path="/production/1" element={<ProdDetail />} />
+				<Route path="/production/:prodId" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
 
 				<Route path="/admin" element={<Dashboard />} />
