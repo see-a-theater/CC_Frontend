@@ -17,6 +17,7 @@ function UploadPic() {
 	const [selected, setSelected] = useState(null);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [dateRange, setDateRange] = useState(null);
 
 	const baseOptions = data.map((item) => ({
 		value: `${item.title}-${item.date}`,
@@ -45,6 +46,11 @@ function UploadPic() {
 		setSelected(option);
 	};
 
+	const handleDateChange = (range) => {
+		setDateRange(range);
+		console.log('선택된 날짜:', range);
+	};
+
 	return (
 		<>
 			<Mobile>
@@ -64,7 +70,15 @@ function UploadPic() {
 					<ImageUploadBox size="362px" aspect-ratio="1" />
 					<p className="add">공연에서 있었던 이야기를 작성해 주세요</p>
 				</Content>
-				{showModal && <Modal onClose={() => setShowModal(false)} />}
+				{showModal && (
+					<Modal
+						onClose={() => setShowModal(false)}
+						onDateSubmit={handleDateChange}
+					/>
+				)}
+				{dateRange && (
+					console.log('선택된 날짜:', dateRange)
+				)}
 			</Mobile>
 
 			<Web>
@@ -88,7 +102,7 @@ function UploadPic() {
 						<ImageUploadBox size="362px" aspect-ratio="1" />
 						<p className="add">공연에서 있었던 이야기를 작성해 주세요</p>
 					</Content>
-					{showModal && <Modal onClose={() => setShowModal(false)} />}
+					{/*{showModal && <Modal onClose={() => setShowModal(false)} />}*/}
 				</Container>
 			</Web>
 		</>
@@ -98,6 +112,9 @@ function UploadPic() {
 export default UploadPic;
 
 const Mobile = styled.div`
+	width: 100vw;
+	height: 100vh;
+
 	@media (min-width: 768px) {
 		display: none;
 	}

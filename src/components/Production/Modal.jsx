@@ -1,18 +1,27 @@
 import styled from 'styled-components';
-import MyCalendar from '@/components/Calendar';
+import CalendarPeriod from '@/components/CalendarPeriod';
+
 import { useState } from 'react';
 
-function Modal() {
+function Modal({ onClose, onDateSubmit }) {
 	const [inputValue, setInputValue] = useState('');
+	const [selectedRange, setSelectedRange] = useState(null);
 	const [step, setStep] = useState('input');
 
 	const handleNext = () => {
 		setStep('calendar');
 	};
+	const handleDateChange = (range) => {
+		setSelectedRange(range);
+	};
+	const handleSubmit = () => {
+		onDateSubmit(selectedRange);
+		onClose();
+	};
 
 	return (
 		<Backdrop>
-			<ModalBox>
+			<ModalBox step={step}>
 				{step === 'input' ? (
 					<>
 						<Top>
@@ -29,7 +38,8 @@ function Modal() {
 					</>
 				) : (
 					<>
-						<MyCalendar />
+						<CalendarPeriod onChange={handleDateChange} />
+						<button onClick={handleSubmit}>완료</button>
 					</>
 				)}
 			</ModalBox>
@@ -54,13 +64,15 @@ const Backdrop = styled.div`
 const ModalBox = styled.div`
 	width: 100%;
 	aspect-ratio: 1;
-
-	background: ${({ theme }) => theme.colors.gray200};
-	padding: 28px 20px;
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+
+	background: ${({ step, theme }) =>
+		step === 'calendar' ? theme.colors.grayWhite : theme.colors.gray200};
+
+	padding: ${({ step }) => (step === 'calendar' ? '0' : '28px 20px')};
 `;
 const Top = styled.div`
 	display: flex;
