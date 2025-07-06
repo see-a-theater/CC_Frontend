@@ -44,12 +44,7 @@ function Dashboard() {
 
 	return (
 		<Container>
-			<Top>
-				<Search />
-			</Top>
-
 			<Content>
-				<Sidebar />
 				<BoardArea>
 					<ChartWrapper>
 						<SectionTitle>통계 {'>'}</SectionTitle>
@@ -87,25 +82,12 @@ function Dashboard() {
 
 export default Dashboard;
 
-const Container = styled.div``;
-const Top = styled.div`
-	height: 108px;
-	display: flex;
-	justify-content: flex-end;
-	padding: 40px 110px;
+const Container = styled.div`
+	width: 100%;
 `;
 
 const Content = styled.div``;
-const Sidebar = styled.div`
-	//추후 컴포넌트로 변경 후 삭제
-	width: 290px;
-	height: 100vh;
-	position: fixed;
-	padding: 27px 18px;
-	background: #8f8e94;
-`;
 const BoardArea = styled.div`
-	margin-left: 290px;
 	padding: 50px;
 	display: flex;
 	gap: 90px;
