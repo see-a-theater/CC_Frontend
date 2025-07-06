@@ -5,6 +5,7 @@ import FullScreenMenu from './components/FullScreenMenu';
 import Home from './pages/home/Home';
 import SmallTheaterCurrent from './pages/theater/SmallTheaterCurrent';
 import SmallTheaterRegister from './pages/register/SmallTheaterRegister';
+import TicketingPage from './pages/ticketingpage/TicketingPage.jsx';
 import Board from './pages/board/Board';
 import Gallery from './pages/gallery/Gallery';
 import Info from './pages/info/Info';
