@@ -4,7 +4,7 @@ import Staff from '@/components/Detail/Staff';
 import profile from '@/assets/mock/images/프로필.png';
 import styled from 'styled-components';
 
-function Cast() {
+function Cast(props) {
 	const mockdata = [
 		{
 			path: profile,
@@ -45,17 +45,23 @@ function Cast() {
 			name: '권혁진, 이보미',
 		},
 	];
+	
+	console.log('props:', props);
 
 	return (
 		<Container>
 			<Content>
 				<Title>극단</Title>
+				{/*props?.result.casting.actorName*/}
 				<p>홍익극연구회</p>
 			</Content>
 
 			<Content>
 				<Title>출연진</Title>
 				<Casts>
+					{/*props?.result.casting.castingImageUrl*/}
+					{/*props?.result.casting.actorName*/}
+					{/*props?.result.casting.castingName*/}
 					{mockdata.map((data) => (
 						<CastCard
 							key={data.id}

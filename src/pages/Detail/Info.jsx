@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 import location from '@/assets/icons/location.svg';
 import time from '@/assets/icons/time.svg';
@@ -14,6 +16,8 @@ import Perform from './InfoArea/Perform';
 import Gallery from './InfoArea/Gallery';
 
 function Info() {
+	const { playId } = useParams();
+
 	const mockInfo = [
 		{
 			icon: location,
@@ -65,6 +69,18 @@ function Info() {
 		{ label: '구덩이' },
 	];
 
+	const {
+		data: playData,
+		error,
+		loading,
+	} = useCustomFetch(`/amateurs/${playId}`);
+	// 현재 404, 존재하지 않는 뮤지컬로 뜸 (데이터 없는 것으로 추정)
+	// 아직 api에 데이터가 없어 mock으로 대체
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', playData);
+
 	const [activeTab, setActiveTab] = useState('perform');
 
 	return (
@@ -75,7 +91,9 @@ function Info() {
 					<p className="title">실종</p>
 				</Top>
 				<img src={poster} height={220} alt="포스터 이미지" className="poster" />
+				{/*playData?.result.posterImageUrl*/}
 				<h3 className="title">실종</h3>
+				{/*playData?.result.title*/}
 				<TagList>
 					{mockGenre.map((genre, index) => (
 						<Tag key={index}>{genre.label}</Tag>
@@ -83,6 +101,9 @@ function Info() {
 				</TagList>
 
 				<InfoList>
+					{/*playData?.result.place*/}
+					{/*playData?.result.notice.timeInfo*/}
+					{/*playData?.result.tickets.price*/}
 					{mockInfo.map((section, idx) => (
 						<InfoBlock key={idx}>
 							<IconWrapper>
@@ -231,9 +252,9 @@ function Info() {
 						</TabBar>
 
 						<ContentArea>
-							{activeTab === 'perform' && <Perform />}
-							{activeTab === 'cast' && <Cast />}
-							{activeTab === 'gallery' && <Gallery />}
+							{activeTab === 'perform' && <Perform data={playData}/>}
+							{activeTab === 'cast' && <Cast data={playData}/>}
+							{activeTab === 'gallery' && <Gallery data={playData}/>}
 						</ContentArea>
 					</WebLeft>
 

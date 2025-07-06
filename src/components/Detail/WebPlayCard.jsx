@@ -37,8 +37,6 @@ const TextArea = styled.div`
 const Text = styled.div`
 	color: ${({ theme }) => theme.colors.grayWhite};
 
-	//스타일링 적용 안 됨, 수정 필요
-
 	.Title {
 		font-size: ${({ theme }) => theme.font.fontSize.headline24};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};

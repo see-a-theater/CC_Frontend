@@ -11,7 +11,22 @@ function ProdPlayCard({ data }) {
 			<Title>{data.title}</Title>
 			<Location>{data.location}</Location>
 
-			<Date>{data.date}</Date>
+			<Date>
+				{' '}
+				<p>
+					{data?.date
+						? (() => {
+								const [before, after] = data.date.split('~');
+								return (
+									<>
+										{before.trim()} ~<br />
+										{after.trim()}
+									</>
+								);
+							})()
+						: null}
+				</p>
+			</Date>
 		</Container>
 	);
 }

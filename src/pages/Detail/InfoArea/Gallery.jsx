@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import Masonry from '@/components/Masonry';
 
-function Gallery() {
+function Gallery(props) {
 	const imageList = [
 		{ src: image1, text: '실종' },
 		{ src: image2, text: '카포네 트릴로지' },
@@ -16,6 +16,7 @@ function Gallery() {
 		{ src: image4, text: '실종' },
 		{ src: image5, text: '킬링시저' },
 	];
+	console.log('id:', props?.result.amateurShowId);
 
 	return (
 		<Container>

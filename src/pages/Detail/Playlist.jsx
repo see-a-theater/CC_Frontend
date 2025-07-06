@@ -8,6 +8,9 @@ import WebPlayCard from '@/components/Detail/WebPlayCard';
 import WebListCard from '@/components/Detail/WebListCard';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import SearchBar from '@/components/SearchBar';
+import HomeIconMenu from '@/components/HomeIconMenu';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 import SamplePoster from '@/assets/mock/images/실종.png';
 
@@ -18,21 +21,21 @@ function Playlist() {
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 1,
 		},
 		{
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 2,
 		},
 		{
 			src: SamplePoster,
 			title: '실종',
 			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			id: 3,
 		},
 	];
@@ -41,10 +44,19 @@ function Playlist() {
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
+	const { data: todayData, error, loading } = useCustomFetch(`/amateurs/today`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', todayData);
+	// 아직 api에 데이터가 없어 mock으로 대체
+
 	return (
 		<Container>
 			<Web>
-				<Sidebar />
+				<SideMenuWrapper>
+					<HomeIconMenu isWeb={true} />
+				</SideMenuWrapper>
 				<WebContent>
 					<SearchBar />
 					<WebHot>
@@ -99,9 +111,9 @@ function Playlist() {
 				<Now>
 					<h3 className="onGoing"> 현재 진행중 </h3>
 					<MappingArea>
-						<NowShowing />
-						<NowShowing />
-						<NowShowing />
+						{mockList.map((data) => (
+							<NowShowing data={data} key={data.id} />
+						))}
 					</MappingArea>
 				</Now>
 				{token && (
@@ -134,13 +146,13 @@ const Web = styled.div`
 
 	@media (min-width: 768px) {
 		display: flex;
-
 		width: 100%;
 	}
 `;
 const WebContent = styled.div`
 	display: flex;
 	padding: 60px 100px 100px 60px;
+	margin-left: 100px;
 	flex-direction: column;
 	gap: 40px;
 
@@ -165,14 +177,18 @@ const BoxWrapper = styled.div`
 	display: flex;
 	gap: 80px;
 `;
-const Sidebar = styled.div`
-	display: block;
-	flex-shrink: 0;
-	width: 100px;
+const SideMenuWrapper = styled.div`
+	width: 101px;
 	height: 100vh;
-	background-color: ${({ theme }) => theme.colors.gray200};
-	position: sticky;
+	position: fixed;
 	top: 0;
+	left: 0;
+	flex-shrink: 0;
+	display: none;
+	background-color: white;
+	@media (min-width: 768px) {
+		display: block;
+	}
 `;
 
 const Mobile = styled.div`

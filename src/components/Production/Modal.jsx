@@ -1,22 +1,47 @@
 import styled from 'styled-components';
+import CalendarPeriod from '@/components/CalendarPeriod';
+
 import { useState } from 'react';
 
-function Modal() {
+function Modal({ onClose, onDateSubmit }) {
 	const [inputValue, setInputValue] = useState('');
+	const [selectedRange, setSelectedRange] = useState(null);
+	const [step, setStep] = useState('input');
+
+	const handleNext = () => {
+		setStep('calendar');
+	};
+	const handleDateChange = (range) => {
+		setSelectedRange(range);
+	};
+	const handleSubmit = () => {
+		onDateSubmit(selectedRange);
+		onClose();
+	};
 
 	return (
 		<Backdrop>
-			<ModalBox>
-				<Top>
-					<h3>공연 이름 입력</h3>
-					<p>다음</p>
-				</Top>
+			<ModalBox step={step}>
+				{step === 'input' ? (
+					<>
+						<Top>
+							<h3>공연 이름 입력</h3>
+							<Button onClick={handleNext}>다음</Button>
+						</Top>
 
-				<Input
-					type="text"
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-				/>
+						<Input
+							type="text"
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							placeholder="공연 이름을 입력하세요"
+						/>
+					</>
+				) : (
+					<>
+						<CalendarPeriod onChange={handleDateChange} />
+						<button onClick={handleSubmit}>완료</button>
+					</>
+				)}
 			</ModalBox>
 		</Backdrop>
 	);
@@ -39,13 +64,15 @@ const Backdrop = styled.div`
 const ModalBox = styled.div`
 	width: 100%;
 	aspect-ratio: 1;
-
-	background: ${({ theme }) => theme.colors.gray200};
-	padding: 28px 20px;
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+
+	background: ${({ step, theme }) =>
+		step === 'calendar' ? theme.colors.grayWhite : theme.colors.gray200};
+
+	padding: ${({ step }) => (step === 'calendar' ? '0' : '28px 20px')};
 `;
 const Top = styled.div`
 	display: flex;
@@ -65,8 +92,12 @@ const Input = styled.input`
 	border: none;
 	background: ${({ theme }) => theme.colors.grayWhite};
 `;
-const Actions = styled.div`
-	display: flex;
-	justify-content: flex-end;
-	gap: 10px;
+const Button = styled.p`
+	cursor: pointer;
+	color: #007bff;
+	user-select: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
 `;

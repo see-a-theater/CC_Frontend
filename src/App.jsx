@@ -37,6 +37,7 @@ import ProdDetail from './pages/production/ProdDetail';
 import Production from './pages/production/Production';
 import ProdDetail from './pages/production/ProdDetail';
 import UploadPic from './pages/production/UploadPic';
+
 import Admin from './pages/admin/Admin.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 import RegistrationManagement from './pages/admin/register-request/RegisterRequests.jsx';
@@ -48,6 +49,13 @@ import RefundManagement from './pages/admin/refund/RefundManagement.jsx';
 import MyPageManagement from './pages/admin/mypage/MypageManagement.jsx';
 import TicketManagementDetail from './pages/admin/tickets/TicketManagementDetail.jsx';
 import ReservationManagementDetail from './pages/admin/reservation/ReservationManagementDetail.jsx';
+import Users from './pages/admin/Users.jsx';
+import AdminGallery from './pages/admin/AdminGallery.jsx';
+import AdminPlays from './pages/admin/AdminPlays.jsx';
+import UsersDetail from './pages/admin/UsersDetail.jsx';
+import GalleryDetail from './pages/admin/GalleryDetail.jsx';
+import PlaysDetail from './pages/admin/PlaysDetail.jsx';
+
 function App() {
 	return (
 		<>
@@ -99,16 +107,22 @@ function App() {
 					<Route path="booking-history" element={<BookingHistory />} />
 				</Route>
 				<Route path="/plays" element={<Playlist />} />
-				<Route path="/detail" element={<Detail />} />
+
 				<Route path="/notification" element={<Notification />} />
-				<Route path="/admin" element={<Admin />}>
-					<Route path="dashboard" element={<Dashboard />} />
-				</Route>
+				<Route path="/plays/detail/:playId" element={<Detail />} />
+
 				<Route path="/production" element={<Production />} />
-				<Route path="/production/1" element={<ProdDetail />} />
+				<Route path="/production/:prodId" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
+          
 				<Route path="admin" element={<Admin />}>
 					<Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="gallery" element={<AdminGallery />} />
+          <Route path="plays" element={<AdminPlays />} />
+          <Route path="users/:userId" element={<UsersDetail />} />
+          <Route path="gallery/:galleryId" element={<GalleryDetail />} />
+          <Route path="plays/:playId" element={<PlaysDetail />} />            
 					<Route path="register-requests" element={<RegisterRequests />} />
 					<Route
 						path="register-requests/1"
@@ -124,6 +138,7 @@ function App() {
 					<Route path="refunds" element={<RefundManagement />} />
 					<Route path="mypage" element={<MyPageManagement />} />
 				</Route>
+
 			</Routes>
 		</>
 	);
