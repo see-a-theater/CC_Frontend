@@ -1,5 +1,8 @@
 import { RegisterWrapper } from './Register.style.js';
-function RegisterStep5({ onNext }) {
+import { useNavigate, useOutletContext } from 'react-router-dom';
+function RegisterStep5() {
+	const { nextStep } = useOutletContext();
+	const navigate = useNavigate();
 	return (
 		<RegisterWrapper>
 			<div
@@ -13,7 +16,11 @@ function RegisterStep5({ onNext }) {
 				<h1>등록 완료!</h1>
 			</div>
 
-			<button type="submit" className="btn-primary" onClick={onNext}>
+			<button
+				type="submit"
+				className="btn-primary"
+				onClick={() => navigate('/mypage')}
+			>
 				마이페이지 바로가기
 			</button>
 		</RegisterWrapper>

@@ -1,5 +1,7 @@
 import { RegisterWrapper } from './Register.style.js';
-function RegisterStep4({ onNext }) {
+import { useOutletContext } from 'react-router-dom';
+function RegisterStep4() {
+	const { nextStep } = useOutletContext();
 	return (
 		<RegisterWrapper>
 			<form style={{ height: '100%', justifyContent: 'space-between' }}>
@@ -35,7 +37,7 @@ function RegisterStep4({ onNext }) {
 				style={{ marginTop: '44px' }}
 				type="submit"
 				className="btn-primary"
-				onClick={onNext}
+				onClick={nextStep}
 			>
 				다음
 			</button>
