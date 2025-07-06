@@ -8,9 +8,11 @@ import {
   SearchNotice
 } from '../styles/commonStyles';
 import SearchBlack from '../components/Icons/SearchBlack.svg';
+import useResponsive from '../hooks/useResponsive'
 
 const SearchBar = ({ onSearch, showNotice = true }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const isPC = useResponsive();
 
   const handleSearch = () => {
     if (onSearch) {
@@ -27,13 +29,14 @@ const SearchBar = ({ onSearch, showNotice = true }) => {
   return (
     <SearchContainer>
       <SearchBox>
+        {isPC && ( <SearchIcon onClick={handleSearch} src={SearchBlack} /> )}
         <SearchInput
           placeholder="원하시는 내용을 검색하세요"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyPress={handleKeyPress}
         />
-        <SearchIcon onClick={handleSearch} src={SearchBlack} />
+        {!isPC && ( <SearchIcon onClick={handleSearch} src={SearchBlack} /> )}
       </SearchBox>
       {showNotice && (
         <SearchNotice>

@@ -16,18 +16,22 @@ import {
   ImagePreviewContainer,
   ImagePreview,
   ImageDeleteButton,
+  RegisterBtnContainer,
+  RegisterButton,
 } from '../styles/formStyles';
-import Header from '../components/Header';
+import Header from '../components/BoardHeader';
 import Modal from '../components/Modal';
 import useModal from '../hooks/useModal';
 import usePosts from '../hooks/usePosts';
 import Camera from '../components/Icons/Camera.svg';
+import useResponsive from '../hooks/useResponsive'
 
 const PostCreatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { addPost } = usePosts();
-  
+  const isPC = useResponsive();
+
   // URL에서 카테고리 정보 가져오기 (플로팅 버튼에서 전달받음)
   const searchParams = new URLSearchParams(location.search);
   const category = searchParams.get('category') || 'general';
@@ -164,7 +168,7 @@ const PostCreatePage = () => {
       const createdPost = await addPost(newPost);
       
       // 작성한 게시글 상세 페이지로 이동
-      navigate(`/board/post/${createdPost.id}`);
+      navigate(`/board/create/success?postId=${createdPost.id}`);
     } catch (error) {
       console.error('게시글 작성 실패:', error);
       // 에러 처리 (토스트 메시지 등)
@@ -199,26 +203,56 @@ const PostCreatePage = () => {
 
   return (
     <Container>
-      <Header
-        title="create"
-        showBack={true}
-        onBack={handleBack}
-        onComplete={handleSubmit}
-        completeDisabled={!isFormValid}
-      />
+      {!isPC && (
+        <Header
+          title="create"
+          showBack={true}
+          onBack={handleBack}
+          onComplete={handleSubmit}
+          completeDisabled={!isFormValid}
+        />
+      )}
 
       <ContentArea>
         <FormContainer>
           <FormField>
-            <TitleInput
-              value={formData.title}
-              onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="제목을 입력하세요"
-              maxLength={100}
-            />
+            <RegisterBtnContainer>
+              <TitleInput
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                placeholder="제목을 입력하세요"
+                maxLength={100}
+              />
+              {isPC && ( <RegisterButton disabled={!isFormValid} onClick={isFormValid ? handleSubmit : undefined} >등록</RegisterButton> )}
+            </RegisterBtnContainer>
           </FormField>
 
           <CategoryLabel>{getCategoryDisplayName(formData.category)}</CategoryLabel>
+          {isPC && (
+            <div style={{display: 'flex', justifyContent: 'end'}}>
+              <ImageAddButton disabled={formData.images.length >= 5}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageAdd}
+                  style={{ display: 'none' }}
+                  id="image-upload"
+                  disabled={formData.images.length >= 5}
+                />
+                <label htmlFor="image-upload" style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  cursor: formData.images.length >= 5 ? 'not-allowed' : 'pointer',
+                  opacity: formData.images.length >= 5 ? 0.5 : 1
+                }}>
+                  <ImageAddIcon src={Camera} alt="사진 추가" />
+                  <ImageAddText>사진</ImageAddText>
+                </label>
+              </ImageAddButton>
+            </div>
+          )}
 
           <FormField>
             <ContentTextarea
@@ -230,27 +264,29 @@ const PostCreatePage = () => {
           </FormField>
 
           <ImageSection>
-            <ImageAddButton disabled={formData.images.length >= 5}>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageAdd}
-                style={{ display: 'none' }}
-                id="image-upload"
-                disabled={formData.images.length >= 5}
-              />
-              <label htmlFor="image-upload" style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                cursor: formData.images.length >= 5 ? 'not-allowed' : 'pointer',
-                opacity: formData.images.length >= 5 ? 0.5 : 1
-              }}>
-                <ImageAddIcon src={Camera} alt="사진 추가" />
-                <ImageAddText>사진</ImageAddText>
-              </label>
-            </ImageAddButton>
+            {!isPC && ( 
+              <ImageAddButton disabled={formData.images.length >= 5}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageAdd}
+                  style={{ display: 'none' }}
+                  id="image-upload"
+                  disabled={formData.images.length >= 5}
+                />
+                <label htmlFor="image-upload" style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  cursor: formData.images.length >= 5 ? 'not-allowed' : 'pointer',
+                  opacity: formData.images.length >= 5 ? 0.5 : 1
+                }}>
+                  <ImageAddIcon src={Camera} alt="사진 추가" />
+                  <ImageAddText>사진</ImageAddText>
+                </label>
+              </ImageAddButton>
+            )}
             
             {formData.images.length > 0 && (
               <ImagePreviewContainer>

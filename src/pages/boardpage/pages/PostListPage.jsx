@@ -4,33 +4,33 @@ import {
   Container,
   ContentArea,
   LoadingSpinner,
-  EmptyState
+  EmptyState,
+  LoadMoreButton,
+  LoadMoreContainer 
 } from '../styles/commonStyles';
-import Header from '../components/Header';
+import Header from '../components/BoardHeader';
 import TabBar from '../components/TabBar';
 import SearchBar from '../components/SearchBar';
 import PostItem from '../components/PostItem';
 import FloatingButton from '../components/FloatingButton';
 import usePosts from '../hooks/usePosts';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
+import useResponsive from '../hooks/useResponsive'
 
 const PostListPage = () => {
   const [activeTab, setActiveTab] = useState('general');
+  const isPC = useResponsive();
+
   const {
-    posts,
-    loading,
-    hasMore,
-    userType,
-    canCreatePost,
-    loadPosts,
-    loadMore,
-    setPage
+    posts, loading, hasMore, userType,
+    canCreatePost, loadPosts, loadMore, setPage, loadMoreForPC, hasMoreForPC
   } = usePosts();
 
   const { lastElementRef } = useInfiniteScroll(
     () => loadMore(activeTab),
     hasMore,
-    loading
+    loading,
+    !isPC
   );
 
   useEffect(() => {
@@ -47,19 +47,26 @@ const PostListPage = () => {
     // 검색 기능 구현
   };
 
+  const handleLoadMoreForPC = () => {
+    loadMoreForPC();
+  };
+
   const showFloatingButton = canCreatePost(activeTab);
 
   return (
     <Container>
-      <Header 
-        title="board" 
-        onMenuClick={() => console.log('메뉴 클릭')}
-        onSearchClick={() => console.log('검색 클릭')}
-      />
+      {!isPC && (
+        <Header 
+          title="board" 
+          onMenuClick={() => console.log('메뉴 클릭')}
+          onSearchClick={() => console.log('검색 클릭')}
+        />
+      )}
       
       <TabBar 
         activeTab={activeTab} 
         onTabChange={handleTabChange} 
+        showFloatingButton={showFloatingButton}
       />
       
       <SearchBar onSearch={handleSearch} />
@@ -77,9 +84,17 @@ const PostListPage = () => {
                 key={post.id}
                 post={post}
                 isLast={index === posts.length - 1}
-                lastElementRef={lastElementRef}
+                lastElementRef={!isPC ? lastElementRef : null}
               />
             ))}
+
+            {isPC && hasMoreForPC() && !loading && (
+              <LoadMoreContainer>
+                <LoadMoreButton onClick={handleLoadMoreForPC}>
+                  게시글 더보기
+                </LoadMoreButton>
+              </LoadMoreContainer>
+            )}
             
             {loading && (
               <LoadingSpinner>
@@ -90,10 +105,12 @@ const PostListPage = () => {
         )}
       </ContentArea>
       
-      <FloatingButton 
-        show={showFloatingButton} 
-        category={activeTab} 
-      />
+      {!isPC && (
+        <FloatingButton 
+          show={showFloatingButton} 
+          category={activeTab} 
+        />
+      )}
     </Container>
   );
 };

@@ -3,40 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container } from '../styles/commonStyles';
 import {
-  ContentArea,
-  PostDetailContainer,
-  PostHeader,
-  PostTitle,
-  PostContent,
-  PostMeta,
-  PostAuthor,
-  PostDate,
-  PostActions,
-  LikeButton,
-  LikeIcon,
-  ImageContainer,
-  PostImage,
-  ImagePagination,
-  PaginationDot,
-  CommentsSection,
-  CommentsSectionTitle,
-  CommentItem,
-  CommentHeader,
-  CommentAuthor,
-  CommentDate,
-  CommentContent,
-  CommentButton,
-  CommentIcon,
-  CommentLikeInfo,
-  ReplyIndicator,
-  CommentInput,
-  CommentInputContainer,
-  CommentSubmitButton,
-  CommentHeaderActions,
-  CommentActionButton,
+  ContentArea, PostDetailContainer, PostHeader, PostTitle,
+  PostContent, PostMeta, PostAuthor, PostDate,
+  PostActions, LikeButton, LikeIcon, ImageContainer,
+  PostImage, ImagePagination, PaginationDot, CommentsSection,
+  CommentsSectionTitle, CommentItem, CommentHeader, CommentAuthor,
+  CommentDate, CommentContent, CommentButton, CommentIcon,
+  CommentLikeInfo, ReplyIndicator, CommentInput, CommentInputContainer,
+  CommentSubmitButton, CommentHeaderActions, CommentActionButton,
   Divider,
 } from '../styles/postDetailStyles';
-import Header from '../components/Header';
+import Header from '../components/BoardHeader';
 import ActionSheet from '../components/ActionSheet';
 import Modal from '../components/Modal';
 import useModal from '../hooks/useModal';
@@ -47,6 +24,8 @@ import Comment from '../components/Icons/Comment.svg';
 import Edit from '../components/Icons/Edit.svg';
 import Delete from '../components/Icons/Delete.svg';
 import Tab from '../components/Icons/Tab.svg';
+import Lock from '../components/Icons/Lock.svg';
+import useResponsive from '../hooks/useResponsive'
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -63,6 +42,7 @@ const PostDetailPage = () => {
   const [selectedComment, setSelectedComment] = useState(null);
 
   const currentUserId = 'currentUser';
+  const isPC = useResponsive();
   
   // 게시글 및 댓글 데이터 로드
   useEffect(() => {
@@ -255,21 +235,31 @@ const PostDetailPage = () => {
 
   return (
     <Container>
-      <Header
-        title={post.category}
-        showBack={true}
-        myPost={isMyPost ? openActionSheet : undefined}
-      />
+      {!isPC && (
+        <Header
+          title={post.category}
+          showBack={true}
+          myPost={isMyPost ? openActionSheet : undefined}
+        />
+      )}
 
       <ContentArea>
         <PostDetailContainer>
           {/* 게시글 헤더 */}
           <PostHeader>
+            {isPC && ( 
+              <div style={{display: 'flex', gap: '20px', alignItems: 'center'}}>
+                <PostTitle>{post.title}</PostTitle>
+                <div style={{marginBottom: '12px', fontSize: '16px', fontWeight: 'bold', color: '#F67676'}}>
+                  {post.category === 'general' ? '일반' : '홍보' }
+                </div>
+              </div>
+            )}
             <PostMeta>
               <PostAuthor>{post.author}</PostAuthor>
               <PostDate>{post.date}</PostDate>
             </PostMeta>
-            <PostTitle>{post.title}</PostTitle>
+            {!isPC && ( <PostTitle>{post.title}</PostTitle> )}
           </PostHeader>
 
           {/* 게시글 내용 */}
@@ -297,31 +287,100 @@ const PostDetailPage = () => {
           )}
 
           {/* 게시글 좋아요 */}
+          {!isPC && (
           <PostActions>
             <LikeButton liked={post.isLiked} onClick={handlePostLike}>
               <LikeIcon src={LikePink} alt="좋아요" />
               좋아요
             </LikeButton>
           </PostActions>
+          )}
 
           <Divider />
 
           {/* 댓글 섹션 */}
           <CommentsSection>
-            <CommentsSectionTitle>댓글 {comments.length}</CommentsSectionTitle>
+            <CommentsSectionTitle>댓글 {comments.length}개</CommentsSectionTitle>
+
+            {/* PC 댓글 입력 */}
+            {isPC && (
+              <CommentInputContainer>
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}> 
+                  <div style={{ 
+                    display: 'flex', flexDirection: 'column', height: '67%', 
+                    padding: '20px 16px 8px 16px', gap: '10px', borderBottom: '1px solid #DDDDDD'
+                  }}>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <div style={{ fontSize: '16px', fontWeight: '500', padding: '4px 0px' }}>하지희</div>
+                      {replyingTo && (
+                        <div style={{ 
+                          fontSize: '13px', 
+                          color: '#999', 
+                          padding: '6px 8px',
+                          background: '#f5f5f5',
+                          borderRadius: '4px'
+                        }}>
+                          {replyingTo.author}님에게 답글 작성 중
+                          <button 
+                            onClick={() => setReplyingTo(null)}
+                            style={{ 
+                              marginLeft: '8px', 
+                              background: 'none', 
+                              border: 'none', 
+                              color: '#999',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <CommentInput
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="댓글을 입력하세요..."
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleCommentSubmit();
+                        }
+                      }}
+                    />
+                  </div>
+                  <div style={{ 
+                    display: 'flex', flexDirection: 'row', height: '33%', justifyContent: 'space-between', 
+                    padding: '16px 20px', alignItems: 'center'
+                  }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <img src={Lock} alt="lock" width="24" height="24" />
+                      <div style={{ fontSize: '16px', fontWeight: '500', color: '#929292' }}>익명</div>
+                    </div>
+                    <CommentSubmitButton onClick={handleCommentSubmit}>
+                      등록
+                    </CommentSubmitButton>
+                  </div>
+                </div>
+              </CommentInputContainer>
+            )}
             
+            {/* 개별 댓글 */}
             {comments.map((comment) => (
               <CommentItem key={comment.id} replyLevel={comment.replyLevel}>
                 {comment.replyLevel > 0 && (
                   <ReplyIndicator>
                     {Array.from({ length: comment.replyLevel - 1 }).map((_, index) => (
-                      <div key={index} style={{ width: '20px', height: '20px' }} />
+                      <>
+                      <>{!isPC && ( <div key={index} style={{ width: '20px', height: '20px' }} /> )}</>
+                      <>{isPC && ( <div key={index} style={{ width: '24px', height: '24px' }} /> )}</>
+                      </>
                     ))}
                     {/* 마지막 단계만 Tab 아이콘 */}
-                    <img src={Tab} alt="대댓글" width="20" height="20" />
+                    {!isPC && ( <img src={Tab} alt="대댓글" width="20" height="20" /> )}
+                    {isPC && ( <img src={Tab} alt="대댓글" width="24" height="24" /> )}
                   </ReplyIndicator>
                 )}
-                <div style={{ flex: 1 }}>
+                <div >
                   {/* 삭제된 댓글 표시 처리 */}
                   {comment.isDeleted ? (
                     // 삭제된 댓글 표시
@@ -383,7 +442,7 @@ const PostDetailPage = () => {
                       
                       {comment.likes > 0 && (
                         <CommentLikeInfo>
-                          <img src={LikePink} alt="좋아요" width="20" height="20" />
+                          <img src={isPC ? Like : LikePink } alt="좋아요" width={isPC ? '28px' : '20px' } height={isPC ? '28px' : '20px' } />
                           <span>{comment.likes}</span>
                         </CommentLikeInfo>
                       )}
@@ -395,7 +454,9 @@ const PostDetailPage = () => {
           </CommentsSection>
         </PostDetailContainer>
       </ContentArea>
-      {/* 댓글 입력 */}
+
+      {/* 모바일 댓글 입력 */}
+      {!isPC && (
       <CommentInputContainer>
         {replyingTo && (
           <div style={{ 
@@ -438,6 +499,7 @@ const PostDetailPage = () => {
           </CommentSubmitButton>
         </div>
       </CommentInputContainer>
+      )}
 
       {/* 액션시트 */}
       <ActionSheet

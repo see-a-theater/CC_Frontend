@@ -1,11 +1,24 @@
 
 import styled from 'styled-components';
 
+// 반응형 미디어쿼리 상수
+const media = {
+  mobile: `@media (max-width: 767px)`,
+  pc: `@media (min-width: 768px)`,
+};
+
 // 메인 컨텐츠 영역 스타일
 export const ContentArea = styled.div`
-  height: 674px;
-  overflow-y: auto;
-  background: white;
+  ${media.mobile} {
+    height: 674px;
+    overflow-y: auto;
+    background: white;
+  }
+  ${media.pc} {
+    margin-left: 60px;
+    margin-top: 100px;
+    margin-right: 100px;
+  }
   
   &::-webkit-scrollbar {
     width: 0px;
@@ -16,6 +29,9 @@ export const ContentArea = styled.div`
 export const PostDetailContainer = styled.div`
   padding: 20px;
   background: white;
+  ${media.pc} {
+    padding: 0px;
+  }
 `;
 
 // 게시글 헤더 - 제목,작성,날짜
@@ -30,6 +46,12 @@ export const PostMeta = styled.div`
   font-size: 12px;
   font-weight: 500px;
   margin-bottom: 12px;
+
+  ${media.pc} {
+    font-size: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #DDDDDD;
+  }
 `;
 
 export const PostAuthor = styled.span`
@@ -46,6 +68,11 @@ export const PostTitle = styled.h1`
   color: #000000;
   margin-bottom: 8px;
   line-height: 1.4;
+
+  ${media.pc} {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
 `;
 
 // 게시글 본문 영역1 - 글
@@ -55,6 +82,11 @@ export const PostContent = styled.div`
   line-height: 1.6;
   margin-bottom: 20px;
   white-space: pre-wrap;
+
+  ${media.pc} {
+    margin-top: 40px;
+    font-size: 16px;
+  }
 `;
 
 // 게시글 본문 영역2 - 이미지 + 이미지 페이지네이션
@@ -63,11 +95,19 @@ export const ImageContainer = styled.div`
 `;
 
 export const PostImage = styled.img`
-  width: 100%;
-  height: 360px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  ${media.mobile} {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  ${media.pc} {
+    width: 320px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
 `;
 
 export const ImagePagination = styled.div`
@@ -121,15 +161,24 @@ export const LikeIcon = styled.img`
 
 // 구분선
 export const Divider = styled.div`
-  height: 4px;
-  background-color: #FFF1EF;
-  width: 402px;
-  margin-left: -20px;
+  ${media.mobile} {
+    height: 4px;
+    background-color: #FFF1EF;
+    width: 402px;
+    margin-left: -20px;
+  }
+  ${media.pc} { }
 `;
 
 // 댓글 영역 스타일
 export const CommentsSection = styled.div`
   margin-top: 20px;
+
+    ${media.pc} {
+    padding-top: 20px;
+    margin-top: 100px;
+    border-top: 1px solid #DDDDDD;
+    }
 `;
 
 export const CommentsSectionTitle = styled.h3`
@@ -137,6 +186,12 @@ export const CommentsSectionTitle = styled.h3`
   font-weight: 500;
   color: #000000;
   margin-bottom: 36px;
+
+  ${media.pc} {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 `;
 
 // 개별 댓글 컴포넌트
@@ -144,8 +199,16 @@ export const CommentItem = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['replyLevel'].includes(prop)
 })`
   margin-bottom: 16px;
-  padding-left: ${props => props.replyLevel ? props.replyLevel * 20 + 8 : 0}px;
+  padding-left: ${props => props.replyLevel ? props.replyLevel * 24 + 4 : 0}px;
   position: relative;
+
+  ${media.pc} {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #DDDDDD;
+    padding-left: ${props => props.replyLevel ? props.replyLevel * 28 + 4 : 0}px;
+  }
 `;
 // 대댓글 탭
 export const ReplyIndicator = styled.div`
@@ -167,6 +230,12 @@ export const CommentAuthor = styled.span`
   font-size: 10px;
   font-weight: 500;
   color: #929292;
+
+  ${media.pc} {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+  }
 `;
 
 export const CommentDate = styled.span`
@@ -174,6 +243,11 @@ export const CommentDate = styled.span`
   font-size: 10px;
   font-weight: 500;
   color: #929292;
+
+  ${media.pc} {
+    margin-left: 16px;
+    font-size: 14px;
+  }
 `;
 // 좋아요 대댓글 버튼관련 스타일
 export const CommentHeaderActions = styled.div`
@@ -190,27 +264,40 @@ export const CommentButton = styled.button`
   padding: 4px;
   border-radius: 4px;
   transition: background-color 0.2s;
-  
-  &:hover {
-    background: #f5f5f5;
-  }
 `;
 export const CommentIcon = styled.img`
   width: 20px;
   height: 20px;
+
+  ${media.pc} {
+    width: 28px;
+    height: 28px;
+    color: #FFBEBB;
+  }
 `;
 
 // 댓글 수정, 삭제 관련 (댓글 작성자에게만)
 export const CommentActionButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 10px;
-  color: #929292;
-  cursor: pointer;
-  padding: 2px 4px;
-  
-  &.delete {
-    color: #FF3737;
+  ${media.mobile} {
+    background: none;
+    border: none;
+    font-size: 10px;
+    color: #929292;
+    cursor: pointer;
+    padding: 2px 4px;
+
+    &.delete {
+      color: #FF3737;
+    }
+  }
+
+  ${media.pc} {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #FFBEBB;
+    cursor: pointer;
+    padding: 2px 4px;
   }
   
   &:hover {
@@ -225,6 +312,13 @@ export const CommentContent = styled.p`
   color: #000000;
   line-height: 1.5;
   margin-bottom: 8px;
+
+  ${media.pc} {
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
 `;
 
 // 댓글 좋아요 
@@ -236,23 +330,46 @@ export const CommentLikeInfo = styled.div`
   color: #F67676;
   margin-top: 8px;
   padding-left: 0;
+
+  ${media.pc} {
+    font-size: 14px;
+    color: #929292;
+  }
 `;
 
 // 댓글 작성 관련
 export const CommentInputContainer = styled.div`
-  padding: 12px;
+  ${media.mobile} {
+    padding: 12px;
+  }
+  ${media.pc} {
+    margin-bottom: 40px;
+    height: 200px;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+  }
 `;
 
 export const CommentInput = styled.textarea`
-  flex: 1;
-  padding: 12px;
-  border: 2px solid #FFF1EF;
-  border-radius: 8px;
-  font-size: 14px;
-  resize: none;
-  height: 60px;
-  outline: none;
-  font-family: inherit;
+  ${media.mobile} {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #FFF1EF;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: none;
+    height: 60px;
+    outline: none;
+    font-family: inherit;
+  }
+  ${media.pc} {
+    height: 100%;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+    border: none;
+    font-family: inherit;
+  }
   
   &:focus {
     border-color: #FF8585;
@@ -260,6 +377,7 @@ export const CommentInput = styled.textarea`
   
   &::placeholder {
     color: #999;
+    ${media.pc} { color: #929292; }
   }
 `;
 
@@ -273,6 +391,14 @@ export const CommentSubmitButton = styled.button`
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s;
+
+  ${media.pc} {
+    height: 100%;
+    width: 80px;
+    padding: 6px 20px;
+    background: #DDDDDD;
+    border-radius: 3px;
+  }
   
   &:hover {
     background: #ff7070;

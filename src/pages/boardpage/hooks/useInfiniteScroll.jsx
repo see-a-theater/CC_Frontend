@@ -1,15 +1,15 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-const useInfiniteScroll = (callback, hasMore, loading) => {
+const useInfiniteScroll = (callback, hasMore, loading, enabled = true) => {
   const observer = useRef();
   
   const lastElementRef = useCallback(node => {
-    if (loading) return;
+    if (loading || !enabled) return;
     if (observer.current) observer.current.disconnect();
     
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries[0].isIntersecting && hasMore && enabled) {
         callback();
       }
     }, {
@@ -18,7 +18,7 @@ const useInfiniteScroll = (callback, hasMore, loading) => {
     });
     
     if (node) observer.current.observe(node);
-  }, [loading, hasMore, callback]);
+  }, [loading, hasMore, callback, enabled]);
 
   useEffect(() => {
     return () => {

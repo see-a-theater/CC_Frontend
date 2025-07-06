@@ -14,6 +14,7 @@ import {
 } from '../styles/postStyles';
 import Like from '../components/Icons/Like.svg';
 import Comment from '../components/Icons/Comment.svg';
+import useResponsive from '../hooks/useResponsive'
 
 const PostItem = ({ post, isLast, lastElementRef }) => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const PostItem = ({ post, isLast, lastElementRef }) => {
   const handleClick = () => {
     navigate(`/board/post/${post.id}`);
   };
+
+  const isPC = useResponsive();
 
   return (
     <StyledPostItem 
@@ -37,11 +40,13 @@ const PostItem = ({ post, isLast, lastElementRef }) => {
         </div>
         <PostStats>
           <PostStat>
-            <img src={Like} alt="좋아요" width="20" height="20" />
+            {!isPC && ( <img src={Like} alt="좋아요" width="20" height="20" /> )}
+            {isPC && ( <img src={Like} alt="좋아요" width="28" height="28" /> )}
             <span>{post.likes}</span>
           </PostStat>
           <PostStat>
-            <img src={Comment} alt="댓글" width="20" height="20" />
+            {!isPC && ( <img src={Comment} alt="댓글" width="20" height="20" /> )}
+            {isPC && ( <img src={Comment} alt="댓글" width="28" height="28" /> )}
             <span>{post.comments}</span>
           </PostStat>
         </PostStats>

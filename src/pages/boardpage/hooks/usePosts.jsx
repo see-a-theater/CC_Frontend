@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import SampleImg from '../components/Icons/SampleImg.svg'
+import useResponsive from './useResponsive';
 
 // Mock 데이터
 const mockPosts = [
@@ -266,6 +267,16 @@ const mockComments = {
       replyLevel: 0,
       parentId: null,
       likes: 1
+    },
+    {
+      id: 7,
+      author: '익명',
+      content: 'ㅋㅋㅋ',
+      date: '04.22',
+      userId: 'user17',
+      replyLevel: 0,
+      parentId: null,
+      likes: 0
     }
   ]
 };
@@ -275,7 +286,11 @@ const usePosts = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const [userType] = useState('normalUser'); // 'normalUser' | 'registerUser'   - 임시 하드코딩, 추후 api
+  const [userType] = useState('registerUser'); // 'normalUser' | 'registerUser'   - 임시, 추후 api
+  const [displayedPosts, setDisplayedPosts] = useState([]);   // PC용 표시될 게시글 배열
+  const [allPostsLoaded, setAllPostsLoaded] = useState([]);   // PC에서 전체 로드된 게시글 저장
+  const isPC = useResponsive();
+
   /*
   const getUserType = useCallback(async () => {
     try {
@@ -299,7 +314,7 @@ const usePosts = () => {
     setLoading(true);
     
     // 시뮬레이트된 API 호출
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     let filteredPosts = mockPosts;
     
@@ -311,28 +326,62 @@ const usePosts = () => {
       filteredPosts = mockPosts.filter(post => post.category === 'general');
     }
     
-    const itemsPerPage = 5;
+    const itemsPerPage = 6;
     const startIndex = (pageNum - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const newPosts = filteredPosts.slice(startIndex, endIndex);
     
     if (reset) {
       setPosts(newPosts);
+      if (isPC) { // PC에서는 전체 데이터를 별도로 저장하고, 표시용 배열은 첫 6개만
+        setAllPostsLoaded(filteredPosts); 
+        setDisplayedPosts(newPosts);
+      }
     } else {
       setPosts(prev => [...prev, ...newPosts]);
+      if (isPC) {
+        setDisplayedPosts(prev => [...prev, ...newPosts]);    // PC에서는 displayedPosts에 추가
+      }
     }
     
     setHasMore(endIndex < filteredPosts.length);
     setLoading(false);
-  }, []);
+  }, [isPC]);
+
+  // PC용 더보기 함수
+  const loadMoreForPC = useCallback(() => {
+    if (loading) return;
+    
+    const currentDisplayed = displayedPosts.length;
+    const nextBatch = allPostsLoaded.slice(currentDisplayed, currentDisplayed + 6);
+    
+    if (nextBatch.length > 0) {
+      setDisplayedPosts(prev => [...prev, ...nextBatch]);
+    }
+  }, [allPostsLoaded, displayedPosts.length, loading]);
+
+  // PC용 더보기 가능 여부 확인
+  const hasMoreForPC = useCallback(() => {
+    return displayedPosts.length < allPostsLoaded.length;
+  }, [displayedPosts.length, allPostsLoaded.length]);
+
 
   const loadMore = useCallback((category) => {
-    if (!loading && hasMore) {
+    if (!loading && hasMore && !isPC) {
       const nextPage = page + 1;
       setPage(nextPage);
       loadPosts(category, nextPage, false);
     }
-  }, [loading, hasMore, page, loadPosts]);
+  }, [loading, hasMore, page, loadPosts, isPC]);
+
+  // 반응형 전환 시 상태 동기화
+  useEffect(() => {
+    if (isPC && posts.length > 0) {
+      // PC로 전환 시: 현재 posts를 displayedPosts로 설정
+      setDisplayedPosts(posts.slice(0, 6));
+    }
+  }, [isPC, posts]);
+
 
   const getPost = useCallback((id) => {
     return mockPosts.find(post => post.id === parseInt(id));
@@ -395,10 +444,14 @@ const usePosts = () => {
   }, []);
 
   return {
-    posts,
+    posts: isPC ? displayedPosts : posts,
     loading,
-    hasMore,
+    hasMore: isPC ? hasMoreForPC() : hasMore,
     userType,
+    allPostsLoaded,
+    displayedPosts,
+    loadMoreForPC,
+    hasMoreForPC,
     canCreatePost,
     loadPosts,
     loadMore,
