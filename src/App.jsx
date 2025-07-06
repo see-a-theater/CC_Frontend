@@ -51,6 +51,8 @@ import AdminPlays from './pages/admin/AdminPlays.jsx';
 import UsersDetail from './pages/admin/UsersDetail.jsx';
 import GalleryDetail from './pages/admin/GalleryDetail.jsx';
 import PlaysDetail from './pages/admin/PlaysDetail.jsx';
+import Inquiry from './pages/admin/Inquiry.jsx';
+import InquiryDetail from './pages/admin/InquiryDetail.jsx';
 
 function App() {
 	return (
@@ -132,6 +134,8 @@ function App() {
 						element={<ReservationManagementDetail />}
 					/>
 					<Route path="refunds" element={<RefundManagement />} />
+					<Route path="inquiry" element={<Inquiry />} />
+					<Route path="inquiry/:inquiryId" element={<InquiryDetail />} />
 					<Route path="mypage" element={<MyPageManagement />} />
 				</Route>
 			</Routes>

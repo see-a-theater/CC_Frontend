@@ -130,7 +130,7 @@ const Button = styled.button`
 	height: 38px;
 	border-radius: 8px;
 	background: var(--color-pink-100, #fff7f5);
-    font-size: font-size: ${({ theme }) => theme.font.fontSize.title16};
+    font-size: ${({ theme }) => theme.font.fontSize.title16};
     font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.pink600};
 `;
