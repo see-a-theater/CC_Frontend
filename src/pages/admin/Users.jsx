@@ -222,11 +222,7 @@ function Users() {
 
 	return (
 		<Container>
-			<Top>
-				<Search />
-			</Top>
 			<Content>
-				<Sidebar />
 				<TableArea>
 					<Title>사용자 관리</Title>
 					<FilterArea>
@@ -278,25 +274,11 @@ const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 `;
-const Top = styled.div`
-	height: 108px;
-	display: flex;
-	justify-content: flex-end;
-	padding: 40px 110px;
-`;
-
 const Content = styled.div`
 	width: 100%;
 	display: flex;
 `;
-const Sidebar = styled.div`
-	//추후 컴포넌트로 변경 후 삭제
-	width: 290px;
-	height: 100vh;
-	position: fixed;
-	padding: 27px 18px;
-	background: #8f8e94;
-`;
+
 const FilterArea = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -329,7 +311,6 @@ const SearchInput = styled.div`
 `;
 
 const TableArea = styled.div`
-	margin-left: 290px;
 	padding: 0px 120px 50px 50px;
 	width: 100%;
 `;

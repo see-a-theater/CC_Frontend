@@ -35,11 +35,7 @@ import Dashboard from './pages/admin/Dashboard';
 import UploadPic from './pages/production/UploadPic';
 import ProdDetail from './pages/production/ProdDetail';
 import Production from './pages/production/Production';
-import ProdDetail from './pages/production/ProdDetail';
-import UploadPic from './pages/production/UploadPic';
 
-import Admin from './pages/admin/Admin.jsx';
-import Dashboard from './pages/admin/Dashboard.jsx';
 import RegistrationManagement from './pages/admin/register-request/RegisterRequests.jsx';
 import RegisterRequests from './pages/admin/register-request/RegisterRequests.jsx';
 import RegisterRequestDetail from './pages/admin/register-request/RegisterRequestDetail.jsx';
@@ -65,7 +61,7 @@ function App() {
 					path="/small-theater/current"
 					element={<SmallTheaterCurrent />}
 				/>
-				<Route path="/ticketing" element={<TicketingPage />} />
+				{/*<Route path="/ticketing" element={<TicketingPage />} />*/}
 				<Route
 					path="/small-theater/register"
 					element={<SmallTheaterRegister />}
@@ -114,15 +110,15 @@ function App() {
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/:prodId" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
-          
+
 				<Route path="admin" element={<Admin />}>
 					<Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<Users />} />
-          <Route path="gallery" element={<AdminGallery />} />
-          <Route path="plays" element={<AdminPlays />} />
-          <Route path="users/:userId" element={<UsersDetail />} />
-          <Route path="gallery/:galleryId" element={<GalleryDetail />} />
-          <Route path="plays/:playId" element={<PlaysDetail />} />            
+					<Route path="users" element={<Users />} />
+					<Route path="gallery" element={<AdminGallery />} />
+					<Route path="plays" element={<AdminPlays />} />
+					<Route path="users/:userId" element={<UsersDetail />} />
+					<Route path="gallery/:galleryId" element={<GalleryDetail />} />
+					<Route path="plays/:playId" element={<PlaysDetail />} />
 					<Route path="register-requests" element={<RegisterRequests />} />
 					<Route
 						path="register-requests/1"
@@ -138,7 +134,6 @@ function App() {
 					<Route path="refunds" element={<RefundManagement />} />
 					<Route path="mypage" element={<MyPageManagement />} />
 				</Route>
-
 			</Routes>
 		</>
 	);

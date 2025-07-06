@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
 
 function PlaysDetail() {
 	const play_data = {
@@ -27,12 +29,16 @@ function PlaysDetail() {
 		{ label: '상태', value: play_data.situation },
 	];
 
+	const navigate = useNavigate();
+	const goBack = () => {
+		navigate(-1);
+	};
+
 	return (
 		<Container>
-			<Sidebar />
 			<Content>
 				<Table>
-					<Title>{'<'} 기본 정보</Title>
+					<Title onClick={goBack}>{'<'} 기본 정보</Title>
 					<tbody>
 						{rows.map((row, index) => (
 							<tr key={index}>
@@ -57,20 +63,11 @@ const Container = styled.div`
 	width: 100vw;
 	display: flex;
 `;
-const Sidebar = styled.div`
-	//추후 컴포넌트로 변경 후 삭제
-	width: 290px;
-	height: 100vh;
-	position: fixed;
-	padding: 27px 18px;
-	background: #8f8e94;
-`;
 const Content = styled.div`
 	width: 100%;
 	display: flex;
+	justify-content: center;
 	flex-direction: column;
-	margin-left: 290px;
-	padding: 230px;
 
 	.buttons {
 		display: flex;

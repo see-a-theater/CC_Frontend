@@ -27,7 +27,6 @@ function UsersDetail() {
 
 	return (
 		<Container>
-			<Sidebar />
 			<Content>
 				<Table>
 					<Title>{'<'} 기본 정보</Title>
@@ -52,19 +51,10 @@ const Container = styled.div`
 	width: 100vw;
 	display: flex;
 `;
-const Sidebar = styled.div`
-	//추후 컴포넌트로 변경 후 삭제
-	width: 290px;
-	height: 100vh;
-	position: fixed;
-	padding: 27px 18px;
-	background: #8f8e94;
-`;
 const Content = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	margin-left: 290px;
 	padding: 230px;
 `;
 
@@ -81,7 +71,6 @@ const Table = styled.div`
 	display: flex;
 	margin: 0 auto;
 	flex-direction: column;
-    
 
 	border-collapse: collapse;
 	th {
@@ -99,7 +88,7 @@ const Table = styled.div`
 
 	td {
 		text-align: left;
-        width: 480px;
+		width: 480px;
 		padding: 6px 20px;
 		border: 1px solid #ddd;
 		border-right: none;
