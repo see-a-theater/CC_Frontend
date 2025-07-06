@@ -85,7 +85,7 @@ function Inquiry() {
 			<Content>
 				<TableArea>
 					<FilterHeader
-						title="소극장 공연 관리"
+						title="문의"
 						searchTerm={searchTerm}
 						setSearchTerm={setSearchTerm}
 						filterKeys={filterKeys}

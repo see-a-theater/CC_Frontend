@@ -9,6 +9,7 @@ import WebListCard from '@/components/Detail/WebListCard';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import SearchBar from '@/components/SearchBar';
 import HomeIconMenu from '@/components/HomeIconMenu';
+import Footer from '@/components/Footer';
 
 import useCustomFetch from '@/utils/hooks/useAxios';
 
@@ -76,6 +77,8 @@ function Playlist() {
 						</BoxWrapper>
 					</WebOnGoing>
 				</WebContent>
+
+				<Footer />
 			</Web>
 
 			<Mobile>
@@ -132,20 +135,18 @@ function Playlist() {
 export default Playlist;
 
 const Container = styled.div`
-	width: 100%;
-	padding: 20px;
-	overflow: hidden;
-
-	@media (min-width: 768px) {
-		display: flex;
-		padding: 0;
-	}
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 `;
 const Web = styled.div`
 	display: none;
 
 	@media (min-width: 768px) {
 		display: flex;
+
+		flex-direction: column;
 		width: 100%;
 	}
 `;
@@ -193,6 +194,7 @@ const SideMenuWrapper = styled.div`
 
 const Mobile = styled.div`
 	display: flex;
+	padding: 20px;
 	flex-direction: column;
 	@media (min-width: 768px) {
 		display: none;
