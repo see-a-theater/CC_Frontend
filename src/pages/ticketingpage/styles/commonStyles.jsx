@@ -10,8 +10,8 @@ const media = {
 // 앱 전체 컨테이너
 export const AppContainer = styled.div`
   ${media.mobile} {
-    width: 402px;
-    height: 830px;
+    min-width: 402px;
+    height: 100vh;
     margin: 0 auto;
     background-color: white;
     position: relative;
@@ -152,8 +152,8 @@ export const PosterContainer = styled.div`
 
 export const Poster = styled.img`
   ${media.mobile} {
-    width: 160px;
-    height: 220px;
+    min-width: 160px;
+    min-height: 220px;
     border-radius: 3px;
   }
   ${media.pc} {
@@ -282,8 +282,7 @@ export const ActionButton = styled.button`
 
     &.bottom {
       position: absolute;
-      bottom: 30px;
-      width: 362px;
+      bottom: 0px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
