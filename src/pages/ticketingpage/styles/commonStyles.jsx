@@ -10,7 +10,7 @@ const media = {
 // 앱 전체 컨테이너
 export const AppContainer = styled.div`
   ${media.mobile} {
-    min-width: 402px;
+    // min-width: 402px;
     height: 100vh;
     margin: 0 auto;
     background-color: white;
@@ -22,7 +22,7 @@ export const AppContainer = styled.div`
 
   ${media.pc} {
     width: 1440px;
-    height: 1024px;
+    height: 100vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
