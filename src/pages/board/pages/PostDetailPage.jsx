@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container } from '../styles/commonStyles';
+import { Container, SideMenuWrapper } from '../styles/commonStyles';
 import {
   ContentArea, PostDetailContainer, PostHeader, PostTitle,
   PostContent, PostMeta, PostAuthor, PostDate,
@@ -13,6 +13,7 @@ import {
   CommentSubmitButton, CommentHeaderActions, CommentActionButton,
   Divider,
 } from '../styles/postDetailStyles';
+import HomeIconMenu from '../../../components/HomeIconMenu';
 import Header from '../components/BoardHeader';
 import ActionSheet from '../components/ActionSheet';
 import Modal from '../components/Modal';
@@ -243,6 +244,10 @@ const PostDetailPage = () => {
         />
       )}
 
+      <SideMenuWrapper>
+        <HomeIconMenu isWeb={true} />
+      </SideMenuWrapper>
+
       <ContentArea>
         <PostDetailContainer>
           {/* 게시글 헤더 */}
@@ -272,7 +277,7 @@ const PostDetailPage = () => {
                 src={Array.isArray(post.image) ? post.image[currentImageIndex] : post.image} 
                 alt="게시글 이미지" 
               />
-              {Array.isArray(post.image) && post.image.length > 1 && (
+              {Array.isArray(post.image) && post.image.length > 1 && !isPC && (
                 <ImagePagination>
                   {post.image.map((_, index) => (
                     <PaginationDot

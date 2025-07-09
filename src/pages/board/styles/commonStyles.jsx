@@ -10,8 +10,8 @@ const media = {
 // 전체 컨테이너
 export const Container = styled.div`
   ${media.mobile} {
-    width: 402px;
-    height: 830px;
+    // min-width: 402px;
+    height: 100vh;
     background: white;
     display: flex;
     flex-direction: column;
@@ -20,8 +20,8 @@ export const Container = styled.div`
     margin: 0 auto;
   }
   ${media.pc} {
-    width: 1440px;
-    height: 1360px;
+    min-width: 768px;
+    height: 100vh;
     margin: 0 auto;
     padding-left: 100px;
     background: white;
@@ -200,7 +200,7 @@ export const SearchNotice = styled.div`
 export const FloatingButton = styled.div`
   ${media.mobile} {
     position: absolute;
-    bottom: 170px;
+    bottom: 20%;
     right: 20px;
     width: 44px;
     height: 44px;
@@ -326,5 +326,20 @@ export const LoadMoreButton = styled.button`
       cursor: not-allowed;
       opacity: 0.5;
     }
+  }
+`;
+
+// 사이드 메뉴
+export const SideMenuWrapper = styled.div`
+  width: 101px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  flex-shrink: 0;
+  display: none;
+  background-color: ${({ theme }) => theme.colors.grayWhite};
+  @media (min-width: 768px) {
+    display: block;
   }
 `;

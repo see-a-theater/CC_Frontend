@@ -11,11 +11,11 @@ import {
   IconButton,
   EmptyHeaderIcon
 } from '../styles/commonStyles';
-import Back from '../components/Icons/Back.svg';
-import HamburgerBar from '../components/Icons/HamburgerBar.svg';
-import Bell from '../components/Icons/Bell.svg';
-import Search from '../components/Icons/Search.svg';
-import Dots from '../components/Icons/Dots.svg';
+import Back from './Icons/Back.svg';
+import HamburgerBar from './Icons/HamburgerBar.svg';
+import Bell from './Icons/Bell.svg';
+import Search from './Icons/Search.svg';
+import Dots from './Icons/Dots.svg';
 
 // 헤더 좌측영역 - showBack true->뒤로가기, false->햄버거 / onMenuClick-햄버거클릭
 // 헤더 중앙영역 - title

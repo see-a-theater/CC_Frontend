@@ -5,7 +5,7 @@ import {
   FloatingButton as StyledFloatingButton,
   FloatingIcon
 } from '../styles/commonStyles';
-import Pen from '../components/Icons/Pen.svg';
+import Pen from './Icons/Pen.svg';
 
 const FloatingButton = ({ show = true, category = 'general' }) => {
   const navigate = useNavigate();

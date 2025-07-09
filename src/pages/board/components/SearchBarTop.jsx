@@ -5,7 +5,7 @@ import {
   SearchInput,
   SearchIcon,
 } from '../styles/commonStyles';
-import SearchBlack from '../components/Icons/SearchBlack.svg';
+import SearchBlack from './Icons/SearchBlack.svg';
 import useResponsive from '../hooks/useResponsive'
 
 const SearchBarTop = ({ onSearch }) => {

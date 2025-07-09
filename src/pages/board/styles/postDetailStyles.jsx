@@ -10,7 +10,7 @@ const media = {
 // 메인 컨텐츠 영역 스타일
 export const ContentArea = styled.div`
   ${media.mobile} {
-    height: 674px;
+    height: 100vh;
     overflow-y: auto;
     background: white;
   }
@@ -164,7 +164,7 @@ export const Divider = styled.div`
   ${media.mobile} {
     height: 4px;
     background-color: #FFF1EF;
-    width: 402px;
+    width: calc(100% + 40px);
     margin-left: -20px;
   }
   ${media.pc} { }

@@ -12,8 +12,8 @@ import {
   PostStat,
   PostImage
 } from '../styles/postStyles';
-import Like from '../components/Icons/Like.svg';
-import Comment from '../components/Icons/Comment.svg';
+import Like from './Icons/Like.svg';
+import Comment from './Icons/Comment.svg';
 import useResponsive from '../hooks/useResponsive'
 
 const PostItem = ({ post, isLast, lastElementRef }) => {
