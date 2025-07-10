@@ -7,6 +7,8 @@ import Masonry from '@/components/Masonry';
 import MasonryWeb from '@/components/MasonryWeb';
 import ProdPlayCard from '@/components/ProdPlayCard';
 
+import useCustomFetch from '@/utils/hooks/useAxios';
+
 import image1 from '@/assets/mock/images/image1.png';
 import image2 from '@/assets/mock/images/image2.png';
 import image3 from '@/assets/mock/images/image3.png';
@@ -65,6 +67,12 @@ function Production() {
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
+
+	const { data: picData, error, loading } = useCustomFetch(`/photoAlbums`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', picData);
 
 	const [activeTab, setActiveTab] = useState('plays');
 	const navigate = useNavigate();
