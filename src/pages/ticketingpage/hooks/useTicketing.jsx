@@ -33,14 +33,17 @@ const useTicketing = () => {
   const isPC = useResponsive(); //반응형
 
   // 최대 단계 수 계산
-  const getMaxSteps = () => isPC ? 5 : 3; // PC: 1날짜,인원→2할인→3수령→4결제→5완료, 모바일: 1날짜→2옵션들→3완료
+  const getMaxSteps = () => 5; // PC: 1날짜,인원→2할인→3수령→4결제→5완료, 모바일: 1날짜→2옵션들→3완료
   // 현재 단계의 컨텐츠 타입 반환
   const getCurrentStepContent = () => {
     if (!isPC) {
       switch(step) {
         case 1: return 'datetime';  // 날짜 인원
-        case 2: return 'options';   // 할인+수령+결제 통합
-        case 3: return 'complete';
+        case 2:
+        case 3:
+        case 4: 
+          return 'options';   // 할인+수령+결제 통합
+        case 5: return 'complete';
         default: return 'datetime';
       }
     } else {
@@ -108,15 +111,19 @@ const useTicketing = () => {
 
   // 다음 단계로 이동
   const goToNextStep = () => {
+    const currentContent = getCurrentStepContent();
     if (nextActive) {
-      setStep(step + 1);
+      if (currentContent === 'options') setStep(5);
+      else setStep(step + 1);
     }
   };
 
   // 이전 단계로 이동
   const goToPreviousStep = () => {
+    const currentContent = getCurrentStepContent();
     if (step > 1) {
-      setStep(step - 1);
+      if (currentContent === 'options') setStep(1);
+      else setStep(step - 1);
     }
   };
 

@@ -45,8 +45,10 @@ const TicketingPage = () => {
         case 1:
           return <Step1 ticketing={ticketing} />;
         case 2:
-          return <Step2 ticketing={ticketing} />;
         case 3:
+        case 4:
+          return <Step2 ticketing={ticketing} />;
+        case 5:
           return <Step3 ticketing={ticketing} />;
         default:
           return <Step1 ticketing={ticketing} />;
