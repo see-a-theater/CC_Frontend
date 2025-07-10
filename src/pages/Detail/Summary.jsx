@@ -1,10 +1,27 @@
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 import sampleImg from '@/assets/mock/images/실종.png';
 import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import ChevronDown from '@/assets/icons/chevronDown.svg?react';
 
 function Summary() {
+	const { playId } = useParams();
+
+	const {
+		data: playData,
+		error,
+		loading,
+	} = useCustomFetch(`/amateurs/${playId}`);
+	// 현재 404, 존재하지 않는 뮤지컬로 뜸 (데이터 없는 것으로 추정)
+	// 아직 api에 데이터가 없어 mock으로 대체
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', playData);
+
 	const mockGenre = [
 		{ label: '극중극' },
 		{ label: '드라마' },
@@ -18,16 +35,18 @@ function Summary() {
 					<Top>
 						<ChevronLeft height={15} alt="뒤로가기" />
 					</Top>
-
+					{/*playData?.result.title*/}
 					<h1>실종</h1>
 
 					<TagList>
 						{mockGenre.map((genre, index) => (
 							<Tag key={index}>{genre.label}</Tag>
 						))}
+						{/*playData?.result.hashtag*/}
 					</TagList>
 
 					<p className="summary">
+						{/*playData?.result.summary*/}
 						1998년 가을,
 						<br />
 						<br />

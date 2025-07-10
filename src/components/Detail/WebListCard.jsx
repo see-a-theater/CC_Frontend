@@ -6,7 +6,19 @@ function WebListCard(props) {
 			<img src={props?.data.src} alt="포스터 이미지" className="poster" />
 			<p className="title">{props?.data.title}</p>
 			<p className="place">{props?.data.place}</p>
-			<p className="date">{props?.data.date}</p>
+			<p className="date">
+				{props?.data?.date
+					? (() => {
+							const [before, after] = props.data.date.split('~');
+							return (
+								<>
+									{before.trim()} ~<br />
+									{after.trim()}
+								</>
+							);
+						})()
+					: null}
+			</p>
 		</Box>
 	);
 }

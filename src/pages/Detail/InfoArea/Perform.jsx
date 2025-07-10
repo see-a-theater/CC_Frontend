@@ -1,7 +1,7 @@
 import poster from '@/assets/mock/images/실종_정보.png';
 import styled from 'styled-components';
 
-function Perform() {
+function Perform(props) {
 	const mockInfo = [
 		{
 			title: '줄거리',
@@ -25,10 +25,17 @@ function Perform() {
 		},
 	];
 
+	console.log('show data:', props);
+
 	return (
 		<Container>
 			{mockInfo.map((content) => (
 				<Content>
+					{/*props?.result.name*/}
+					{/*props?.result.summary*/}
+					{/*props?.result.runtime*/}
+					{/*props?.result.place*/}
+					
 					<Title>{content.title}</Title>
 					{content.title == '줄거리' && <Summary>{content.content}</Summary>}
 					{content.title == '공연시간 정보' && <Text>{content.content}</Text>}
@@ -51,6 +58,7 @@ function Perform() {
 					{content.title == '포스터' && (
 						<img src={content.content} className="Poster" alt="포스터" />
 					)}
+					{/*props?.result.posterUmageUrl*/}
 				</Content>
 			))}
 		</Container>

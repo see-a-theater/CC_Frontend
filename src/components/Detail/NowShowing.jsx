@@ -1,15 +1,25 @@
 import styled from 'styled-components';
 
-import sampleImg from '@/assets/mock/images/실종.png';
-
-function NowShowing() {
+function NowShowing(props) {
 	return (
 		<Container>
-			<img src={sampleImg} alt="포스터" className="poster" />
+			<img src={props?.data.src} alt="포스터" className="poster" />
 			<TextArea>
-				<h3 className="Title">실종</h3>
-				<p className="Location">홍익대학교 학생회관 3층 소극장</p>
-				<p className="Date">2024.10.03 (목) 19:00</p>
+				<h3 className="Title">{props?.data.title}</h3>
+				<p className="Location">{props?.data.place}</p>
+				<p className="Date">
+					{props?.data?.date
+						? (() => {
+								const [before, after] = props.data.date.split('~');
+								return (
+									<>
+										{before.trim()} ~<br />
+										{after.trim()}
+									</>
+								);
+							})()
+						: null}
+				</p>
 			</TextArea>
 		</Container>
 	);
@@ -26,9 +36,9 @@ const Container = styled.div`
 
 	.poster {
 		width: 114px;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 3px;
+		height: 160px;
+		object-fit: cover;
+		border-radius: 3px;
 	}
 `;
 const TextArea = styled.div`
@@ -48,7 +58,7 @@ const TextArea = styled.div`
 	}
 	.Date {
 		color: ${({ theme }) => theme.colors.gray400};
-		font-size: ${({ theme }) => theme.font.fontSize.title16};
-		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-weight: ${({ theme }) => theme.font.fontWeight.normal};
 	}
 `;

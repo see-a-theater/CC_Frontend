@@ -37,28 +37,28 @@ function Production() {
 			title: '실종',
 			src: poster,
 			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2025.10.03 (목) 17:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			activeNow: true,
 		},
 		{
 			title: '실종',
 			src: poster,
 			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2025.10.03 (목) 17:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			activeNow: false,
 		},
 		{
 			title: '실종',
 			src: poster,
 			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2025.10.03 (목) 17:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			activeNow: false,
 		},
 		{
 			title: '실종',
 			src: poster,
 			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2025.10.03 (목) 17:00',
+			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
 			activeNow: false,
 		},
 	];
@@ -73,6 +73,7 @@ function Production() {
 	};
 	const navigateToUpload = () => {
 		navigate('/production/upload_photo');
+		window.scrollTo(0, 0);
 	};
 
 	return (
@@ -148,7 +149,9 @@ function Production() {
 							</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
-						{token && activeTab === 'gallery' && <Button>사진 등록</Button>}
+						{token && activeTab === 'gallery' && (
+							<Button onClick={navigateToUpload}>사진 등록</Button>
+						)}
 					</Theatre>
 					<AreaSelect>
 						<TabItemWeb
