@@ -5,7 +5,6 @@ import Logo from '@/assets/icons/logo.svg?react';
 import Movie from '@/assets/icons/movie-filled.svg?react';
 
 function Noti({ type, category, content, when, checked }) {
-	console.log(type);
 	const renderIcon = () => {
 		if (type === 'play') return <Movie width={16} />;
 		if (type === 'board') return <Board width={16} />;
