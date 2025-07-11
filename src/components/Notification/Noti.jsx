@@ -13,7 +13,7 @@ function Noti({ type, category, content, when, checked }) {
 	};
 
 	return (
-		<Container isChecked={checked}>
+		<Container checked={checked}>
 			<div className="smallTitle">
 				{renderIcon()}
 				<p className="category">{category}</p>
@@ -32,8 +32,8 @@ const Container = styled.div`
 	gap: 12px;
 	padding: 16px 20px;
 
-	background-color: ${({ isChecked, theme }) =>
-		isChecked ? theme.colors.grayWhite : theme.colors.pink100};
+	background-color: ${({ checked, theme }) =>
+		checked ? theme.colors.grayWhite : theme.colors.pink100};
 
 	.smallTitle {
 		display: flex;
@@ -55,5 +55,25 @@ const Container = styled.div`
 		font-size: ${({ theme }) => theme.font.fontSize.body10};
 		font-weight: ${({ theme }) => theme.font.fontWeight.normal};
 		color: ${({ theme }) => theme.colors.gray400};
+	}
+
+	@media (min-width: 768px) {
+		padding: 28px 48px;
+
+		.category {
+			font-size: ${({ theme }) => theme.font.fontSize.body14};
+			font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+			color: ${({ theme }) => theme.colors.gray400};
+		}
+		.notiContent {
+			font-size: ${({ theme }) => theme.font.fontSize.title16};
+			font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+			color: ${({ theme }) => theme.colors.grayMain};
+		}
+		.when {
+			font-size: ${({ theme }) => theme.font.fontSize.body13};
+			font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+			color: ${({ theme }) => theme.colors.gray400};
+		}
 	}
 `;
