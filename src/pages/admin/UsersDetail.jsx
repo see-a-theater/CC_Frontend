@@ -73,7 +73,6 @@ function UsersDetail() {
 	return (
 		<Container>
 			<Content>
-				{' '}
 				<SectionTitle>사용자 관리</SectionTitle>
 				<FilterArea>
 					<SearchInput>
