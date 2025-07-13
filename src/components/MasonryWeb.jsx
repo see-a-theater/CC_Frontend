@@ -5,10 +5,10 @@ function MasonryWeb({ imageData }) {
 		<ImageArea>
 			{imageData?.map((data, idx) => (
 				<Item key={idx}>
-					<img src={data?.src} alt="공연사진" className="pic" />
+					<img src={data?.imageUrl} alt="공연사진" className="pic" />
 					<Text>
-						<p className="title">{data?.text}</p>
-						{data.theatre && <p className="theatre">{data.theatre}</p>}
+						<p className="title">{data?.amateurShowName}</p>
+						{data.memberName && <p className="theatre">{data?.memberName}</p>}
 					</Text>
 				</Item>
 			))}

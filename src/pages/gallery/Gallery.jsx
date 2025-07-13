@@ -47,7 +47,7 @@ function Gallery() {
 			</SideMenuWrapper>
 			<Mobile>
 				<Hamburger title={'사진첩'} />
-				<Masonry imageData={imageList} />
+				<Masonry imageData={picData?.result} />
 			</Mobile>
 
 			<Web>
@@ -61,7 +61,7 @@ function Gallery() {
 						<Button>사진 등록</Button>
 					</TitleArea>
 
-					<MasonryWeb imageData={imageList} />
+					<MasonryWeb imageData={picData?.result} />
 				</Container>
 			</Web>
 		</>
