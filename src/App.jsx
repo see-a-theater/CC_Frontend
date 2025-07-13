@@ -48,10 +48,12 @@ import TicketManagementDetail from './pages/admin/tickets/TicketManagementDetail
 import ReservationManagementDetail from './pages/admin/reservation/ReservationManagementDetail.jsx';
 import Users from './pages/admin/Users.jsx';
 import AdminGallery from './pages/admin/AdminGallery.jsx';
-import AdminPlays from './pages/admin/AdminPlays.jsx';
+import AdminPlays from './pages/admin/plays/AdminPlays.jsx';
 import UsersDetail from './pages/admin/UsersDetail.jsx';
 import GalleryDetail from './pages/admin/GalleryDetail.jsx';
-import PlaysDetail from './pages/admin/PlaysDetail.jsx';
+import PlaysDetail from './pages/admin/plays/PlaysDetail.jsx';
+import AdminPlayReview from './pages/admin/plays/AdminPlayReview.jsx';
+import AdminPlayRegister from './pages/admin/plays/AdminPlayRegister.jsx';
 import Inquiry from './pages/admin/Inquiry.jsx';
 import InquiryDetail from './pages/admin/InquiryDetail.jsx';
 
@@ -122,6 +124,8 @@ function App() {
 					<Route path="users/:userId" element={<UsersDetail />} />
 					<Route path="gallery/:galleryId" element={<GalleryDetail />} />
 					<Route path="plays/:playId" element={<PlaysDetail />} />
+					<Route path="plays/:playId/register" element={<AdminPlayRegister/>}/>
+
 					<Route path="register-requests" element={<RegisterRequests />} />
 					<Route
 						path="register-requests/1"
@@ -139,6 +143,10 @@ function App() {
 					<Route path="inquiry/:inquiryId" element={<InquiryDetail />} />
 					<Route path="mypage" element={<MyPageManagement />} />
 				</Route>
+				<Route
+					path="admin/plays/:playId/review"
+					element={<AdminPlayReview />}
+				/>
 			</Routes>
 		</>
 	);

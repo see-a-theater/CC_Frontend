@@ -16,7 +16,7 @@ function Gallery(props) {
 		{ src: image4, text: '실종' },
 		{ src: image5, text: '킬링시저' },
 	];
-	console.log('id:', props?.result.amateurShowId);
+	//console.log('id:', props?.result.amateurShowId);
 
 	return (
 		<Container>

@@ -5,7 +5,6 @@ import FilterHeader from '@/components/Admin/FilterHeader';
 import { useState, useMemo } from 'react';
 
 function AdminPlays() {
-	//상태 별 글자 색상 변경 추가 필요
 	const play_data = [
 		{
 			title: '소극장 공연 이름',
@@ -13,6 +12,7 @@ function AdminPlays() {
 			uploader: '등록자명',
 			situation: '상태',
 			manage: '관리',
+			id: 0,
 		},
 		{
 			title: '실종',
@@ -20,6 +20,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '확인 전',
 			manage: '/admin/plays/',
+			id: 1,
 		},
 		{
 			title: '실종',
@@ -27,6 +28,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '등록',
 			manage: '/admin/plays/',
+			id: 3,
 		},
 		{
 			title: '실종',
@@ -34,6 +36,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '반려',
 			manage: '/admin/plays/',
+			id: 4,
 		},
 		{
 			title: '실종',
@@ -41,6 +44,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '확인 전',
 			manage: '/admin/plays/',
+			id: 5,
 		},
 		{
 			title: '실종',
@@ -48,6 +52,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '등록',
 			manage: '/admin/plays/',
+			id: 6,
 		},
 		{
 			title: '실종',
@@ -55,6 +60,7 @@ function AdminPlays() {
 			uploader: '홍길동',
 			situation: '반려',
 			manage: '/admin/plays/',
+			id: 7,
 		},
 	];
 	const [searchTerm, setSearchTerm] = useState('');
