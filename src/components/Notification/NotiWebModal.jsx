@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import Noti from '@/components/Notification/Noti';
-import CloseIcon from '@/assets/icons/close.svg?react';
+import NotiComponent from '@/components/Notification/NotiComponent';
 
-import PillToggleGroup from '@/components/PillToggleGroup';
+import CloseIcon from '@/assets/icons/close.svg?react';
 
 function NotiWebModal({ onClose }) {
 	const mock_noti = [
@@ -55,32 +54,15 @@ function NotiWebModal({ onClose }) {
 		},
 	];
 
-    const options = ['전체', '소극장 공연', '추천 공연']
-
 	return (
 		<Overlay onClick={onClose}>
-			<ModalBox>
+			<ModalBox onClick={(e) => e.stopPropagation()}>
 				<Header>
 					<CloseIcon onClick={onClose} width={20} />
 					<h2>알림</h2>
 				</Header>
 
-                <Toggle>
-                    <PillToggleGroup options={options} />
-                </Toggle>
-
-				<NotiList>
-					{mock_noti.map((noti, idx) => (
-						<Noti
-							key={idx}
-							type={noti.type}
-							category={noti.category}
-							content={noti.content}
-							when={noti.when}
-							checked={noti.checked}
-						/>
-					))}
-				</NotiList>
+				<NotiComponent data={mock_noti} />
 			</ModalBox>
 		</Overlay>
 	);
@@ -114,7 +96,7 @@ const ModalBox = styled.div`
 `;
 
 const Header = styled.div`
-    padding: 30px 48px 16px 48px;
+	padding: 30px 48px 16px 48px;
 
 	display: flex;
 	gap: 12px;
@@ -125,17 +107,4 @@ const Header = styled.div`
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
-`;
-
-const Toggle = styled.div`
-    padding: 16px 48px 40px 48px; 
-    display: flex;
-    gap: 12px;
-    font-size: ${({ theme }) => theme.font.fontSize.title16};
-`
-
-const NotiList = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0px;
 `;
