@@ -3,13 +3,13 @@ import styled from 'styled-components';
 function WebListCard(props) {
 	return (
 		<Box>
-			<img src={props?.data.src} alt="포스터 이미지" className="poster" />
-			<p className="title">{props?.data.title}</p>
+			<img src={props?.data.posterImageUrl} alt="포스터 이미지" className="poster" />
+			<p className="title">{props?.data.name}</p>
 			<p className="place">{props?.data.place}</p>
 			<p className="date">
-				{props?.data?.date
+				{props?.data.schedule
 					? (() => {
-							const [before, after] = props.data.date.split('~');
+							const [before, after] = props.data.schedule.split('~');
 							return (
 								<>
 									{before.trim()} ~<br />

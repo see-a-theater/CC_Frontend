@@ -1,13 +1,24 @@
 import styled from 'styled-components';
-import sampleImg from '@/assets/mock/images/실종.png';
 
-function PlayCard() {
+function PlayCard(props) {
 	return (
-		<Container>
+		<Container image={props?.data.posterImageUrl}>
 			<Text>
-				<h3 className="Title"> 실종 </h3>
-				<p className="Location">홍익대학교 학생회관 3층 소극장</p>
-				<p className="Date">2024.10.03 (목) 19:00</p>
+				<h3 className="Title"> {props?.data.name} </h3>
+				<p className="Location">{props?.data.place}</p>
+				<p className="Date">
+					{props?.data?.schedule
+						? (() => {
+								const [before, after] = props.data.schedule.split('~');
+								return (
+									<>
+										{before.trim()} ~<br />
+										{after.trim()}
+									</>
+								);
+							})()
+						: null}
+				</p>
 			</Text>
 		</Container>
 	);
@@ -23,9 +34,9 @@ const Container = styled.div`
 
 	position: relative;
 
-	background:
-		linear-gradient(180deg, rgba(0, 0, 0, 0) 25.94%, rgba(0, 0, 0, 0.6) 77.94%),
-		url('${sampleImg}');
+	background: ${({ image }) =>
+		`linear-gradient(180deg, rgba(0, 0, 0, 0) 25.94%, rgba(0, 0, 0, 0.6) 77.94%),
+		url(${image})`};
 	background-size: cover;
 `;
 const Text = styled.div`
@@ -38,13 +49,13 @@ const Text = styled.div`
 		font-size: ${({ theme }) => theme.font.fontSize.headline24};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 
-        margin-bottom: 28px;
+		margin-bottom: 28px;
 	}
 	.Location {
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 
-        margin-bottom: 8px;
+		margin-bottom: 8px;
 	}
 	.Date {
 		font-size: ${({ theme }) => theme.font.fontSize.body14};

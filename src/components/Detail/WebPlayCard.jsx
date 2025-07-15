@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 function WebPlayCard(props) {
 	return (
-		<Card image={props?.data.src}>
+		<Card image={props?.data.posterImageUrl}>
 			<TextArea>
-				<Text className="Title">{props?.data.title}</Text>
-				<Text className="Date">{props?.data.date}</Text>
+				<Text className="Title">{props?.data.name}</Text>
+				<Text className="Date">{props?.data.schedule}</Text>
 				<Text className="Location">{props?.data.place}</Text>
 			</TextArea>
 		</Card>
@@ -30,7 +30,7 @@ const TextArea = styled.div`
 	position: absolute;
 	left: 28px;
 	bottom: 28px;
-	
+
 	display: flex;
 	flex-direction: column;
 `;
