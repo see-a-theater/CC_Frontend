@@ -1,9 +1,23 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 function WebListCard(props) {
+	const ShowId = props?.data.amateurShowId;
+
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${ShowId}`);
+		window.scrollTo(0, 0);
+	};
+
 	return (
 		<Box>
-			<img src={props?.data.posterImageUrl} alt="포스터 이미지" className="poster" />
+			<img
+				src={props?.data.posterImageUrl}
+				alt="포스터 이미지"
+				className="poster"
+				onClick={goDetail}
+			/>
 			<p className="title">{props?.data.name}</p>
 			<p className="place">{props?.data.place}</p>
 			<p className="date">

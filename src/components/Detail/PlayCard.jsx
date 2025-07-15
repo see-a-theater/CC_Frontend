@@ -1,8 +1,16 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 function PlayCard(props) {
+	const ShowId = props?.data.amateurShowId;
+
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${ShowId}`);
+		window.scrollTo(0, 0);
+	};
 	return (
-		<Container image={props?.data.posterImageUrl}>
+		<Container image={props?.data.posterImageUrl} onClick={goDetail}>
 			<Text>
 				<h3 className="Title"> {props?.data.name} </h3>
 				<p className="Location">{props?.data.place}</p>
