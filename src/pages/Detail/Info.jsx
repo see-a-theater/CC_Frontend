@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useCustomFetch from '@/utils/hooks/useAxios';
 
-import location from '@/assets/icons/location.svg';
-import time from '@/assets/icons/time.svg';
-import price from '@/assets/icons/price.svg';
+import Location from '@/assets/icons/location.svg?react';
+import Time from '@/assets/icons/time.svg?react';
+import Price from '@/assets/icons/price.svg?react';
 
 import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
 
-import poster from '@/assets/mock/images/실종.png';
+import sampleImg from '@/assets/mock/images/실종.png';
+import profile from '@/assets/mock/images/프로필.png';
 
 import Cast from './InfoArea/Cast';
 import Perform from './InfoArea/Perform';
@@ -17,57 +18,100 @@ import Gallery from './InfoArea/Gallery';
 
 function Info() {
 	const { playId } = useParams();
-
-	const mockInfo = [
-		{
-			icon: location,
-			rows: [
+	const mockData = {
+		isSuccess: true,
+		code: '200',
+		message: 'OK',
+		result: {
+			amateurShowId: 0,
+			name: '실종',
+			place: '홍익대학교 학생회관 3층 소극장',
+			schedule: '2025.10.03 (목) ~ 2025.10.05 (토)',
+			runtime: '60분',
+			account: '123456789',
+			contact: '010-1111-2222',
+			hashtag: '극중극, 드라마, 구덩이',
+			summary:
+				"1998년 가을, ‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.",
+			posterImageUrl: sampleImg,
+			notice: {
+				content: 'string',
+				noticeImageUrl: 'string',
+				timeInfo: 'string',
+			},
+			casting: [
 				{
-					value: '홍익대학교 학생회관 3층 소극장',
-					valueType: 'default',
+					actorName: '이지후',
+					castingName: '7급',
+					castingImageUrl: profile,
+				},
+				{
+					actorName: '권혁진',
+					castingName: '5급',
+					castingImageUrl: profile,
+				},
+				{
+					actorName: '이승재',
+					castingName: '6급',
+					castingImageUrl: profile,
+				},
+				{
+					actorName: '임유빈',
+					castingName: '학생1',
+					castingImageUrl: profile,
+				},
+			],
+			staff: [
+				{
+					position: '원작',
+					staffName: '최문애',
+				},
+				{
+					position: '연출/각색',
+					staffName: '서준서',
+				},
+				{
+					position: '조연출',
+					staffName: '권혁진, 이보미',
+				},
+			],
+			rounds: [
+				{
+					roundNumber: 0,
+					performanceDateTime: '10.03 (목) 17:00',
+					totalTicket: 0,
+				},
+				{
+					roundNumber: 1,
+					performanceDateTime: '10.04 (금) 17:00',
+					totalTicket: 0,
+				},
+				{
+					roundNumber: 2,
+					performanceDateTime: '10.05 (토) 17:00',
+					totalTicket: 0,
+				},
+			],
+			tickets: [
+				{
+					discountName: '일반예매',
+					price: 10000,
+				},
+				{
+					discountName: '홍대생',
+					price: 7000,
 				},
 			],
 		},
-		{
-			icon: time,
-			rows: [
-				{
-					values: [
-						{
-							value: '2025.10.03 (목) ~ 2025.10.05 (토)',
-							valueType: 'default',
-						},
-						{ value: '60분', valueType: 'highlight' },
-					],
-				},
-				{ value: '10.03 (목) 17:00', valueType: 'deem' },
-				{ value: '10.04 (금) 17:00', valueType: 'deem' },
-				{ value: '10.05 (토) 17:00', valueType: 'deem' },
-			],
-		},
-		{
-			icon: price,
-			rows: [
-				{
-					label: '일반예매',
-					value: '10,000원',
-					labelType: 'deem',
-					valueType: 'default',
-				},
-				{
-					label: '홍대생',
-					value: '7,000원',
-					labelType: 'deem',
-					valueType: 'default',
-				},
-			],
-		},
-	];
+	};
 	const mockGenre = [
 		{ label: '극중극' },
 		{ label: '드라마' },
 		{ label: '구덩이' },
 	];
+	const displayGenre = mockData?.result.hashtag
+		? mockData?.result.hashtag.split(', ').map((tag) => ({ label: tag }))
+		: mockGenre;
 
 	const {
 		data: playData,
@@ -88,59 +132,63 @@ function Info() {
 			<Mobile>
 				<Top>
 					<ChevronLeftPink height={15} alt="이전" className="back" />
-					<p className="title">실종</p>
+					<p className="title">{mockData?.result.name}</p>
 				</Top>
-				<img src={poster} height={220} alt="포스터 이미지" className="poster" />
-				{/*playData?.result.posterImageUrl*/}
-				<h3 className="title">실종</h3>
-				{/*playData?.result.title*/}
+				<img
+					src={mockData?.result.posterImageUrl}
+					height={220}
+					alt="포스터 이미지"
+					className="poster"
+				/>
+				<h3 className="title">{mockData?.result.name}</h3>
 				<TagList>
-					{mockGenre.map((genre, index) => (
+					{displayGenre.map((genre, index) => (
 						<Tag key={index}>{genre.label}</Tag>
 					))}
 				</TagList>
 
 				<InfoList>
-					{/*playData?.result.place*/}
-					{/*playData?.result.notice.timeInfo*/}
-					{/*playData?.result.tickets.price*/}
-					{mockInfo.map((section, idx) => (
-						<InfoBlock key={idx}>
-							<IconWrapper>
-								<img src={section.icon} height={24} alt="icon" />
-							</IconWrapper>
+					<InfoBlock>
+						<IconWrapper>
+							<Location height={24} />
+						</IconWrapper>
 
-							<InfoContent>
-								{section.rows.map((row, rIdx) => (
-									<Row key={rIdx}>
-										{row.label && (
-											<StyledText
-												className={row.labelType ?? row.vaslueType ?? 'default'}
-											>
-												{row.label}
-											</StyledText>
-										)}
+						<p className="blackTxt">{mockData?.result.place}</p>
+					</InfoBlock>
+					<InfoBlock>
+						<IconWrapper>
+							<Time height={24} />
+						</IconWrapper>
 
-										{Array.isArray(row.values) ? (
-											row.values.map((item, i) => (
-												<StyledText
-													key={i}
-													className={item.valueType ?? 'default'}
-													style={i === 0 ? { marginRight: 'auto' } : undefined}
-												>
-													{item.value}
-												</StyledText>
-											))
-										) : (
-											<StyledText className={row.valueType ?? 'default'}>
-												{row.value}
-											</StyledText>
-										)}
-									</Row>
+						<div className="gap10">
+							<div>
+								<span className="blackTxt">{mockData?.result.schedule}</span>
+								<span className="pinkTxt">{mockData?.result.runtime}</span>
+							</div>
+
+							<div className="gap8">
+								{mockData?.result.rounds.map((data) => (
+									<p className="grayTxt">
+										{data.roundNumber}회차 {data.performanceDateTime}
+									</p>
 								))}
-							</InfoContent>
-						</InfoBlock>
-					))}
+							</div>
+						</div>
+					</InfoBlock>
+					<InfoBlock>
+						<IconWrapper>
+							<Price height={24} />
+						</IconWrapper>
+
+						<div className="gap10">
+							{mockData?.result.tickets.map((data) => (
+								<div className="ticket">
+									<p className="grayTxt discountName">{data.discountName}</p>
+									<p className="blackTxt">{data.price}</p>
+								</div>
+							))}
+						</div>
+					</InfoBlock>
 				</InfoList>
 
 				<TabBar>
@@ -165,68 +213,73 @@ function Info() {
 				</TabBar>
 
 				<ContentArea>
-					{activeTab === 'perform' && <Perform />}
-					{activeTab === 'cast' && <Cast />}
-					{activeTab === 'gallery' && <Gallery />}
+					{activeTab === 'perform' && <Perform data={mockData}/>}
+					{activeTab === 'cast' && <Cast data={mockData}/>}
+					{activeTab === 'gallery' && <Gallery data={mockData}/>}
 				</ContentArea>
 
 				<BookBtn>예매하러 가기</BookBtn>
 			</Mobile>
 
 			<Web>
-				<h3 className="title">실종</h3>
+				<h3 className="title">{mockData?.result.name}</h3>
 				<WebContent>
 					<WebLeft>
 						<WebInfo>
 							<img
-								src={poster}
+								src={mockData?.result.posterImageUrl}
 								height={220}
 								alt="포스터 이미지"
 								className="poster"
 							/>
 
 							<InfoList>
-								{mockInfo.map((section, idx) => (
-									<InfoBlock key={idx}>
-										<IconWrapper>
-											<img src={section.icon} height={24} alt="icon" />
-										</IconWrapper>
+								<InfoBlock>
+									<IconWrapper>
+										<Location height={24} />
+									</IconWrapper>
 
-										<InfoContent>
-											{section.rows.map((row, rIdx) => (
-												<Row key={rIdx}>
-													{row.label && (
-														<StyledText
-															className={
-																row.labelType ?? row.vaslueType ?? 'default'
-															}
-														>
-															{row.label}
-														</StyledText>
-													)}
+									<p className="blackTxt">{mockData?.result.place}</p>
+								</InfoBlock>
+								<InfoBlock>
+									<IconWrapper>
+										<Time height={24} />
+									</IconWrapper>
 
-													{Array.isArray(row.values) ? (
-														row.values.map((item, i) => (
-															<StyledText
-																key={i}
-																className={item.valueType ?? 'default'}
-																style={
-																	i === 0 ? { marginRight: 'auto' } : undefined
-																}
-															>
-																{item.value}
-															</StyledText>
-														))
-													) : (
-														<StyledText className={row.valueType ?? 'default'}>
-															{row.value}
-														</StyledText>
-													)}
-												</Row>
+									<div className="gap10">
+										<div>
+											<span className="blackTxt">
+												{mockData?.result.schedule}
+											</span>
+											<span className="pinkTxt">
+												{mockData?.result.runtime}
+											</span>
+										</div>
+										<div className="gap12">
+											{mockData?.result.rounds.map((data) => (
+												<p className="grayTxt">
+													{data.roundNumber}회차 {data.performanceDateTime}
+												</p>
 											))}
-										</InfoContent>
-									</InfoBlock>
-								))}
+										</div>
+									</div>
+								</InfoBlock>
+								<InfoBlock>
+									<IconWrapper>
+										<Price height={24} />
+									</IconWrapper>
+
+									<div className="gap12">
+										{mockData?.result.tickets.map((data) => (
+											<div className="ticket">
+												<p className="grayTxt discountName">
+													{data.discountName}
+												</p>
+												<p className="blackTxt">{data.price}</p>
+											</div>
+										))}
+									</div>
+								</InfoBlock>
 							</InfoList>
 						</WebInfo>
 
@@ -252,9 +305,9 @@ function Info() {
 						</TabBar>
 
 						<ContentArea>
-							{activeTab === 'perform' && <Perform data={playData}/>}
-							{activeTab === 'cast' && <Cast data={playData}/>}
-							{activeTab === 'gallery' && <Gallery data={playData}/>}
+							{activeTab === 'perform' && <Perform data={mockData} />}
+							{activeTab === 'cast' && <Cast data={mockData} />}
+							{activeTab === 'gallery' && <Gallery data={mockData} />}
 						</ContentArea>
 					</WebLeft>
 
@@ -326,56 +379,71 @@ const Tag = styled.div`
 
 const InfoList = styled.div`
 	margin-top: 20px;
-
 	width: 100%;
 	background: ${({ theme }) => theme.colors.pink100};
-	padding: 16px 20px;
+	padding: 20px;
 
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+
+	.blackTxt {
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+	.pinkTxt {
+		color: ${({ theme }) => theme.colors.pink600};
+		margin-left: 8px;
+	}
+	.grayTxt {
+		color: ${({ theme }) => theme.colors.gray400};
+	}
+	.discountName {
+		min-width: 80px;
+	}
+	.gap8 {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.gap10 {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.gap12 {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
 	@media (min-width: 768px) {
 		margin-top: 0px;
 	}
 `;
 
 const InfoBlock = styled.div`
+	font-size: ${({ theme }) => theme.font.fontSize.body14};
+	font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+
 	display: flex;
 	gap: 32px;
-	margin-bottom: 20px;
+
+	.ticket {
+		display: flex;
+	}
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	}
 `;
 
 const IconWrapper = styled.div`
 	height: 24px;
 	width: 24px;
 
-	img {
-		width: 100%;
-	}
-`;
-
-const InfoContent = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-`;
-
-const Row = styled.div`
 	display: flex;
 	align-items: center;
-	gap: 8px;
-`;
-
-const StyledText = styled.span`
-	font-size: ${({ theme }) => theme.font.fontSize.body14};
-	font-weight: ${({ theme }) => theme.font.fontWeight.medium};
-
-	&.default {
-		color: ${({ theme }) => theme.colors.gray900};
-	}
-	&.highlight {
-		color: ${({ theme }) => theme.colors.pink500};
-	}
-	&.deem {
-		color: ${({ theme }) => theme.colors.gray500};
-	}
+	justify-content: center;
 `;
 
 const TabBar = styled.div`
@@ -424,7 +492,7 @@ const ContentArea = styled.div`
 `;
 const BookBtn = styled.button`
 	width: 100%;
-	padding: 20px 128px;
+	padding: 20px 100px;
 	border-radius: 10px;
 
 	background: ${({ theme }) => theme.colors.pink600};
