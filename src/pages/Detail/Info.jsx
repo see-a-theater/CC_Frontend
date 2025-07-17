@@ -10,6 +10,7 @@ import Price from '@/assets/icons/price.svg?react';
 import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
 
 import sampleImg from '@/assets/mock/images/실종.png';
+import samplePoster from '@/assets/mock/images/실종_정보.png';
 import profile from '@/assets/mock/images/프로필.png';
 
 import Cast from './InfoArea/Cast';
@@ -36,8 +37,8 @@ function Info() {
 			posterImageUrl: sampleImg,
 			notice: {
 				content: 'string',
-				noticeImageUrl: 'string',
-				timeInfo: 'string',
+				noticeImageUrl: samplePoster,
+				timeInfo: '공연 시작 3시간 전까지 예매 가능',
 			},
 			casting: [
 				{
