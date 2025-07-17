@@ -24,19 +24,6 @@ import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
 function Production() {
 	const { prodId } = useParams();
 
-	const imageList = [
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-	];
-
 	const mockData = {
 		isSuccess: true,
 		code: '200',
@@ -226,7 +213,7 @@ function Production() {
 					<ContentArea>
 						{activeTab === 'plays' && (
 							<>
-								<SubText>{mockData.result.length}개의 연극</SubText>
+								<SubText>{playList.length}개의 연극</SubText>
 								<CardArea>
 									{playList?.map((data) => (
 										<ProdPlayCard data={data}  onClick={navigateToDetail}/>
@@ -236,7 +223,7 @@ function Production() {
 						)}
 						{activeTab === 'gallery' && (
 							<>
-								<SubText>{imageList.length}개의 사진첩</SubText>
+								<SubText>{mockData.result.length}개의 사진첩</SubText>
 								<MasonryWeb data={mockData} />
 							</>
 						)}
