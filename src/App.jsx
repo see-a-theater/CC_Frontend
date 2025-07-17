@@ -110,8 +110,8 @@ function App() {
 				<Route path="/notification" element={<Notification />} />
 				<Route path="/plays/detail/:playId" element={<Detail />} />
 
-				<Route path="/production" element={<Production />} />
-				<Route path="/production/:prodId" element={<ProdDetail />} />
+				<Route path="/production/:prodId" element={<Production />} />
+				<Route path="/production/:prodId/detail" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
 
 				<Route path="admin" element={<Admin />}>

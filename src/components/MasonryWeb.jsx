@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
-function MasonryWeb({ imageData }) {
+function MasonryWeb(props) {
 	return (
 		<ImageArea>
-			{imageData?.map((data, idx) => (
+			{props?.data.result.map((data, idx) => (
 				<Item key={idx}>
 					<img src={data?.imageUrl} alt="공연사진" className="pic" />
 					<Text>
 						<p className="title">{data?.amateurShowName}</p>
-						{data.memberName && <p className="theatre">{data?.memberName}</p>}
+						{data.place && <p className="theatre">{data?.place}</p>}
 					</Text>
 				</Item>
 			))}
