@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { AdminListPage } from '../STYLE/admin.style';
 import Pagination from 'react-js-pagination';
 function RefundManagement() {
-	const navigate = useNavigate();
 	const requests = [
 		{
 			userId: 'diana8443',
@@ -16,6 +15,7 @@ function RefundManagement() {
 			title: '실종',
 			date: '2025-01-09 / 14:50',
 			requestDate: '2024.01.24 / 17:59',
+			id: 1,
 		},
 		{
 			userId: 'diana8443',
@@ -23,6 +23,7 @@ function RefundManagement() {
 			title: '실종',
 			date: '2025-01-09 / 14:50',
 			requestDate: '2024.01.24 / 17:59',
+			id: 2,
 		},
 		{
 			userId: 'diana8443',
@@ -30,6 +31,7 @@ function RefundManagement() {
 			title: '실종',
 			date: '2025-01-09 / 14:50',
 			requestDate: '2024.01.24 / 17:59 ',
+			id: 3,
 		},
 		{
 			userId: 'diana8443',
@@ -37,6 +39,7 @@ function RefundManagement() {
 			title: '실종',
 			date: '2025-01-09 / 14:50',
 			requestDate: '2024.01.24 / 17:59 ',
+			id: 4,
 		},
 		{
 			userId: 'diana8443',
@@ -44,6 +47,7 @@ function RefundManagement() {
 			title: '실종',
 			date: '2025-01-09 / 14:50',
 			requestDate: '2024.01.24 / 17:59 ',
+			id: 5,
 		},
 	];
 	const [stockList, setStockList] = useState(requests);
@@ -60,6 +64,11 @@ function RefundManagement() {
 	useEffect(() => {
 		setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
 	}, [page, stockList]);
+
+	const navigate = useNavigate();
+	const goDetail = (id) => {
+		navigate(`${id}`);
+	};
 
 	return (
 		<>
@@ -78,7 +87,7 @@ function RefundManagement() {
 						</tr>
 					</thead>
 					<tbody>
-						{currentList.map((request, id) => (
+						{currentList.map((request) => (
 							<tr key={request.id}>
 								{console.log(request)}
 								<td>{request.userId}</td>
@@ -87,7 +96,7 @@ function RefundManagement() {
 								<td>{request.date}</td>
 								<td>{request.requestDate}</td>
 								<td>
-									<button onClick={() => navigate('1')}>상세</button>
+									<button onClick={() => goDetail(request.id)}>상세</button>
 								</td>
 							</tr>
 						))}

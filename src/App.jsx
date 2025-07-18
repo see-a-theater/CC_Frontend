@@ -43,6 +43,7 @@ import RegisterRequestDetail from './pages/admin/register-request/RegisterReques
 import TicketManagement from './pages/admin/tickets/TicketManagement.jsx';
 import ReservationManagement from './pages/admin/reservation/ReservationManagement.jsx';
 import RefundManagement from './pages/admin/refund/RefundManagement.jsx';
+import RefundDetail from './pages/admin/refund/RefundDetail.jsx';
 import MyPageManagement from './pages/admin/mypage/MypageManagement.jsx';
 import TicketManagementDetail from './pages/admin/tickets/TicketManagementDetail.jsx';
 import ReservationManagementDetail from './pages/admin/reservation/ReservationManagementDetail.jsx';
@@ -139,6 +140,7 @@ function App() {
 						element={<ReservationManagementDetail />}
 					/>
 					<Route path="refunds" element={<RefundManagement />} />
+					<Route path="refunds/:refundId" element={<RefundDetail />} />
 					<Route path="inquiry" element={<Inquiry />} />
 					<Route path="inquiry/:inquiryId" element={<InquiryDetail />} />
 					<Route path="mypage" element={<MyPageManagement />} />
