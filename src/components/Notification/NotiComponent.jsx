@@ -1,10 +1,29 @@
 import styled from 'styled-components';
 import Noti from '@/components/Notification/Noti';
-
 import PillToggleGroup from '@/components/PillToggleGroup';
 
-function NotiComponent(props) {
+import useCustomFetch from '@/utils/hooks/useAxios';
+
+function NotiComponent() {
 	const options = ['전체', '소극장 공연', '추천 공연'];
+
+	const { data: notiData, error, loading } = useCustomFetch(`/notice`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', notiData);
+
+	const { fetchData: markAsRead } = useCustomFetch(null, 'PATCH');
+
+	const handleClick = async (noticeId) => {
+		try {
+			await markAsRead(`/notice/${noticeId}`);
+			// 이후에 알림 목록을 다시 불러오거나 상태를 변경
+			location.reload(); // 임시: 새로고침으로 변경사항 반영
+		} catch (error) {
+			console.error('알림 읽음 처리 실패', error);
+		}
+	};
 
 	return (
 		<Box>
@@ -13,14 +32,15 @@ function NotiComponent(props) {
 			</Toggle>
 
 			<NotiList>
-				{props?.data.map((noti, idx) => (
+				{notiData?.result.map((noti) => (
 					<Noti
-						key={idx}
-						type={noti.type}
-						category={noti.category}
-						content={noti.content}
-						when={noti.when}
-						checked={noti.checked}
+						key={noti.id}
+						type={noti.noticeType}
+						noticeType={noti.noticeType}
+						content={noti.message}
+						when={noti.createdAt}
+						checked={noti.isRead}
+						onClick={() => handleClick(noti.contentId)}
 					/>
 				))}
 			</NotiList>

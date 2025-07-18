@@ -1,7 +1,7 @@
 // yarn add axios
 
 import { useEffect, useState } from 'react';
-import { axiosInstance } from '../apis/axiosInstance';
+import { axiosInstance } from '@/utils/apis/axiosInstance';
 
 const useCustomFetch = (url, method = 'GET', body = null) => {
 	const [data, setData] = useState(null);

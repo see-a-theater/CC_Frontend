@@ -4,7 +4,7 @@ import Board from '@/assets/icons/board-filled.svg?react';
 import Logo from '@/assets/icons/logo.svg?react';
 import Movie from '@/assets/icons/movie-filled.svg?react';
 
-function Noti({ type, category, content, when, checked }) {
+function Noti({ type, category, content, when, checked, onClick}) {
 	const renderIcon = () => {
 		if (type === 'play') return <Movie width={16} />;
 		if (type === 'board') return <Board width={16} />;
@@ -12,14 +12,28 @@ function Noti({ type, category, content, when, checked }) {
 		return null;
 	};
 
+	function formatWhen(createdAt) {
+		const now = new Date();
+		const created = new Date(createdAt);
+		const diffMs = now - created;
+
+		const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+		if (diffHours < 24) {
+			return `${diffHours}시간 전`;
+		} else {
+			return `${created.getMonth() + 1}월 ${created.getDate()}일`;
+		}
+	}
+
 	return (
-		<Container checked={checked}>
+		<Container checked={checked} onClick={onClick}>
 			<div className="smallTitle">
 				{renderIcon()}
 				<p className="category">{category}</p>
 			</div>
 			<p className="notiContent">{content}</p>
-			<p className="when">{when}</p>
+			<p className="when">{formatWhen(when)}</p>
 		</Container>
 	);
 }
