@@ -17,14 +17,14 @@ import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import TicketDetail from './pages/mypage/ticket/TicketDetail';
 import LikedTheater from './pages/mypage/liked-theater/LikedTheater';
-import MyPageMenu from './pages/mypage/MypageMenu';
+import MyPageMenu from './pages/mypage/MyPageMenu';
 import Notification from './pages/notification/Notification';
 import AboutCC from './pages/mypage/about-cc/AboutCC';
-import RegisterStep1 from './pages/register/RegisterStep1';
-import RegisterStep2 from './pages/register/RegisterStep2';
-import RegisterStep3 from './pages/register/RegisterStep3';
-import RegisterStep4 from './pages/register/RegisterStep4';
-import RegisterStep5 from './pages/register/RegisterStep5';
+import RegisterStep1 from './pages/Register/RegisterStep1';
+import RegisterStep2 from './pages/Register/RegisterStep2';
+import RegisterStep3 from './pages/Register/RegisterStep3';
+import RegisterStep4 from './pages/Register/RegisterStep4';
+import RegisterStep5 from './pages/Register/RegisterStep5';
 import TicketCancelComplete from './pages/mypage/ticket/TicketCancelComplete';
 import TicketCancel from './pages/mypage/ticket/TicketCancel';
 import AccountConnection from './pages/mypage/account-connection/AccountConnection';
@@ -54,12 +54,14 @@ import GalleryDetail from './pages/admin/GalleryDetail.jsx';
 import PlaysDetail from './pages/admin/PlaysDetail.jsx';
 import Inquiry from './pages/admin/Inquiry.jsx';
 import InquiryDetail from './pages/admin/InquiryDetail.jsx';
+import SearchMobile from './pages/search/SearchMobile.jsx';
 
 function App() {
 	return (
 		<>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/search" element={<SearchMobile/>} />
 				<Route
 					path="/small-theater/current"
 					element={<SmallTheaterCurrent />}
