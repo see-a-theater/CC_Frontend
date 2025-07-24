@@ -4,12 +4,32 @@ import Board from '@/assets/icons/board-filled.svg?react';
 import Logo from '@/assets/icons/logo.svg?react';
 import Movie from '@/assets/icons/movie-filled.svg?react';
 
-function Noti({ type, category, content, when, checked, onClick}) {
+function Noti({ type, content, when, checked, onClick }) {
+	//REPLY(댓글 알림), COMMENT(댓글 알림), HOT(게시글 알림), AMATEURSHOW(좋아요 한 극단 공연 등록), TICKET(예매완료), REMIND(공연 당일 리마인드)
 	const renderIcon = () => {
-		if (type === 'play') return <Movie width={16} />;
-		if (type === 'board') return <Board width={16} />;
-		if (type === 'cc') return <Logo width={16} />;
+		if (type === 'AMATEURSHOW' || type === 'REMIND' || type === 'TICKET')
+			return <Movie width={16} />;
+		if (type === 'HOT' || '') return <Board width={16} />;
+		if (type === 'COMMENT' || type === 'REPLY') return <Logo width={16} />;
 		return null;
+	};
+
+	const getCategoryLabel = () => {
+		switch (type) {
+			case 'REPLY':
+			case 'COMMENT':
+				return '댓글 알림';
+			case 'HOT':
+				return '게시글 알림';
+			case 'AMATEURSHOW':
+				return '좋아요 한 극단 공연 등록';
+			case 'TICKET':
+				return '예매 완료';
+			case 'REMIND':
+				return '공연 당일 리마인드';
+			default:
+				return '알림';
+		}
 	};
 
 	function formatWhen(createdAt) {
@@ -30,7 +50,7 @@ function Noti({ type, category, content, when, checked, onClick}) {
 		<Container checked={checked} onClick={onClick}>
 			<div className="smallTitle">
 				{renderIcon()}
-				<p className="category">{category}</p>
+				<p className="category">{getCategoryLabel()}</p>
 			</div>
 			<p className="notiContent">{content}</p>
 			<p className="when">{formatWhen(when)}</p>
