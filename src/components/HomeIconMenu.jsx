@@ -151,8 +151,8 @@ const MenuWrapper = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-	position: absolute;
+	position: fixed;
 	top: 100px;
 	left: 100px;
-	z-index: 3000;
+	z-index: 9999;
 `;
