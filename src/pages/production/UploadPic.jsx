@@ -196,7 +196,7 @@ function UploadPic() {
 													setMenuOpen(false);
 												}}
 											>
-												+ 공연 새로 추가하기
+												+ 새로 공연 추가하기
 											</OptionItem>
 										</Dropdown>
 									)}

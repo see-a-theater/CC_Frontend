@@ -93,7 +93,7 @@ function RegisterRequests() {
 	return (
 		<>
 			<AdminListPage>
-				<h1>등록 요청 관리</h1>
+				<SectionTitle>등록 요청 관리</SectionTitle>
 				<SearchOptionBar />
 				<table>
 					<thead>
@@ -136,3 +136,10 @@ function RegisterRequests() {
 	);
 }
 export default RegisterRequests;
+
+const SectionTitle = styled.h3`
+	font-size: ${({ theme }) => theme.font.fontSize.headline24};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink600};
+	margin-bottom: 12px;
+`;

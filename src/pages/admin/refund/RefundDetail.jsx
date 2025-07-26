@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
+import SubNav from '@/components/Admin/SubNav';
+
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
-import { useNavigate } from 'react-router-dom';
 
 function RefundDetail() {
-	const navigate = useNavigate();
-
 	const refund_data = {
 		play: '실종',
 		name: '전시연',
@@ -83,15 +84,7 @@ function RefundDetail() {
 		<Container>
 			<Content>
 				<SectionTitle>소극장 공연 관리</SectionTitle>
-				<SubNav>
-					<h3 onClick={() => navigate('/admin/tickets')}>소극장 티켓 관리</h3>
-					<h3 onClick={() => navigate('/admin/reservations')}>
-						예약 내역 관리
-					</h3>
-					<h3 onClick={() => navigate('/admin/refunds')} className="nowHere">
-						환불 내역 관리
-					</h3>
-				</SubNav>
+				<SubNav page={'refunds'} />
 				<FilterArea>
 					<SearchInput>
 						<input
@@ -206,21 +199,6 @@ const SectionTitle = styled.h3`
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.pink600};
 	margin-bottom: 12px;
-`;
-
-const SubNav = styled.div`
-	display: flex;
-	gap: 12px;
-	margin-bottom: 32px;
-
-	h3 {
-		font-size: ${({ theme }) => theme.font.fontSize.title16};
-		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
-		color: #8f8e94;
-	}
-	.nowHere {
-		color: ${({ theme }) => theme.colors.grayMain};
-	}
 `;
 const FilterArea = styled.div`
 	display: flex;

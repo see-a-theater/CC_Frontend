@@ -3,6 +3,7 @@ import SearchBar from '../../../components/SearchBar';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
 import SearchBarBlack from '../../../components/SearchBarBlack';
 import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
+import SubNav from '@/components/Admin/SubNav';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AdminListPage } from '../STYLE/admin.style';
@@ -65,7 +66,8 @@ function ReservationManagement() {
 	return (
 		<>
 			<AdminListPage>
-				<h1>등록 요청 관리</h1>
+				<SectionTitle>소극장 공연 관리</SectionTitle>
+				<SubNav page={'reservations'} />
 				<SearchOptionBar />
 				<table>
 					<thead>
@@ -108,3 +110,10 @@ function ReservationManagement() {
 	);
 }
 export default ReservationManagement;
+
+const SectionTitle = styled.h3`
+	font-size: ${({ theme }) => theme.font.fontSize.headline24};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink600};
+	margin-bottom: 12px;
+`;
