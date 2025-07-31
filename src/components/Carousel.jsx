@@ -1,5 +1,5 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState } from 'react';
+import styled from 'styled-components';
 
 function Carousel(props) {
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -7,11 +7,11 @@ function Carousel(props) {
 	return (
 		<Container>
 			<ImageArea>
-				<img src={props?.data[currentIndex].src} alt={props?.data[currentIndex]?.text} />
+				<img src={props?.data.result[currentIndex].imageUrl} />
 			</ImageArea>
 
 			<DotWrapper>
-				{props?.data.map((_, index) => (
+				{props?.data.result.map((_, index) => (
 					<Dot
 						key={index}
 						$isActive={index === currentIndex}
@@ -24,7 +24,6 @@ function Carousel(props) {
 }
 
 export default Carousel;
-
 
 const Container = styled.div`
 	width: 100%;
@@ -45,7 +44,6 @@ const ImageArea = styled.div`
 		object-fit: cover;
 	}
 `;
-
 
 const DotWrapper = styled.div`
 	position: absolute;

@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-function ProdPlayCard({ data }) {
+function ProdPlayCard({ data, onClick }) {
 	const isEnded = !data.activeNow;
 
 	return (
-		<Container>
+		<Container onClick={onClick}>
 			<PosterCard imageUrl={data.src} isEnded={isEnded}>
 				{isEnded && <Tag>공연종료</Tag>}
 			</PosterCard>

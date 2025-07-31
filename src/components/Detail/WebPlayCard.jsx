@@ -1,11 +1,20 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 function WebPlayCard(props) {
+	const ShowId = props?.data.amateurShowId;
+
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${ShowId}`);
+		window.scrollTo(0, 0);
+	};
+
 	return (
-		<Card image={props?.data.src}>
+		<Card image={props?.data.posterImageUrl} onClick={goDetail}>
 			<TextArea>
-				<Text className="Title">{props?.data.title}</Text>
-				<Text className="Date">{props?.data.date}</Text>
+				<Text className="Title">{props?.data.name}</Text>
+				<Text className="Date">{props?.data.schedule}</Text>
 				<Text className="Location">{props?.data.place}</Text>
 			</TextArea>
 		</Card>
@@ -30,7 +39,7 @@ const TextArea = styled.div`
 	position: absolute;
 	left: 28px;
 	bottom: 28px;
-	
+
 	display: flex;
 	flex-direction: column;
 `;

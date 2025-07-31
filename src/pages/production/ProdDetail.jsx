@@ -13,6 +13,8 @@ import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 
 function ProdDetail() {
+	//api 불러오는 코드 추가
+
 	const mockData = [
 		{
 			production: '홍익극연구회',
@@ -24,16 +26,58 @@ function ProdDetail() {
                     어쩌구 저쩌구 자축~~~~~`,
 		},
 	];
-	const imageList = [
-		{ src: image1, text: '실종', theatre: '홍익극연구회' },
-		{ src: image2, text: '카포네 트릴로지', theatre: '홍익극연구회' },
-		{ src: image3, text: '실종', theatre: '홍익극연구회' },
-		{ src: image4, text: '실종', theatre: '홍익극연구회' },
-		{ src: image5, text: '킬링시저', theatre: '설렘' },
-		{ src: image1, text: '실종', theatre: '홍익극연구회' },
-		{ src: image2, text: '카포네 트릴로지', theatre: '홍익극연구회' },
-		{ src: image3, text: '실종', theatre: '홍익극연구회' },
-	];
+	const imageList = {
+		isSuccess: true,
+		code: '200',
+		message: 'OK',
+		result: [
+			{
+				photoAlbumId: 0,
+				amateurShowName: '실종',
+				place: 'string',
+				imageUrl: image1,
+			},
+			{
+				photoAlbumId: 2,
+				amateurShowName: '카포네 트릴로지',
+				place: 'string',
+				imageUrl: image2,
+			},
+
+			{
+				photoAlbumId: 3,
+				amateurShowName: '킬링시저',
+				place: 'string',
+				imageUrl: image3,
+			},
+			{
+				photoAlbumId: 4,
+				amateurShowName: '카포네 트릴로지',
+				place: 'string',
+				imageUrl: image4,
+			},
+
+			{
+				photoAlbumId: 5,
+				amateurShowName: '킬링시저',
+				place: 'string',
+				imageUrl: image5,
+			},
+			{
+				photoAlbumId: 6,
+				amateurShowName: '카포네 트릴로지',
+				place: 'string',
+				imageUrl: image4,
+			},
+
+			{
+				photoAlbumId: 7,
+				amateurShowName: '킬링시저',
+				place: 'string',
+				imageUrl: image5,
+			},
+		],
+	};
 
 	return (
 		<>
@@ -57,10 +101,10 @@ function ProdDetail() {
 						'{mockData[0].production}'의 사진첩 더보기
 					</p>
 					<ImgList>
-						{imageList?.map((data) => (
+						{imageList?.result.map((data) => (
 							<ImgCard>
-								<img src={data.src} alt={data.text} />
-								<p>{data.text}</p>
+								<img src={data.imageUrl} />
+								<p>{data.amateurShowName}</p>
 							</ImgCard>
 						))}
 					</ImgList>
@@ -101,12 +145,12 @@ function ProdDetail() {
 							'{mockData[0].production}'의 사진첩 더보기
 						</p>
 						<ImgList>
-							{imageList?.map((data) => (
+							{imageList?.result.map((data) => (
 								<ImgCard>
-									<img src={data.src} alt={data.text} />
+									<img src={data.imageUrl} />
 									<div className="textArea">
-										<p className="title">{data.text}</p>
-										<p className="theatre">{data.theatre}</p>
+										<p className="title">{data.amateurShowName}</p>
+										<p className="theatre">{data.place}</p>
 									</div>
 								</ImgCard>
 							))}
@@ -131,14 +175,17 @@ const Web = styled.div`
 	display: none;
 	@media (min-width: 768px) {
 		display: flex;
-		width: 100vw;
-		margin-left: 100px;
-		padding: 100px 100px 60px 60px;
+		width: 100%;
 	}
 `;
 
 const Container = styled.div`
 	width: 100%;
+
+	@media (min-width: 768px) {
+		//margin-left: 100px;
+		padding: 100px 100px 60px 160px;
+	}
 `;
 
 const Content = styled.div`
@@ -191,7 +238,7 @@ const TextArea = styled.div`
 	}
 
 	@media (min-width: 768px) {
-		width: 700px;
+		//width: 700px;
 
 		.titleArea {
 			display: flex;
@@ -218,6 +265,7 @@ const Divide = styled.div`
 	}
 `;
 const MorePic = styled.div`
+	width: 100%;
 	padding-top: 24px;
 
 	.galleryTitle {
@@ -229,6 +277,7 @@ const MorePic = styled.div`
 	}
 
 	@media (min-width: 768px) {
+		width: 100%;
 		.galleryTitle {
 			font-size: ${({ theme }) => theme.font.fontSize.headline20};
 		}
@@ -239,7 +288,7 @@ const ImgList = styled.div`
 	gap: 12px;
 	overflow-x: auto;
 	overflow-y: hidden;
-
+	width: 100%;
 	&::-webkit-scrollbar {
 		display: none;
 	}
@@ -267,6 +316,7 @@ const ImgCard = styled.div`
 			width: 270px;
 			border-radius: 5px;
 			aspect-ratio: unset;
+			max-height: 350px;
 		}
 		.textArea {
 			display: flex;
