@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import HomeIconMenu from '../../components/HomeIconMenu';
+import HomeIconMenu from '@/components/HomeIconMenu';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ChevronUp from '@/assets/icons/ChevronUpWhite.svg?react';
@@ -45,7 +45,8 @@ function Admin() {
 					<li
 						className={selectedMenu === 'performances' ? 'selected' : ''}
 						onClick={() => {
-							setOpenSubMenu(!openSubMenu);
+							//setOpenSubMenu(!openSubMenu);
+							handleMenuClick('performances', '/admin/plays');
 						}}
 					>
 						소극장 공연 관리
@@ -55,9 +56,17 @@ function Admin() {
 									transform: 'rotate(180deg)',
 									transition: 'transform 0.3s',
 								}}
+								onClick={() => {
+									setOpenSubMenu(!openSubMenu);
+								}}
 							/>
 						) : (
-							<ChevronUp style={{ transition: 'transform 0.3s' }} />
+							<ChevronUp
+								style={{ transition: 'transform 0.3s' }}
+								onClick={() => {
+									setOpenSubMenu(!openSubMenu);
+								}}
+							/>
 						)}
 					</li>
 					{openSubMenu && (
