@@ -16,9 +16,8 @@ import useCustomFetch from '@/utils/hooks/useAxios';
 import SamplePoster from '@/assets/mock/images/실종.png';
 
 function Playlist() {
-	const sampleList = [1, 2, 3];
 	const [current, setCurrent] = useState(0);
-	
+
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
@@ -35,6 +34,13 @@ function Playlist() {
 		loading: rankLoading,
 	} = useCustomFetch(`/amateurs/ranking`);
 	console.log('rankData:', rankData);
+
+	const {
+		data: ongoingData,
+		error: ongoingError,
+		loading: ongoingLoading,
+	} = useCustomFetch(`/amateurs/ongoing`);
+	console.log('ongoing:', ongoingData);
 
 	return (
 		<Container>
@@ -61,7 +67,7 @@ function Playlist() {
 					<WebOnGoing>
 						<h3>현재 진행중인 소극장 연극</h3>
 						<BoxWrapper>
-							{todayData?.result.map((data) => (
+							{ongoingData?.result.content.map((data) => (
 								<WebListCard
 									key={data.amateurShowId}
 									name={data.name}
@@ -88,7 +94,7 @@ function Playlist() {
 
 						<CarouselWrapper>
 							<CarouselTrack $current={current}>
-								{rankData?.result.map((data, idx) => (
+								{todayData?.result.map((data, idx) => (
 									<Slide key={data.amateurShowId}>
 										<PlayCard
 											key={data.amateurShowId}
@@ -102,7 +108,7 @@ function Playlist() {
 							</CarouselTrack>
 						</CarouselWrapper>
 						<IndicatorWrapper>
-							{sampleList.map((_, idx) => (
+							{todayData?.result.map((_, idx) => (
 								<Dot
 									key={idx}
 									className={idx === current ? 'active' : ''}
@@ -115,7 +121,7 @@ function Playlist() {
 				<Now>
 					<h3 className="onGoing"> 현재 진행중 </h3>
 					<MappingArea>
-						{todayData?.result.map((data) => (
+						{ongoingData?.result.content.map((data) => (
 							<NowShowing
 								key={data.amateurShowId}
 								name={data.name}
