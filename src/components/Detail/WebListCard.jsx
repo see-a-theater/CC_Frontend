@@ -1,37 +1,43 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-function WebListCard(props) {
-	const ShowId = props?.data.amateurShowId;
-
+function WebListCard({ name, posterImageUrl, place, schedule, amateurShowId }) {
 	const navigate = useNavigate();
 	const goDetail = () => {
-		navigate(`detail/${ShowId}`);
+		navigate(`detail/${amateurShowId}`);
 		window.scrollTo(0, 0);
 	};
 
 	return (
 		<Box>
 			<img
-				src={props?.data.posterImageUrl}
+				src={posterImageUrl}
 				alt="포스터 이미지"
 				className="poster"
 				onClick={goDetail}
 			/>
-			<p className="title">{props?.data.name}</p>
-			<p className="place">{props?.data.place}</p>
+			<p className="title">{name}</p>
+			<p className="place">{place}</p>
 			<p className="date">
-				{props?.data.schedule
+				{schedule
 					? (() => {
-							const [before, after] = props.data.schedule.split('~');
+							const parts = schedule.split('~');
+							const before = parts[0]?.trim() ?? '';
+							const after = parts[1]?.trim() ?? '';
 							return (
 								<>
-									{before.trim()} ~<br />
-									{after.trim()}
+									{before}
+									{after && (
+										<>
+											{' ~'}
+											<br />
+											{after}
+										</>
+									)}
 								</>
 							);
 						})()
-					: null}
+					: '날짜 정보 없음'}
 			</p>
 		</Box>
 	);

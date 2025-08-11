@@ -16,123 +16,31 @@ import useCustomFetch from '@/utils/hooks/useAxios';
 import SamplePoster from '@/assets/mock/images/실종.png';
 
 function Playlist() {
-	const sampleList = [1, 2, 3];
-	const TodayHot = {
-		isSuccess: true,
-		code: '200',
-		message: 'OK',
-		result: [
-			{
-				amateurShowId: 1,
-				name: '실종 - 사라진 그림자',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 2,
-				name: '실종 - 기억의 조각',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 3,
-				name: '실종 - 잊혀진 시간',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-		],
-	};
-	const mockData = {
-		isSuccess: true,
-		code: '200',
-		message: 'OK',
-		result: [
-			{
-				amateurShowId: 1,
-				name: '실종 - 사라진 그림자',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 2,
-				name: '실종 - 기억의 조각',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 3,
-				name: '실종 - 잊혀진 시간',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 4,
-				name: '실종 - 끝나지 않은 이야기',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 5,
-				name: '실종 - 비밀의 흔적',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 6,
-				name: '실종 - 진실을 찾아서',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 7,
-				name: '실종 - 어둠 속 외침',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 8,
-				name: '실종 - 마지막 단서',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 9,
-				name: '실종 - 그림자 게임',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-			{
-				amateurShowId: 10,
-				name: '실종 - 미궁 속으로',
-				place: '홍익대학교 학생회관 3층 소극장',
-				schedule: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-				posterImageUrl: SamplePoster,
-			},
-		],
-	};
 	const [current, setCurrent] = useState(0);
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
-	const { data: todayData, error, loading } = useCustomFetch(`/amateurs/today`);
+	const {
+		data: todayData,
+		error: todayError,
+		loading: todayLoading,
+	} = useCustomFetch(`/amateurs/today`);
+	console.log('todayData:', todayData);
 
-	console.log('error:', error);
-	console.log('loading:', loading);
-	console.log('data:', todayData);
-	// 아직 api에 데이터가 없어 mock으로 대체
+	const {
+		data: rankData,
+		error: rankError,
+		loading: rankLoading,
+	} = useCustomFetch(`/amateurs/ranking`);
+	console.log('rankData:', rankData);
+
+	const {
+		data: ongoingData,
+		error: ongoingError,
+		loading: ongoingLoading,
+	} = useCustomFetch(`/amateurs/ongoing`);
+	console.log('ongoing:', ongoingData);
 
 	return (
 		<Container>
@@ -145,16 +53,28 @@ function Playlist() {
 					<WebHot>
 						<h3 className="Todays">요즘 🔥HOT한 소극장 연극</h3>
 						<CardWrapper>
-							{TodayHot?.result.map((data) => (
-								<WebPlayCard data={data} key={data.amateurShowId} />
+							{rankData?.result.map((data) => (
+								<WebPlayCard
+									key={data.amateurShowId}
+									name={data.name}
+									place={data.place}
+									posterImageUrl={data.posterImageUrl}
+									schedule={data.schedule}
+								/>
 							))}
 						</CardWrapper>
 					</WebHot>
 					<WebOnGoing>
 						<h3>현재 진행중인 소극장 연극</h3>
 						<BoxWrapper>
-							{mockData?.result.map((data) => (
-								<WebListCard data={data} key={data.amateurShowId} />
+							{ongoingData?.result.content.map((data) => (
+								<WebListCard
+									key={data.amateurShowId}
+									name={data.name}
+									place={data.place}
+									posterImageUrl={data.posterImageUrl}
+									schedule={data.schedule}
+								/>
 							))}
 						</BoxWrapper>
 					</WebOnGoing>
@@ -174,15 +94,21 @@ function Playlist() {
 
 						<CarouselWrapper>
 							<CarouselTrack $current={current}>
-								{TodayHot?.result.map((data, idx) => (
+								{todayData?.result.map((data, idx) => (
 									<Slide key={data.amateurShowId}>
-										<PlayCard data={data} />
+										<PlayCard
+											key={data.amateurShowId}
+											name={data.name}
+											place={data.place}
+											posterImageUrl={data.posterImageUrl}
+											schedule={data.schedule}
+										/>
 									</Slide>
 								))}
 							</CarouselTrack>
 						</CarouselWrapper>
 						<IndicatorWrapper>
-							{sampleList.map((_, idx) => (
+							{todayData?.result.map((_, idx) => (
 								<Dot
 									key={idx}
 									className={idx === current ? 'active' : ''}
@@ -195,8 +121,14 @@ function Playlist() {
 				<Now>
 					<h3 className="onGoing"> 현재 진행중 </h3>
 					<MappingArea>
-						{mockData?.result.map((data) => (
-							<NowShowing data={data} key={data.amateurShowId} />
+						{ongoingData?.result.content.map((data) => (
+							<NowShowing
+								key={data.amateurShowId}
+								name={data.name}
+								place={data.place}
+								posterImageUrl={data.posterImageUrl}
+								schedule={data.schedule}
+							/>
 						))}
 					</MappingArea>
 				</Now>

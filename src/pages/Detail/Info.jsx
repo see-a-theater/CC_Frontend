@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useCustomFetch from '@/utils/hooks/useAxios';
 
 import Location from '@/assets/icons/location.svg?react';
 import Time from '@/assets/icons/time.svg?react';
@@ -9,139 +7,35 @@ import Price from '@/assets/icons/price.svg?react';
 
 import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
 
-import sampleImg from '@/assets/mock/images/실종.png';
-import samplePoster from '@/assets/mock/images/실종_정보.png';
-import profile from '@/assets/mock/images/프로필.png';
-
 import Cast from './InfoArea/Cast';
 import Perform from './InfoArea/Perform';
 import Gallery from './InfoArea/Gallery';
 
-function Info() {
-	const { playId } = useParams();
-	const mockData = {
-		isSuccess: true,
-		code: '200',
-		message: 'OK',
-		result: {
-			amateurShowId: 0,
-			name: '실종',
-			place: '홍익대학교 학생회관 3층 소극장',
-			schedule: '2025.10.03 (목) ~ 2025.10.05 (토)',
-			runtime: '60분',
-			account: '123456789',
-			contact: '010-1111-2222',
-			hashtag: '극중극, 드라마, 구덩이',
-			summary:
-				"1998년 가을, ‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.",
-			posterImageUrl: sampleImg,
-			notice: {
-				content: 'string',
-				noticeImageUrl: samplePoster,
-				timeInfo: '공연 시작 3시간 전까지 예매 가능',
-			},
-			casting: [
-				{
-					actorName: '이지후',
-					castingName: '7급',
-					castingImageUrl: profile,
-				},
-				{
-					actorName: '권혁진',
-					castingName: '5급',
-					castingImageUrl: profile,
-				},
-				{
-					actorName: '이승재',
-					castingName: '6급',
-					castingImageUrl: profile,
-				},
-				{
-					actorName: '임유빈',
-					castingName: '학생1',
-					castingImageUrl: profile,
-				},
-			],
-			staff: [
-				{
-					position: '원작',
-					staffName: '최문애',
-				},
-				{
-					position: '연출/각색',
-					staffName: '서준서',
-				},
-				{
-					position: '조연출',
-					staffName: '권혁진, 이보미',
-				},
-			],
-			rounds: [
-				{
-					roundNumber: 0,
-					performanceDateTime: '10.03 (목) 17:00',
-					totalTicket: 0,
-				},
-				{
-					roundNumber: 1,
-					performanceDateTime: '10.04 (금) 17:00',
-					totalTicket: 0,
-				},
-				{
-					roundNumber: 2,
-					performanceDateTime: '10.05 (토) 17:00',
-					totalTicket: 0,
-				},
-			],
-			tickets: [
-				{
-					discountName: '일반예매',
-					price: 10000,
-				},
-				{
-					discountName: '홍대생',
-					price: 7000,
-				},
-			],
-		},
-	};
-	const mockGenre = [
-		{ label: '극중극' },
-		{ label: '드라마' },
-		{ label: '구덩이' },
-	];
-	const displayGenre = mockData?.result.hashtag
-		? mockData?.result.hashtag.split(', ').map((tag) => ({ label: tag }))
-		: mockGenre;
-
-	const {
-		data: playData,
-		error,
-		loading,
-	} = useCustomFetch(`/amateurs/${playId}`);
-	// 현재 404, 존재하지 않는 뮤지컬로 뜸 (데이터 없는 것으로 추정)
-	// 아직 api에 데이터가 없어 mock으로 대체
-
-	console.log('error:', error);
-	console.log('loading:', loading);
-	console.log('data:', playData);
-
+function Info({ playData }) {
 	const [activeTab, setActiveTab] = useState('perform');
+
+	console.log('InfoData:', playData);
+
+	const displayGenre = playData.result.hashtag
+		.split('#')
+		.map((tag) => tag.trim())
+		.filter((tag) => tag.length > 0)
+		.map((tag) => ({ label: tag }));
 
 	return (
 		<Container>
 			<Mobile>
 				<Top>
 					<ChevronLeftPink height={15} alt="이전" className="back" />
-					<p className="title">{mockData?.result.name}</p>
+					<p className="title">{playData?.result.name}</p>
 				</Top>
 				<img
-					src={mockData?.result.posterImageUrl}
+					src={playData?.result.posterImageUrl}
 					height={220}
 					alt="포스터 이미지"
 					className="poster"
 				/>
-				<h3 className="title">{mockData?.result.name}</h3>
+				<h3 className="title">{playData?.result.name}</h3>
 				<TagList>
 					{displayGenre.map((genre, index) => (
 						<Tag key={index}>{genre.label}</Tag>
@@ -154,7 +48,7 @@ function Info() {
 							<Location height={24} />
 						</IconWrapper>
 
-						<p className="blackTxt">{mockData?.result.place}</p>
+						<p className="blackTxt">{playData?.result.place}</p>
 					</InfoBlock>
 					<InfoBlock>
 						<IconWrapper>
@@ -163,12 +57,12 @@ function Info() {
 
 						<div className="gap10">
 							<div>
-								<span className="blackTxt">{mockData?.result.schedule}</span>
-								<span className="pinkTxt">{mockData?.result.runtime}</span>
+								<span className="blackTxt">{playData?.result.schedule}</span>
+								<span className="pinkTxt">{playData?.result.runtime}</span>
 							</div>
 
 							<div className="gap8">
-								{mockData?.result.rounds.map((data) => (
+								{playData?.result.rounds.map((data) => (
 									<p className="grayTxt">
 										{data.roundNumber}회차 {data.performanceDateTime}
 									</p>
@@ -182,7 +76,7 @@ function Info() {
 						</IconWrapper>
 
 						<div className="gap10">
-							{mockData?.result.tickets.map((data) => (
+							{playData?.result.tickets.map((data) => (
 								<div className="ticket">
 									<p className="grayTxt discountName">{data.discountName}</p>
 									<p className="blackTxt">{data.price}</p>
@@ -214,21 +108,21 @@ function Info() {
 				</TabBar>
 
 				<ContentArea>
-					{activeTab === 'perform' && <Perform data={mockData}/>}
-					{activeTab === 'cast' && <Cast data={mockData}/>}
-					{activeTab === 'gallery' && <Gallery data={mockData}/>}
+					{activeTab === 'perform' && <Perform data={playData} />}
+					{activeTab === 'cast' && <Cast data={playData} />}
+					{activeTab === 'gallery' && <Gallery data={playData} />}
 				</ContentArea>
 
 				<BookBtn>예매하러 가기</BookBtn>
 			</Mobile>
 
 			<Web>
-				<h3 className="title">{mockData?.result.name}</h3>
+				<h3 className="title">{playData?.result.name}</h3>
 				<WebContent>
 					<WebLeft>
 						<WebInfo>
 							<img
-								src={mockData?.result.posterImageUrl}
+								src={playData?.result.posterImageUrl}
 								height={220}
 								alt="포스터 이미지"
 								className="poster"
@@ -240,7 +134,7 @@ function Info() {
 										<Location height={24} />
 									</IconWrapper>
 
-									<p className="blackTxt">{mockData?.result.place}</p>
+									<p className="blackTxt">{playData?.result.place}</p>
 								</InfoBlock>
 								<InfoBlock>
 									<IconWrapper>
@@ -250,14 +144,14 @@ function Info() {
 									<div className="gap10">
 										<div>
 											<span className="blackTxt">
-												{mockData?.result.schedule}
+												{playData?.result.schedule}
 											</span>
 											<span className="pinkTxt">
-												{mockData?.result.runtime}
+												{playData?.result.runtime}
 											</span>
 										</div>
 										<div className="gap12">
-											{mockData?.result.rounds.map((data) => (
+											{playData?.result.rounds.map((data) => (
 												<p className="grayTxt">
 													{data.roundNumber}회차 {data.performanceDateTime}
 												</p>
@@ -271,7 +165,7 @@ function Info() {
 									</IconWrapper>
 
 									<div className="gap12">
-										{mockData?.result.tickets.map((data) => (
+										{playData?.result.tickets.map((data) => (
 											<div className="ticket">
 												<p className="grayTxt discountName">
 													{data.discountName}
@@ -306,9 +200,9 @@ function Info() {
 						</TabBar>
 
 						<ContentArea>
-							{activeTab === 'perform' && <Perform data={mockData} />}
-							{activeTab === 'cast' && <Cast data={mockData} />}
-							{activeTab === 'gallery' && <Gallery data={mockData} />}
+							{activeTab === 'perform' && <Perform data={playData} />}
+							{activeTab === 'cast' && <Cast data={playData} />}
+							{activeTab === 'gallery' && <Gallery data={playData} />}
 						</ContentArea>
 					</WebLeft>
 
