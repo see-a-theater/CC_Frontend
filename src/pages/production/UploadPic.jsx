@@ -1,5 +1,7 @@
 //yarn add react-select
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
+import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -115,6 +117,26 @@ function UploadPic() {
 		}
 	};
 
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				// 예: jpg 파일을 photoAlbum 경로에 업로드할 Presigned URL 요청
+				const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
+					'jpg',
+					'photoAlbum',
+				);
+
+				console.log('📌 업로드 URL:', uploadUrl);
+				console.log('📌 Public URL:', publicUrl);
+				console.log('📌 Key Name:', keyName);
+			} catch (err) {
+				console.error('❌ 에러:', err.message);
+			}
+		}
+
+		fetchData();
+	}, []);
+
 	return (
 		<>
 			<Mobile>
@@ -144,6 +166,7 @@ function UploadPic() {
 						onSubmit={handleModalSubmit}
 					/>
 				)}
+				{/* {dateRange && console.log('선택된 날짜:', dateRange)} */}
 			</Mobile>
 
 			<Web>
