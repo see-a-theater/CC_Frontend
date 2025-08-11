@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import SimpleTable from '@/components/Admin/SimpleTable';
+
+import Search from '@/assets/icons/searchBlack.svg?react';
+
 
 function InquiryDetail() {
 	const inquiry_data = [
@@ -27,8 +31,22 @@ function InquiryDetail() {
 		navigate(-1);
 	};
 
+	const [searchTerm, setSearchTerm] = useState('');
+
 	return (
 		<Container>
+			<SectionTitle>문의</SectionTitle>
+			<FilterArea>
+				<SearchInput>
+					<input
+						type="text"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+					<Search width={15} />
+				</SearchInput>
+			</FilterArea>
+
 			<Title onClick={goBack}>{'<'} 일대일 문의</Title>
 			<ContentArea>
 				<SimpleTable data={inquiry_data} />
@@ -84,7 +102,7 @@ const ContentArea = styled.div`
 		font-style: normal;
 		font-weight: 800;
 		line-height: normal;
-        margin-bottom: 5px;
+		margin-bottom: 5px;
 	}
 `;
 const Title = styled.h2`
@@ -115,5 +133,36 @@ const Box = styled.div`
 		color: #8f8e94;
 		font-family: Pretendard;
 		font-size: 16px;
+	}
+`;
+const SectionTitle = styled.h3`
+	font-size: ${({ theme }) => theme.font.fontSize.headline24};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink600};
+	margin-bottom: 15px;
+`;
+const FilterArea = styled.div`
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 36px;
+
+`;
+const SearchInput = styled.div`
+	display: flex;
+	align-items: center;
+	padding: 0 10px;
+	background: #fff;
+	width: 360px;
+	height: 32px;
+	border-radius: 7px;
+	border: 1px solid #000;
+
+	input {
+		width: 100%;
+		border: none;
+		outline: none;
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
 	}
 `;

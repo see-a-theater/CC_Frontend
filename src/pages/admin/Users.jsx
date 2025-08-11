@@ -189,6 +189,7 @@ function Users() {
 		'id',
 		'name',
 		'email',
+		'number',
 		'gender',
 	]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -239,7 +240,7 @@ function Users() {
 							<Search width={15} />
 						</SearchInput>
 						<div className="checkboxArea">
-							{['id', 'name', 'email', 'gender'].map((key) => (
+							{['id', 'name', 'email', 'number', 'gender'].map((key) => (
 								<label key={key}>
 									<input
 										type="checkbox"

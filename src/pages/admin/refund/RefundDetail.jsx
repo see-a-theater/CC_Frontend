@@ -1,44 +1,51 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
+import SubNav from '@/components/Admin/SubNav';
+
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 
-function UsersDetail() {
-	const user_data = {
-		id: 'diana8443',
+function RefundDetail() {
+	const refund_data = {
+		play: '실종',
 		name: '전시연',
-		phone: '010-1234-5678',
-		email: 'cc1234@gmail.com',
-		birth: '2004-10-26',
-		gender: '여',
-		address: '서울특별시 와우산로 홍익대학교 홍문관 1층 102호',
+		date: '2024.01.25 / 14:00',
+		cancelDate: '2024.12.21 / 15:41',
+		price: '50,000원',
+		charge: '5000원',
+		account: '토스 뱅크 1000-1000-1000-1000',
+		situation: '환불 완료',
 	};
 
 	const rows = [
-		{ label: '아이디', value: user_data.id },
-		{ label: '이름', value: user_data.name },
-		{ label: '번호', value: user_data.phone },
-		{ label: 'E-mail', value: user_data.email },
-		{ label: '생년월일', value: user_data.birth },
-		{ label: '성별', value: user_data.gender },
-		{ label: '주소', value: user_data.address },
+		{ label: '소극장 공연 이름', value: refund_data.play },
+		{ label: '예약자명', value: refund_data.name },
+		{ label: '날짜/시간', value: refund_data.date },
+		{ label: '취소 시각', value: refund_data.cancelDate },
+		{ label: '판매가', value: refund_data.price },
+		{ label: '취소 수수료', value: refund_data.charge },
+		{ label: '계좌', value: refund_data.account },
+		{ label: '진행상황', value: refund_data.situation },
 	];
+
 	const labelMap = {
 		id: '아이디',
-		name: '이름',
-		email: 'E-mail',
-		phone: '번호',
-		gender: '성별',
+		play: '소극장 공연 이름',
+		cancelDate: '환불 신청 날짜/시간',
 	};
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [visibleColumns, setVisibleColumns] = useState([
-		'id',
+		'play',
 		'name',
-		'email',
-		'phone',
-		'gender',
-		'address',
+		'date',
+		'cancelDate',
+		'price',
+		'charge',
+		'account',
+		'situation',
 	]);
 
 	const handleColumnToggle = (column) => {
@@ -59,28 +66,31 @@ function UsersDetail() {
 
 	function getKeyByLabel(label) {
 		const map = {
-			아이디: 'id',
-			이름: 'name',
-			번호: 'phone',
-			'E-mail': 'email',
-			생년월일: 'birth',
-			성별: 'gender',
-			주소: 'address',
+			'소극장 공연 이름': 'play',
+			예약자명: 'name',
+			'날짜/시간': 'date',
+			'취소 시각': 'cancelDate',
+			판매가: 'price',
+			'취소 수수료': 'charge',
+			계좌: 'account',
+			진행상황: 'situation',
 		};
 		return map[label];
 	}
 
+	//const [nowHere, setNowHere] = useState('refunds');
+
 	return (
 		<Container>
 			<Content>
-				<SectionTitle>사용자 관리</SectionTitle>
+				<SectionTitle>소극장 공연 관리</SectionTitle>
+				<SubNav page={'refunds'} />
 				<FilterArea>
 					<SearchInput>
 						<input
 							type="text"
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							placeholder="검색어를 입력하세요"
 						/>
 						<Search width={15} />
 					</SearchInput>
@@ -115,7 +125,7 @@ function UsersDetail() {
 	);
 }
 
-export default UsersDetail;
+export default RefundDetail;
 
 const Container = styled.div`
 	width: 100vw;
@@ -188,7 +198,7 @@ const SectionTitle = styled.h3`
 	font-size: ${({ theme }) => theme.font.fontSize.headline24};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.pink600};
-	margin-bottom: 15px;
+	margin-bottom: 12px;
 `;
 const FilterArea = styled.div`
 	display: flex;

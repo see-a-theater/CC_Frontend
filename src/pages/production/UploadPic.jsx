@@ -8,6 +8,9 @@ import Select from 'react-select';
 import ImageUploadBox from '@/components/ImageUploadBox';
 import TopBar from '@/components/TopBar';
 import Modal from '@/components/Production/Modal';
+import CalendarPeriod from '@/components/CalendarPeriod';
+
+import ChevronDown from '@/assets/icons/chevronDownGrey.svg?react';
 
 function UploadPic() {
 	const data = [
@@ -19,10 +22,16 @@ function UploadPic() {
 	const [selected, setSelected] = useState(null);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const [dateRange, setDateRange] = useState(null);
+	const [showCalendar, setShowCalendar] = useState(false);
+	const [customOptions, setCustomOptions] = useState([]);
+	const [image, setImage] = useState(null);
+	const [imageName, setImageName] = useState(null);
+	const [inputValue, setInputValue] = useState('');
 
 	const baseOptions = data.map((item) => ({
 		value: `${item.title}-${item.date}`,
+		title: item.title,
+		date: item.date,
 		label: (
 			<LabelWrapper>
 				<Title>{item.title}</Title>
@@ -33,11 +42,16 @@ function UploadPic() {
 
 	const options = [
 		...baseOptions,
+		...customOptions,
 		{
 			value: 'custom',
 			label: <Title>직접 입력</Title>,
 		},
 	];
+	const filteredOptions = baseOptions.filter(
+		(option) =>
+			option.title.includes(inputValue) || option.date.includes(inputValue),
+	);
 
 	const handleSelectChange = (option) => {
 		if (option.value === 'custom') {
@@ -48,9 +62,59 @@ function UploadPic() {
 		setSelected(option);
 	};
 
-	const handleDateChange = (range) => {
-		setDateRange(range);
-		console.log('선택된 날짜:', range);
+	const handleModalSubmit = (title, range) => {
+		const [start, end] = range;
+		const formattedRange = `${start.toLocaleDateString()} ~ ${end.toLocaleDateString()}`;
+
+		const newOption = {
+			value: `${title}-${formattedRange}`,
+			label: (
+				<LabelWrapper>
+					<Title>{title}</Title>
+					<Date>{formattedRange}</Date>
+				</LabelWrapper>
+			),
+		};
+
+		setCustomOptions((prev) => [...prev, newOption]);
+		setSelected(newOption);
+		setShowModal(false);
+	};
+
+	const handleCalendarSubmit = (range) => {
+		if (!inputValue || !range || !range[0] || !range[1]) return;
+
+		const [start, end] = range;
+		const formattedRange = `${start.toLocaleDateString()} ~ ${end.toLocaleDateString()}`;
+
+		const newOption = {
+			value: `${inputValue}-${formattedRange}`,
+			title: inputValue,
+			date: formattedRange,
+			label: (
+				<LabelWrapper>
+					<Title>{inputValue}</Title>
+					<Date>{formattedRange}</Date>
+				</LabelWrapper>
+			),
+		};
+
+		setCustomOptions((prev) => [...prev, newOption]);
+		setSelected(newOption);
+		setShowCalendar(false);
+		setInputValue('');
+	};
+
+	const ReadImage = (e) => {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setImage(reader.result);
+		};
+		if (file) {
+			reader.readAsDataURL(file);
+			setImageName(file.name);
+		}
 	};
 
 	useEffect(() => {
@@ -77,7 +141,7 @@ function UploadPic() {
 		<>
 			<Mobile>
 				{menuOpen && <Overlay onClick={() => setMenuOpen(false)} />}
-				<TopBar> 사진 등록 </TopBar>
+				<TopBar> 사진첩 게시 </TopBar>
 				<Content>
 					<StyledSelect
 						options={options}
@@ -89,40 +153,93 @@ function UploadPic() {
 						onMenuOpen={() => setMenuOpen(true)}
 						onMenuClose={() => setMenuOpen(false)}
 					/>
-					<ImageUploadBox size="362px" aspect-ratio="1" />
-					<p className="add">공연에서 있었던 이야기를 작성해 주세요</p>
+					<ImageUploadBox size="362px" aspect-ratio="1" onChange={ReadImage} />
+					<textarea
+						className="add"
+						placeholder="공연에서 있었던 이야기를 작성해 주세요"
+						rows="10"
+					/>
 				</Content>
 				{showModal && (
 					<Modal
 						onClose={() => setShowModal(false)}
-						onDateSubmit={handleDateChange}
+						onSubmit={handleModalSubmit}
 					/>
 				)}
-				{dateRange && console.log('선택된 날짜:', dateRange)}
+				{/* {dateRange && console.log('선택된 날짜:', dateRange)} */}
 			</Mobile>
 
 			<Web>
 				<Container>
-					{menuOpen && <Overlay onClick={() => setMenuOpen(false)} />}
 					<Content>
 						<UpperArea>
-							<StyledSelect
-								options={options}
-								value={selected}
-								onChange={handleSelectChange}
-								placeholder="공연을 선택해주세요"
-								isSearchable={false}
-								components={{ IndicatorSeparator: () => null }}
-								onMenuOpen={() => setMenuOpen(true)}
-								onMenuClose={() => setMenuOpen(false)}
-							/>
+							{selected ? (
+								<SelectedInfo>
+									<SelectedInfoWrapper>
+										<Title>{selected.title}</Title>
+										<ChevronDown
+											onClick={() => {
+												setSelected(null);
+												setInputValue('');
+											}}
+										/>
+									</SelectedInfoWrapper>
+									<Date>{selected.date}</Date>
+								</SelectedInfo>
+							) : (
+								<SearchWrapper>
+									<input
+										type="text"
+										value={inputValue}
+										onChange={(e) => setInputValue(e.target.value)}
+										onFocus={() => setMenuOpen(true)}
+										placeholder="공연을 입력하세요"
+									/>
+									{menuOpen && (
+										<Dropdown>
+											{filteredOptions.map((option, idx) => (
+												<OptionItem
+													key={idx}
+													onClick={() => {
+														setSelected(option);
+														setMenuOpen(false);
+														setInputValue('');
+													}}
+												>
+													<LabelWrapper>
+														<Title>{option.title}</Title>
+														<Date>{option.date}</Date>
+													</LabelWrapper>
+												</OptionItem>
+											))}
+											<OptionItem
+												isNew
+												onClick={() => {
+													setShowCalendar(true);
+													setMenuOpen(false);
+												}}
+											>
+												+ 새로 공연 추가하기
+											</OptionItem>
+										</Dropdown>
+									)}
+								</SearchWrapper>
+							)}
 							<UploadBtn>등록</UploadBtn>
 						</UpperArea>
 
 						<ImageUploadBox size="362px" aspect-ratio="1" />
-						<p className="add">공연에서 있었던 이야기를 작성해 주세요</p>
+						<textarea
+							className="add"
+							placeholder="공연에서 있었던 이야기를 작성해 주세요"
+							rows="10"
+						/>
 					</Content>
-					{/*{showModal && <Modal onClose={() => setShowModal(false)} />}*/}
+					{showCalendar && (
+						<CalendarWrapper>
+							<CalendarPeriod onChange={handleCalendarSubmit} />
+						</CalendarWrapper>
+					)}
 				</Container>
 			</Web>
 		</>
@@ -168,9 +285,17 @@ const Content = styled.div`
 	gap: 20px;
 
 	.add {
+		border: none;
 		font-size: ${({ theme }) => theme.font.fontSize.body13};
 		font-weight: ${({ theme }) => theme.font.fontWeight.regular};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+
+	textarea::placeholder {
 		color: ${({ theme }) => theme.colors.gray400};
+	}
+	textarea:focus {
+		outline: none;
 	}
 
 	@media (min-width: 768px) {
@@ -190,18 +315,30 @@ const Title = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body14};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.headline20};
+		font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 
 const Date = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body10};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.gray400};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+		color: ${({ theme }) => theme.colors.gray400};
+	}
 `;
 
 const StyledSelect = styled(Select).attrs({
 	classNamePrefix: 'custom',
 })`
-	width: 50%;
+	width: 60%;
 
 	.custom__control {
 		border-radius: 3px;
@@ -233,11 +370,6 @@ const StyledSelect = styled(Select).attrs({
 		color: ${({ theme }) => theme.colors.gray400};
 		font-size: ${({ theme }) => theme.font.fontSize.title16};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
-
-		@media (min-width: 768px) {
-			font-size: ${({ theme }) => theme.font.fontSize.headline24};
-			font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
-		}
 	}
 `;
 const UpperArea = styled.div`
@@ -259,4 +391,86 @@ const UploadBtn = styled.button`
 	font-size: ${({ theme }) => theme.font.fontSize.body14};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 	color: ${({ theme }) => theme.colors.gray400};
+`;
+
+const SearchWrapper = styled.div`
+	position: relative;
+	width: 100%;
+
+	input {
+		font-size: ${({ theme }) => theme.font.fontSize.headline24};
+		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
+		color: ${({ theme }) => theme.colors.grayMain};
+
+		width: 300px;
+		padding: 10px;
+		border: none;
+		border-radius: 5px;
+	}
+	input::placeholder {
+		color: ${({ theme }) => theme.colors.gray400};
+	}
+	input:focus {
+		outline: none;
+	}
+`;
+
+const Dropdown = styled.ul`
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background-color: white;
+	border: 1px solid #ccc;
+	border-top: none;
+	z-index: 10;
+	max-height: 200px;
+	overflow-y: auto;
+
+	width: 300px;
+`;
+
+const OptionItem = styled.li`
+	padding: 10px;
+	cursor: pointer;
+	//background-color: ${({ isNew }) => (isNew ? '#f5f5f5' : 'white')};
+
+	&:hover {
+		background-color: #eee;
+	}
+
+	font-size: ${({ theme }) => theme.font.fontSize.headline20};
+	font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+	color: ${({ theme }) => theme.colors.gray400};
+`;
+const CalendarWrapper = styled.div`
+	position: absolute;
+	top: 170px;
+	z-index: 9;
+	background: white;
+	border: 1px solid #ccc;
+	padding: 16px;
+	border-radius: 6px;
+`;
+
+const SelectedInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 300px;
+	padding: 10px;
+	border-radius: 5px;
+`;
+const SelectedInfoWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+`;
+
+const ChangeBtn = styled.button`
+	background: none;
+	border: none;
+	color: ${({ theme }) => theme.colors.gray500};
+	font-size: ${({ theme }) => theme.font.fontSize.body12};
+	cursor: pointer;
 `;
