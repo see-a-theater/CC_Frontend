@@ -16,10 +16,11 @@ const UserTable = ({
 	const allHeaders = Object.keys(data[0]);
 
 	const handleDetailClick = (link, id) => {
-		navigate(link+id);
+		navigate(link + id);
 	};
+
 	//현재 페이지에서 링크, id를 받아오는 형식
-	//나중에 데이터 확인 후 사용자/사진첩 관리에 따라서 내부에서 링크 설정 가능하게 할 듯 
+	//나중에 데이터 확인 후 사용자/사진첩 관리에 따라서 내부에서 링크 설정 가능하게 할 듯
 
 	return (
 		<Wrapper>
@@ -39,15 +40,39 @@ const UserTable = ({
 							{allHeaders.map((key) => {
 								if (!visibleColumns.includes(key) && key !== 'manage')
 									return null;
-								return key === 'manage' ? (
-									<td key={key}>
-										<DetailButton onClick={() => handleDetailClick(user.manage, user.id)}>
-											상세
-										</DetailButton>
-									</td>
-								) : (
-									<td key={key}>{user[key]}</td>
-								);
+
+								if (key === 'manage') {
+									return (
+										<td key={key}>
+											<DetailButton
+												onClick={() => handleDetailClick(user.manage, user.id)}
+											>
+												상세
+											</DetailButton>
+										</td>
+									);
+								}
+
+								if (key === 'situation') {
+									const situation = user[key];
+									let className = '';
+
+									if (situation === '확인 전' || situation === '미완료') {
+										className = 'situation-pink';
+									} else if (situation === '등록') {
+										className = 'situation-gray400';
+									} else {
+										className = 'situation-default';
+									}
+
+									return (
+										<td key={key} className={className}>
+											{situation}
+										</td>
+									);
+								}
+
+								return <td key={key}>{user[key]}</td>;
 							})}
 						</tr>
 					))}
@@ -99,18 +124,26 @@ const StyledTable = styled.table`
 		height: 31px;
 	}
 	th {
-		border: 1px solid #e6e6e6;
-		background-color: #f5f5f5;
+		border: 1px solid #000;
 		text-align: center;
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
 	td {
-		border: 1px solid #e6e6e6;
+		border: 1px solid #000;
 		text-align: center;
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+	.situation-pink {
+		color: ${({ theme }) => theme.colors.pink600};
+	}
+	.situation-gray400 {
+		color: ${({ theme }) => theme.colors.gray400};
+	}
+	.situation-default {
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
 `;

@@ -56,7 +56,7 @@ function Inquiry() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 20;
 
-	const filterKeys = ['email', 'id', 'date', 'situation'];
+	const filterKeys = ['email', 'date', 'situation'];
 	const filterLabels = {
 		email: 'E-mail',
 		id: '번호',

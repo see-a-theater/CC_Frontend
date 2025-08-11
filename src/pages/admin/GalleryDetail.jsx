@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 import Search from '@/assets/icons/searchBlack.svg?react';
+import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 import Image from '@/assets/mock/images/image1.png';
 
 function GalleryDetail() {

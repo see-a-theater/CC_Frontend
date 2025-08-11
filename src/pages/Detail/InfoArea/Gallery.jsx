@@ -9,7 +9,7 @@ import useCustomFetch from '@/utils/hooks/useAxios';
 
 import Masonry from '@/components/Masonry';
 
-function Gallery(props) {
+function Gallery() {
 	{
 		/* 추후 memberId 받아와서 사진 정보 받아오는 걸로 수정 */
 	}

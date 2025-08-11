@@ -14,8 +14,9 @@ import FullScreenMenu from './FullScreenMenu';
  * - hasLogo: 로고 표시 여부
  * - title: 타이틀 텍스트 (중앙 정렬)
  * - back: 뒤로가기 버튼 여부
+ * - noIcon: 우측 아이콘 여부
  */
-function Hamburger({ hasLogo, title, back }) {
+function Hamburger({ hasLogo, title, back, noIcon }) {
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -46,10 +47,12 @@ function Hamburger({ hasLogo, title, back }) {
 
 				{title && <Title>{title}</Title>}
 
-				<Right>
-					<Alrert alt="알림" />
-					<Search alt="검색" />
-				</Right>
+				{!noIcon && (
+					<Right>
+						<Alrert alt="알림" />
+						<Search alt="검색" />
+					</Right>
+				)}
 			</ButtonArea>
 		</Container>
 	);

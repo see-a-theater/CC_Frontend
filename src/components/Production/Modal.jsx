@@ -3,20 +3,20 @@ import CalendarPeriod from '@/components/CalendarPeriod';
 
 import { useState } from 'react';
 
-function Modal({ onClose, onDateSubmit }) {
+function Modal({ onClose, onSubmit }) {
 	const [inputValue, setInputValue] = useState('');
-	const [selectedRange, setSelectedRange] = useState(null);
 	const [step, setStep] = useState('input');
 
 	const handleNext = () => {
 		setStep('calendar');
 	};
+
 	const handleDateChange = (range) => {
-		setSelectedRange(range);
-	};
-	const handleSubmit = () => {
-		onDateSubmit(selectedRange);
-		onClose();
+		setTimeout(() => {
+			if (!inputValue || !range?.[0] || !range?.[1]) return;
+			onSubmit(inputValue, range);
+			onClose();
+		}, 100);
 	};
 
 	return (
@@ -39,7 +39,6 @@ function Modal({ onClose, onDateSubmit }) {
 				) : (
 					<>
 						<CalendarPeriod onChange={handleDateChange} />
-						<button onClick={handleSubmit}>완료</button>
 					</>
 				)}
 			</ModalBox>

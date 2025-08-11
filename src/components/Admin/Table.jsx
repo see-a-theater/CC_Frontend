@@ -46,13 +46,12 @@ const StyledTable = styled.table`
 	th,
 	td {
 		padding: 12px;
-		border: 1px solid #e6e6e6;
+		border: 1px solid #000;
 		text-align: left;
 		font-size: 14px;
 	}
 
 	th {
-		background-color: #f5f5f5;
 		font-weight: 700;
 	}
 `;
