@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-function Masonry(props) {
-	console.log(props);
+function Masonry({imageData}) {
+	console.log(imageData);
 	
 	return (
 		<>
 			<ImageArea>
-				{props?.data.result.map((data, idx) => (
+				{imageData.map((data, idx) => (
 					<Item key={idx}>
 						<img src={data?.imageUrl} alt="공연사진" className="pic" />
 						<Text>

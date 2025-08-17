@@ -19,6 +19,10 @@ function Gallery() {
 	console.log('loading:', loading);
 	console.log('data:', picData);
 
+	if (loading || !picData?.result) {
+		return <div>로딩 중...</div>;
+	}
+
 	return (
 		<>
 			<SideMenuWrapper>
