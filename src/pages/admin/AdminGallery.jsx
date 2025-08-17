@@ -1,59 +1,64 @@
 import styled from 'styled-components';
 import UserTable from '@/components/Admin/UserTable';
 import Search from '@/assets/icons/searchBlack.svg?react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 function AdminGallery() {
-	const photo_data = [
-		{
-			title: '소극장 공연 이름',
-			date: '사진 등록 날짜',
-			id: '아이디',
-			manage: '관리',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			id: 'cc1234',
-			manage: '/admin/gallery/',
-		},
-	];
-	const visibleColumns = ['title', 'date', 'id', 'manage'];
+	function formatDateTime(isoString) {
+		if (!isoString) return '';
+
+		const date = new Date(isoString);
+
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+
+		return `${year}-${month}-${day} / ${hours}:${minutes}`;
+	}
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 20;
+
+	const headerRow = {
+		title: '소극장 공연 이름',
+		date: '사진 등록 날짜',
+		id: '아이디',
+		manage: '관리',
+	};
+
+	const {
+		data: gallData,
+		error,
+		loading,
+	} = useCustomFetch(
+		`/admin/photoAlbum?page=${currentPage - 1}&size=${itemsPerPage}`,
+	);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', gallData);
+	const apiRows = useMemo(() => {
+		if (!gallData || !gallData.result) return [];
+		return gallData?.result.content.map((item) => ({
+			title: item.amateurShowName,
+			date: formatDateTime(item.updatedAt),
+			id: item.id,
+			//id: item.uploaderId? 아이디가 사진 아이디인지, 등록자 아이디인지....
+			manage: `/admin/gallery/`,
+		}));
+	}, [gallData]);
+
+	const photo_data = [headerRow, ...apiRows];
+	const visibleColumns = ['title', 'date', 'id', 'manage'];
+
 	const totalPages = Math.ceil((photo_data.length - 1) / itemsPerPage);
+
 	const paginatedData = photo_data
 		.slice(0, 1)
 		.concat(
