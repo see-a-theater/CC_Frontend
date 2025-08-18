@@ -1,65 +1,82 @@
-import { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import Camera from '../assets/icons/Camera.svg';
 import styled from 'styled-components';
-import Camera from '@/assets/icons/Camera.svg?react';
+import useCustomFetch from '../utils/hooks/useAxios';
+import axios from 'axios';
 
-function ImageUploadBox({ size, webSize, round }) {
-	const fileInputRef = useRef(null);
-	const [previewUrl, setPreviewUrl] = useState(null);
+function ImageUploadBox({ size, webSize, round, onUploadSuccess }) {
+	const [imageSrc, setImageSrc] = useState(null);
 
-	const handleClick = () => {
-		fileInputRef.current.click();
-	};
-
-	const handleChange = (e) => {
+	const handleImageChange = async (e) => {
 		const file = e.target.files[0];
-		if (file && file.type.startsWith('image/')) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setPreviewUrl(reader.result);
-			};
-			reader.readAsDataURL(file);
+		if (!file) return;
+
+		// 미리보기
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setImageSrc(reader.result);
+		};
+		reader.readAsDataURL(file);
+
+		try {
+			// 1) presigned URL 요청
+			const res = await axios.get(
+				'https://api.seeatheater.site/upload/s3/presignedUrl?imageExtension=png&filePath=amateurShow',
+				{
+					headers: {
+						Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_ACCESS_TOKEN}`,
+					},
+				},
+			);
+			console.log('요청한 url', res.data);
+
+			const { uploadUrl, publicUrl, keyName } = res.data;
+			// presigned URL은 key만 내려오니까 S3 도메인 붙여주기
+
+			const FullUploadUrl = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
+			// 2) File → ArrayBuffer 변환
+			const arrayBuffer = await file.arrayBuffer();
+
+			// 2) S3로 직접 업로드
+			await axios.put(FullUploadUrl, arrayBuffer, {
+				headers: {
+					'x-amz-meta-content-type': 'image/png',
+					'x-amz-meta-filetype': 'image/png',
+				},
+			});
+
+			// 3) 부모(RegisterStep1)로 전달 → formData.posterImageRequestDTO에 저장
+			if (onUploadSuccess) {
+				onUploadSuccess({ keyName, publicUrl });
+			}
+		} catch (err) {
+			console.error('이미지 업로드 실패:', err);
 		}
 	};
-
 	return (
-		<>
-			<Box
-				size={size}
-				webSize={webSize}
-				round={round}
-				onClick={handleClick}
-				role="button"
-			>
-				{previewUrl ? (
-					<Preview src={previewUrl} alt="uploaded preview" />
-				) : (
-					<Camera />
-				)}
-			</Box>
-			<input
-				type="file"
-				accept="image/*"
-				style={{ display: 'none' }}
-				ref={fileInputRef}
-				onChange={handleChange}
-			/>
-		</>
+		<Box size={size} webSize={webSize} round={round}>
+			{imageSrc ? (
+				<img src={imageSrc} alt="uploaded" />
+			) : (
+				<img src={Camera} alt="camera icon" />
+			)}
+			<input type="file" accept="image/*" onChange={handleImageChange} />
+		</Box>
 	);
 }
 
 export default ImageUploadBox;
 
 const Box = styled.div`
-	background: ${({ theme }) => theme.colors.gray200};
-	width: ${(props) => props.size || '150px'};
-	height: ${(props) => props.size || '150px'};
+	position: relative;
+
+	width: ${(props) => (props.size ? props.size : '150px')};
+	height: ${(props) => (props.size ? props.size : '150px')};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
 	overflow: hidden;
-
-	border-radius: ${(props) => (props.round ? '50% 50% 10% 50%' : '8px')};
 
 	@media (min-width: 768px) {
 		width: ${(props) => props.webSize || props.size || '240px'};
@@ -67,12 +84,25 @@ const Box = styled.div`
 	}
 
 	img {
-		width: 100%;
+		width: 20px;
+		height: 20px;
+		object-fit: cover;
+		${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
+		background-color: gainsboro;
 	}
-`;
 
-const Preview = styled.img`
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+	input[type='file'] {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+	}
 `;

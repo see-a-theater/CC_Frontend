@@ -3,38 +3,104 @@ import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
 function RegisterStep3() {
-	const [actors, setActors] = useState([{ id: Date.now() }]);
-	const [staffs, setStaffs] = useState([{ id: Date.now() + 1 }]); // 다른 id
-	const { nextStep } = useOutletContext();
+	const { nextStep, formData, setFormData } = useOutletContext();
+
+	// 초기값 설정
+	useEffect(() => {
+		if (!formData.casting || formData.casting.length === 0) {
+			setFormData((prev) => ({
+				...prev,
+				casting: [{ actorName: '', castingName: '', castingImageUrl: '' }],
+			}));
+		}
+		if (!formData.staff || formData.staff.length === 0) {
+			setFormData((prev) => ({
+				...prev,
+				staff: [{ position: '', staffName: '' }],
+			}));
+		}
+	}, []);
+
+	// 배우 추가
 	const addActor = () => {
-		setActors((prev) => [...prev, { id: Date.now() }]);
+		setFormData((prev) => ({
+			...prev,
+			casting: [
+				...prev.casting,
+				{ actorName: '', castingName: '', castingImageUrl: '' },
+			],
+		}));
 	};
 
+	// 스태프 추가
 	const addStaff = () => {
-		setStaffs((prev) => [...prev, { id: Date.now() }]);
+		setFormData((prev) => ({
+			...prev,
+			staff: [...prev.staff, { position: '', staffName: '' }],
+		}));
+	};
+
+	// 배우 입력값 변경
+	const handleActorChange = (index, field, value) => {
+		setFormData((prev) => {
+			const updated = [...prev.casting];
+			updated[index][field] = value;
+			console.log(formData.casting);
+			return { ...prev, casting: updated };
+		});
+	};
+
+	// 스태프 입력값 변경
+	const handleStaffChange = (index, field, value) => {
+		setFormData((prev) => {
+			const updated = [...prev.staff];
+			updated[index][field] = value;
+			return { ...prev, staff: updated };
+		});
+	};
+
+	// 배우 이미지 업로드
+	const handleActorImageUpload = (index, fileInfo) => {
+		handleActorChange(index, 'castingImageUrl', fileInfo.publicUrl);
 	};
 	return (
 		<RegisterWrapper>
 			<form>
 				<h1>캐스팅 정보</h1>
 				<div>
-					{actors.map((actor) => (
-						<ActorWrapper key={actor.id}>
+					{formData.casting.map((actor, idx) => (
+						<ActorWrapper key={idx}>
 							<div>
-								<ImageUploadBox size="89px" webSize="160px" round="true" />
+								<ImageUploadBox
+									size="89px"
+									webSize="160px"
+									round="true"
+									onUploadSuccess={(fileInfo) =>
+										handleActorImageUpload(idx, fileInfo)
+									}
+								/>
 							</div>
 							<Right>
 								<input
+									className="input-text"
 									type="text"
 									placeholder="배우 이름을 입력하세요"
-									className="input"
+									value={actor.actorName}
+									onChange={(e) =>
+										handleActorChange(idx, 'actorName', e.target.value)
+									}
 								/>
 								<input
 									type="text"
 									placeholder="역할을 입력하세요"
-									className="input"
+									className="input-text"
 									style={{ marginBottom: '0px' }}
+									value={actor.castingName}
+									onChange={(e) =>
+										handleActorChange(idx, 'castingName', e.target.value)
+									}
 								/>
 							</Right>
 						</ActorWrapper>
@@ -47,14 +113,27 @@ function RegisterStep3() {
 					>
 						+ 추가하기
 					</button>
+
 					<label>감독 및 스태프</label>
-					{staffs.map((staff) => (
-						<DirectorWrapper key={staff.id}>
-							<input type="text" placeholder="역할" className="input" />
+					{formData.staff.map((staff, idx) => (
+						<DirectorWrapper key={idx}>
+							<input
+								type="text"
+								placeholder="역할"
+								className="input-text"
+								value={staff.position}
+								onChange={(e) =>
+									handleStaffChange(idx, 'position', e.target.value)
+								}
+							/>
 							<input
 								type="text"
 								placeholder="이름을 입력하세요"
-								className="input"
+								className="input-text"
+								value={staff.staffName}
+								onChange={(e) =>
+									handleStaffChange(idx, 'staffName', e.target.value)
+								}
 							/>
 						</DirectorWrapper>
 					))}
@@ -83,7 +162,12 @@ function RegisterStep3() {
 
 export default RegisterStep3;
 
-const Right = styled.div``;
+const Right = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+`;
 
 const ActorWrapper = styled.div`
 	display: flex;

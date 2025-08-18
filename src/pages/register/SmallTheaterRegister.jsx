@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import TopBar from '../../components/TopBar';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-
-/* 현재 step 번호 계산
- /small-theater/register/step1~step5 */
+import { useState } from 'react';
+/* 현재 step 번호 계산*/
 
 function SmallTheaterRegister() {
 	const navigate = useNavigate();
@@ -19,6 +18,52 @@ function SmallTheaterRegister() {
 	const prevStep = () =>
 		navigate(`/small-theater/register/step${Math.max(currentStep - 1, 1)}`);
 
+	/* /small-theater/register/step1~step5 */
+	const [formData, setFormData] = useState({
+		name: '',
+		place: '',
+		schedule: '',
+		runtime: '',
+		account: '',
+		contact: '',
+		hashtag: '',
+		summary: '',
+		notice: {
+			content: '',
+			noticeImageUrl: '',
+			timeInfo: '',
+		},
+		casting: [
+			{
+				actorName: '',
+				castingName: '',
+				castingImageUrl: '',
+			},
+		],
+		tickets: [
+			{
+				discountName: '',
+				price: 0,
+			},
+		],
+		staff: [
+			{
+				position: '',
+				staffName: '',
+			},
+		],
+		rounds: [
+			{
+				roundNumber: 1,
+				performanceDateTime: '',
+				totalTicket: 0,
+			},
+		],
+		imageRequestDTO: {
+			keyName: '',
+			imageUrl: '',
+		},
+	});
 	return (
 		<Wrapper>
 			<TopBar onPrev={prevStep} onNext={nextStep}>
@@ -30,7 +75,7 @@ function SmallTheaterRegister() {
 			</div>
 
 			<ContentWrapper>
-				<Outlet context={{ nextStep, prevStep }} />
+				<Outlet context={{ nextStep, prevStep, formData, setFormData }} />
 			</ContentWrapper>
 		</Wrapper>
 	);
