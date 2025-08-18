@@ -8,6 +8,8 @@ import ChevronLeftGray from '@/assets/icons/chevronLeftGray.svg?react';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 import Poster from '@/assets/images/test-poster2.png';
 import TopBarWeb from '../../../../components/TopBarWeb';
+import PillToggleGroup from '../../../../components/PillToggleGroup';
+import useCustomFetch from '../../../../utils/hooks/useAxios';
 function RegisteredPerformances() {
 	const [selected, setSelected] = useState('전체');
 	const navigate = useNavigate();
@@ -40,6 +42,31 @@ function RegisteredPerformances() {
 			navLink: '1',
 		},
 	];
+
+	const page = 0;
+	const size = 5;
+
+	const {
+		data: dataAllTicket,
+		loading: loadingAllTicket,
+		error: errorAllTicket,
+	} = useCustomFetch(`member/myPage/reserveList?page=${page}&size=${size}`);
+
+	const {
+		data: dataOngoingTicket,
+		loading: loadingOngoingTicket,
+		error: errorOngoingTicket,
+	} = useCustomFetch(
+		`member/myPage/reserveList?page=${page}&size=${size}&status=APPROVED_ONGOING`,
+	);
+
+	const {
+		data: dataEndedTicket,
+		loading: loadingEndedTicket,
+		error: errorEndedTicket,
+	} = useCustomFetch(
+		`member/myPage/reserveList?page=${page}&size=${size}&status=APPROVED_ENDED`,
+	);
 	return (
 		<MyTicketsWrapper>
 			<div className="only-mobile">
@@ -49,40 +76,42 @@ function RegisteredPerformances() {
 				<TopBarWeb>내 티켓</TopBarWeb>
 			</div>
 			<Wrapper>
-				{/*<PillToggleGroup
+				<PillToggleGroup
 					options={['전체', '예매 진행', '공연 종료']}
 					onSelect={(option) => setSelected(option)}
-				/>*/}
+				/>
 				<div style={{ marginBottom: '28px' }} />
 				{selected === '전체' && (
 					<>
-						{details.map((detail) => (
+						{dataAllTicket?.content.map((detail) => (
 							<>
-								<TicketContainer details={detail} header={ticketHeaders} />
+								<TicketContainer
+									details={detail}
+									header={ticketHeaders}
+									isPerformer={true}
+								/>
 							</>
 						))}
 					</>
 				)}
 				{selected === '예매 진행' && (
 					<>
-						{details
-							.filter((detail) => detail.status === '예매 진행중')
-							.map((detail) => (
-								<>
-									<TicketContainer details={detail} header={ticketHeaders} />
-								</>
-							))}
+						아직 데이터 없어 확인 불가
+						{dataOngoingTicket?.content.map((detail) => (
+							<>
+								<TicketContainer details={detail} header={ticketHeaders} />
+							</>
+						))}
 					</>
 				)}
 				{selected === '공연 종료' && (
 					<>
-						{details
-							.filter((detail) => detail.status === '공연 종료')
-							.map((detail) => (
-								<>
-									<TicketContainer details={detail} header={ticketHeaders} />
-								</>
-							))}
+						아직 데이터 없어 확인 불가
+						{dataEndedTicket?.content.map((detail) => (
+							<>
+								<TicketContainer details={detail} header={ticketHeaders} />
+							</>
+						))}
 					</>
 				)}
 			</Wrapper>
