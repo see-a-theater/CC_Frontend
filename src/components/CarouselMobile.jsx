@@ -29,16 +29,17 @@ function CarouselMobile({ banners }) {
 		<Wrapper>
 			<div className="slider-container">
 				<Slider ref={sliderRef} {...settings}>
-					{banners.map((banner) => (
-						<Banner key={banner.id}>
-							<img src={banner.imgSrc} alt={banner.title} />
-							<Text>
-								<p className="title">{banner.title}</p>
-								<p>{banner.location}</p>
-								<p>{banner.date}</p>
-							</Text>
-						</Banner>
-					))}
+					{banners &&
+						banners.map((banner) => (
+							<Banner key={banner.amateurShowId}>
+								<img src={banner.posterImageUrl} alt={banner.name} />
+								<Text>
+									<p className="title">{banner.name}</p>
+									<p>{banner.place}</p>
+									<p>{banner.schedule}</p>
+								</Text>
+							</Banner>
+						))}
 				</Slider>
 			</div>
 		</Wrapper>

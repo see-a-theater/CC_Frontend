@@ -1,15 +1,19 @@
 import styled from 'styled-components';
-function BoardPreviewCardWeb() {
+function BoardPreviewCardWeb({ data }) {
 	const title = '상상도 못한 게시판..ㄴ(°0°)ㄱ';
 	const text =
 		'우오앙 여기도 이런 게시판이 있구나 신기 방기 많이 많이 게시판 이용해야겟다~ 글은 가로길이 800px 넘어가면 다음단락으로 내려가도록... 세줄 넘어가면 ...으로 대체 padding 값은 20px 입니당!  옆에 네모칸은 사진 있을경우 저렇게 쓰면 될것 같고 아래 게시판도 마찬가지로 해당됩니다!';
 	return (
 		<Wrapper>
-			<div>
-				<h1>{title}</h1>
-				<p>{text}</p>
-			</div>
-			<div></div>
+			현재 데이터 없어서 핫게 컴포넌트 출력 x (Web), Carousel로 변경 필요
+			{data &&
+				data.map(() => (
+					<div>
+						<h1>{title}</h1>
+						<p>{text}</p>
+					</div>
+				))}
+			<div>이미지</div>
 		</Wrapper>
 	);
 }

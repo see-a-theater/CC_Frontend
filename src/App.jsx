@@ -54,6 +54,7 @@ import GalleryDetail from './pages/admin/GalleryDetail.jsx';
 import PlaysDetail from './pages/admin/PlaysDetail.jsx';
 import Inquiry from './pages/admin/Inquiry.jsx';
 import InquiryDetail from './pages/admin/InquiryDetail.jsx';
+import TestUploadPic from './pages/TEST/TestUploadPic.jsx';
 
 function App() {
 	return (
@@ -78,16 +79,14 @@ function App() {
 				<Route path="/board" element={<Board />} />
 				<Route path="/gallery" element={<Gallery />} />
 				<Route path="/info" element={<Info />} />
-
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/withdrawal" element={<Withdrawal />} />
 				<Route path="/menu" element={<FullScreenMenu />} />
-
 				<Route path="/mypage" element={<MyPage />}>
 					<Route index element={<MyPageMenu />} />
 					<Route path="tickets" element={<MyTickets />} />
-					<Route path="tickets/1" element={<TicketDetail />} />
-					<Route path="tickets/1/cancel" element={<TicketCancel />} />
+					<Route path="tickets/:ticketId" element={<TicketDetail />} />
+					<Route path="tickets/:ticketId/cancel" element={<TicketCancel />} />
 					<Route
 						path="tickets/1/cancel/complete"
 						element={<TicketCancelComplete />}
@@ -106,14 +105,11 @@ function App() {
 					<Route path="booking-history" element={<BookingHistory />} />
 				</Route>
 				<Route path="/plays" element={<Playlist />} />
-
 				<Route path="/notification" element={<Notification />} />
 				<Route path="/plays/detail/:playId" element={<Detail />} />
-
 				<Route path="/production" element={<Production />} />
 				<Route path="/production/:prodId" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
-
 				<Route path="admin" element={<Admin />}>
 					<Route path="dashboard" element={<Dashboard />} />
 					<Route path="users" element={<Users />} />
@@ -128,7 +124,10 @@ function App() {
 						element={<RegisterRequestDetail />}
 					/>
 					<Route path="tickets" element={<TicketManagement />} />
-					<Route path="tickets/1" element={<TicketManagementDetail />} />
+					<Route
+						path="tickets/:ticketId"
+						element={<TicketManagementDetail />}
+					/>
 					<Route path="reservations" element={<ReservationManagement />} />
 					<Route
 						path="reservations/1"
@@ -138,7 +137,8 @@ function App() {
 					<Route path="inquiry" element={<Inquiry />} />
 					<Route path="inquiry/:inquiryId" element={<InquiryDetail />} />
 					<Route path="mypage" element={<MyPageManagement />} />
-				</Route>
+				</Route>{' '}
+				<Route path="test/upload-pic" element={<TestUploadPic />} />
 			</Routes>
 		</>
 	);

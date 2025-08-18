@@ -73,8 +73,7 @@ const Wrapper = styled.div`
 				: '1px solid #DDDDDD'
 			: 'none'};
 
-	background-color: ${(props) =>
-		props.$bgBlack ? 'black' : 'white'}; // 테스트용
+	background-color: ${(props) => (props.$bgBlack ? 'black' : 'white')};
 `;
 const MenuWrapper = styled.div`
 	display: flex;
@@ -96,9 +95,9 @@ const MenuWrapper = styled.div`
 			height: 40px;
 		}
 		svg {
-			width: 24px; /* 원하는 아이콘 크기 */
+			width: 24px;
 			height: 24px;
-			object-fit: contain; /* 비율 유지 */
+			object-fit: contain;
 			@media (min-width: 768px) {
 				width: 40px;
 				height: 40px;
