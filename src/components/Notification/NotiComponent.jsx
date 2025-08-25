@@ -40,7 +40,7 @@ function NotiComponent() {
 						content={noti.message}
 						when={noti.createdAt}
 						checked={noti.isRead}
-						onClick={() => handleClick(noti.contentId)}
+						onClick={() => handleClick(noti.id)}
 					/>
 				))}
 			</NotiList>
