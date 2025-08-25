@@ -25,9 +25,6 @@ function Gallery() {
 
 	return (
 		<>
-			<SideMenuWrapper>
-				<HomeIconMenu isWeb={true} selectedMenu="gallery" />
-			</SideMenuWrapper>
 			<Mobile>
 				<Hamburger title={'사진첩'} />
 				<Masonry imageData={picData?.result} />
@@ -35,7 +32,7 @@ function Gallery() {
 
 			<Web>
 				<SideMenuWrapper>
-					<HomeIconMenu isWeb={true} />
+					<HomeIconMenu isWeb={true} selectedMenu="plays"/>
 				</SideMenuWrapper>
 				<Container>
 					<SearchBar />

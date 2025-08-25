@@ -46,7 +46,7 @@ function Playlist() {
 		<Container>
 			<Web>
 				<SideMenuWrapper>
-					<HomeIconMenu isWeb={true} />
+					<HomeIconMenu isWeb={true} selectedMenu="plays"/>
 				</SideMenuWrapper>
 				<WebContent>
 					<SearchBar />
