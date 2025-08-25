@@ -3,7 +3,7 @@ import styled from 'styled-components';
 function MasonryWeb({ imageData }) {
 	return (
 		<ImageArea>
-			{imageData.map((data, idx) => (
+			{imageData?.photoAlbumDTOs.map((data, idx) => (
 				<Item key={idx}>
 					<img src={data?.imageUrl} alt="공연사진" className="pic" />
 					<Text>
