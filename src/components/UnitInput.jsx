@@ -3,10 +3,16 @@ import CalendarIcon from '../assets/icons/Calendar.svg';
 import styled from 'styled-components';
 import { useState } from 'react';
 
-function UnitInput({ placeholder, unit }) {
+function UnitInput({ placeholder, unit, value, onChange, name }) {
 	return (
 		<Input>
-			<input type="text" placeholder={placeholder} />
+			<input
+				type="text"
+				name={name} // 여기 추가
+				placeholder={placeholder}
+				value={value}
+				onChange={onChange}
+			/>
 			<div>{unit}</div>
 		</Input>
 	);
@@ -15,7 +21,9 @@ export default UnitInput;
 
 const Input = styled.div`
 	display: flex;
+	flex: 1;
 	flex-direction: row;
+	min-width: 0;
 	background: ${({ theme }) => theme.colors.gray200};
 	justify-content: space-between;
 	align-items: center;
@@ -27,17 +35,18 @@ const Input = styled.div`
 	}
 	> input {
 		display: flex;
+		flex: 1;
 		height: 40px;
-		width: 90%;
+		min-width: 0;
+
 		padding: 12px 8px;
 		align-items: center;
 		gap: 12px;
-		flex-shrink: 0;
+
 		border-radius: 3px;
 		border: none;
 		background: var(--color-gray-200, #f8f8f8);
 		color: #000000;
-		font-family: 'NanumSquare Neo OTF';
 		font-size: 13px;
 		font-style: normal;
 		font-weight: 400;
@@ -59,6 +68,7 @@ const Input = styled.div`
 		}
 	}
 	div {
+		flex-shrink: 0;
 		color: var(--color-gray-maintext, #000);
 		font-family: Inter;
 		font-size: 14px;
