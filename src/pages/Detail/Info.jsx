@@ -22,6 +22,24 @@ function Info({ playData }) {
 		.filter((tag) => tag.length > 0)
 		.map((tag) => ({ label: tag }));
 
+	function formatDateTime(dateString) {
+		const date = new Date(dateString);
+
+		// 월, 일
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+
+		// 요일
+		const days = ['일', '월', '화', '수', '목', '금', '토'];
+		const dayOfWeek = days[date.getDay()];
+
+		// 시간, 분
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+
+		return `${month}.${day} (${dayOfWeek}) ${hours}:${minutes}`;
+	}
+
 	return (
 		<Container>
 			<Mobile>
@@ -47,7 +65,6 @@ function Info({ playData }) {
 						<IconWrapper>
 							<Location height={24} />
 						</IconWrapper>
-
 						<p className="blackTxt">{playData?.result.place}</p>
 					</InfoBlock>
 					<InfoBlock>
@@ -134,7 +151,9 @@ function Info({ playData }) {
 										<Location height={24} />
 									</IconWrapper>
 
-									<p className="blackTxt">{playData?.result.place}</p>
+									<p className="blackTxt">
+										{playData?.result.hallName} {playData?.result.detailAddress}
+									</p>
 								</InfoBlock>
 								<InfoBlock>
 									<IconWrapper>
@@ -153,7 +172,8 @@ function Info({ playData }) {
 										<div className="gap12">
 											{playData?.result.rounds.map((data) => (
 												<p className="grayTxt">
-													{data.roundNumber}회차 {data.performanceDateTime}
+													{data.roundNumber}회차{' '}
+													{formatDateTime(data.performanceDateTime)}
 												</p>
 											))}
 										</div>
