@@ -60,6 +60,7 @@ function Playlist() {
 									place={data.place}
 									posterImageUrl={data.posterImageUrl}
 									schedule={data.schedule}
+									amateurShowId={data.amateurShowId}
 								/>
 							))}
 						</CardWrapper>

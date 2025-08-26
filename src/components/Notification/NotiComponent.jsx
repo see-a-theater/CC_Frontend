@@ -18,8 +18,7 @@ function NotiComponent() {
 	const handleClick = async (noticeId) => {
 		try {
 			await markAsRead(`/notice/${noticeId}`);
-			// 이후에 알림 목록을 다시 불러오거나 상태를 변경
-			location.reload(); // 임시: 새로고침으로 변경사항 반영
+			location.reload(); //새로고침으로 변경사항 반영
 		} catch (error) {
 			console.error('알림 읽음 처리 실패', error);
 		}
@@ -32,7 +31,7 @@ function NotiComponent() {
 			</Toggle>
 
 			<NotiList>
-				{notiData?.result.map((noti) => (
+				{notiData?.result.items.map((noti) => (
 					<Noti
 						key={noti.id}
 						type={noti.noticeType}
