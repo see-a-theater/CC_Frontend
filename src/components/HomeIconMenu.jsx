@@ -49,7 +49,7 @@ function HomeIconMenu({ isWeb, selectedMenu }) {
 		<>
 			<Wrapper $isWeb={isWeb} $bgBlack={isAboutCC}>
 				<MenuWrapper $isWeb={isWeb}>
-					<div className="logo" onClick={() => navigate('/')}>
+					<div className="logo" onClick={() => navigate('/home')}>
 						<Logo />
 					</div>
 					<div onClick={() => navigate('/small-theater/current')}>

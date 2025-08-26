@@ -23,7 +23,7 @@ function AboutCC() {
 						<Title>SEE A</Title>
 						<Title>THEATER</Title>
 						<p style={{ marginTop: '28px', marginBottom: '32px' }}>
-							씨씨(CC)는 씨어씨어터의 줄임말이자, 
+							씨씨(CC)는 씨어씨어터의 줄임말이자,
 							<br /> See See!—직접 보고, 즐기자는 의미를 담은 플랫폼입니다.{' '}
 							<br />
 							학교 연극제부터 독립 소극장, 뮤지컬 동아리 공연까지, <br />
@@ -114,7 +114,7 @@ function AboutCC() {
 								<br />
 								저희 씨씨 이용하러 가실까요?
 							</Quote>
-							<button className="btn-primary" onClick={() => navigate('/')}>
+							<button className="btn-primary" onClick={() => navigate('/home')}>
 								홈 화면으로 가기
 							</button>
 						</ContentWrapper>
