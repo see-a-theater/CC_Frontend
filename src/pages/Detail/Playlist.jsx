@@ -11,7 +11,7 @@ import SearchBar from '@/components/SearchBar';
 import HomeIconMenu from '@/components/HomeIconMenu';
 import Footer from '@/components/Footer';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import SamplePoster from '@/assets/mock/images/실종.png';
 

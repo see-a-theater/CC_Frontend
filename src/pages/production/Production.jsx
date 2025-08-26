@@ -7,7 +7,7 @@ import Masonry from '@/components/Masonry';
 import MasonryWeb from '@/components/MasonryWeb';
 import ProdPlayCard from '@/components/ProdPlayCard';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import image1 from '@/assets/mock/images/image1.png';
 import image2 from '@/assets/mock/images/image2.png';
@@ -158,7 +158,7 @@ function Production() {
 							)}
 							<CardArea>
 								{playList?.map((data) => (
-									<ProdPlayCard data={data}  onClick={navigateToDetail}/>
+									<ProdPlayCard data={data} onClick={navigateToDetail} />
 								))}
 							</CardArea>
 						</>
@@ -216,7 +216,7 @@ function Production() {
 								<SubText>{playList.length}개의 연극</SubText>
 								<CardArea>
 									{playList?.map((data) => (
-										<ProdPlayCard data={data}  onClick={navigateToDetail}/>
+										<ProdPlayCard data={data} onClick={navigateToDetail} />
 									))}
 								</CardArea>
 							</>

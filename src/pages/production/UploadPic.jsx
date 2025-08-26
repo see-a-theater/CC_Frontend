@@ -1,5 +1,6 @@
 //yarn add react-select
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import styled from 'styled-components';
@@ -117,11 +118,13 @@ function UploadPic() {
 		}
 	};
 
+	const { accessToken } = useAuth();
 	useEffect(() => {
 		async function fetchData() {
 			try {
 				// 예: jpg 파일을 photoAlbum 경로에 업로드할 Presigned URL 요청
 				const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
+					accessToken,
 					'jpg',
 					'photoAlbum',
 				);

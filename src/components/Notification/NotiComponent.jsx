@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import Noti from '@/components/Notification/Noti';
 import PillToggleGroup from '@/components/PillToggleGroup';
-
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 function NotiComponent() {
 	const options = ['전체', '소극장 공연', '추천 공연'];

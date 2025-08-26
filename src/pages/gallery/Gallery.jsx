@@ -4,14 +4,13 @@ import Hamburger from '@/components/Hamburger';
 import SearchBar from '@/components/SearchBar';
 import HomeIconMenu from '@/components/HomeIconMenu';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import styled from 'styled-components';
 
 function Gallery() {
 	const token = 'producer';
 	localStorage.setItem('token', token);
-	
 
 	const { data: picData, error, loading } = useCustomFetch(`/photoAlbums`);
 

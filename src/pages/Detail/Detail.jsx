@@ -1,7 +1,7 @@
 import Summary from './summary';
 import Info from './Info';
 import { useParams } from 'react-router-dom';
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 function Detail() {
 	const { playId } = useParams();
@@ -23,10 +23,10 @@ function Detail() {
 	return (
 		<>
 			{/*스크롤 전 요약 화면*/}
-			<Summary playData={playData}/>
+			<Summary playData={playData} />
 
 			{/*스크롤 후 상세 화면*/}
-			<Info playData={playData}/>
+			<Info playData={playData} />
 		</>
 	);
 }
