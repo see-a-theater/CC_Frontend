@@ -4,7 +4,7 @@ function Masonry({imageData}) {
 	return (
 		<>
 			<ImageArea>
-				{imageData?.photoAlbumDTOs.map((data, idx) => (
+				{imageData?.result.singlePhotoAlbumDTOs.map((data, idx) => (
 					<Item key={idx}>
 						<img src={data?.imageUrl} alt="공연사진" className="pic" />
 						<Text>

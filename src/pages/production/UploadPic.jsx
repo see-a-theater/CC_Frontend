@@ -128,6 +128,7 @@ function UploadPic() {
 			);
 
 			console.log('✅ S3 응답:', uploadUrl); // 디버깅용
+			console.log('✅ keyName:', keyName); // 디버깅용
 			console.log('✅ publicUrl:', publicUrl); // 디버깅용
 
 			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`
@@ -136,7 +137,7 @@ function UploadPic() {
 
 			const postBody = {
 				//추후 ID 수정
-				amateurShowId: 55,
+				amateurShowId: 4,
 				content: textContent,
 				imageRequestDTOs: [{ keyName, imageUrl: publicUrl }],
 			};

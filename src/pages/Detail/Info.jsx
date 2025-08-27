@@ -65,7 +65,9 @@ function Info({ playData }) {
 						<IconWrapper>
 							<Location height={24} />
 						</IconWrapper>
-						<p className="blackTxt">{playData?.result.place}</p>
+						<p className="blackTxt">
+							{playData?.result.hallName} {playData?.result.detailAddress}
+						</p>
 					</InfoBlock>
 					<InfoBlock>
 						<IconWrapper>

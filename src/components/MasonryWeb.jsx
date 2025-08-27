@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
 function MasonryWeb({ imageData }) {
+	console.log('masonry', imageData);
 	return (
 		<ImageArea>
-			{imageData?.photoAlbumDTOs.map((data, idx) => (
+			{imageData?.result.singlePhotoAlbumDTOs.map((data, idx) => (
 				<Item key={idx}>
 					<img src={data?.imageUrl} alt="공연사진" className="pic" />
 					<Text>
 						<p className="title">{data?.amateurShowName}</p>
-						{data.place && <p className="theatre">{data?.place}</p>}
+						{data.detailAddress && (
+							<p className="theatre">{data?.detailAddress}</p>
+						)}
 					</Text>
 				</Item>
 			))}
