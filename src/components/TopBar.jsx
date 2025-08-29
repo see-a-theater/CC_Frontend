@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import ChevronPink from '@/assets/icons/ChevronPink.svg';
-import { useNavigate } from 'react-router-dom';
 function TopBar({ onPrev, onNext, children }) {
-	const navigate = useNavigate();
-	function onPrev() {
-		navigate(-1);
-	}
 	return (
 		<>
 			<Top>

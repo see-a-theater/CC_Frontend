@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import TicketContainer from '../../../components/TicketContainer';
+import TicketContainer from '@/components/TicketContainer';
 
 import Poster from '@/assets/images/test-poster2.png';
 const ticketHeaders = ['예매일', '장소', '관람일시', '상태'];

@@ -1,8 +1,8 @@
 import Calendar from './Calendar.jsx';
-import CalendarIcon from '../assets/icons/Calendar.svg';
+import CalendarIcon from '@/assets/icons/Calendar.svg';
 import styled from 'styled-components';
 import { useState } from 'react';
-import TimePicker from './TimePicker.jsx';
+import TimePicker from '@/TimePicker.jsx';
 
 function DateInput({ value, onChange }) {
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);

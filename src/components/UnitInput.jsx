@@ -1,7 +1,6 @@
 import Calendar from './Calendar.jsx';
-import CalendarIcon from '../assets/icons/Calendar.svg';
+import CalendarIcon from '@/assets/icons/Calendar.svg';
 import styled from 'styled-components';
-import { useState } from 'react';
 
 function UnitInput({ placeholder, unit, value, onChange, name }) {
 	return (

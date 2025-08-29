@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
-import ImageUploadBox from '../../components/ImageUploadBox.jsx';
-import Counter from '../../components/Counter.jsx';
-import DateInput from '../../components/DateInput.jsx';
-import UnitInput from '../../components/UnitInput.jsx';
+import ImageUploadBox from '@/components/ImageUploadBox.jsx';
+import Counter from '@/components/Counter.jsx';
+import DateInput from '@/components/DateInput.jsx';
+import UnitInput from '@/components/UnitInput.jsx';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { useDebounce } from '../../utils/hooks/useDebounce.js';
 import { useRef } from 'react';
+import { useEffect } from 'react';
 function RegisterStep1() {
-	const [date, setDate] = useState(new Date());
-
+	const [formDataChanged, setFormDataChanged] = useState(false);
 	const [roundCount, setRoundCount] = useState(1);
 	const { nextStep } = useOutletContext();
 
@@ -35,6 +34,7 @@ function RegisterStep1() {
 				[name]: value,
 			}));
 		}
+		setFormDataChanged(true);
 		console.log(formData);
 	};
 	// 할인 항목 추가
@@ -43,6 +43,7 @@ function RegisterStep1() {
 			...prev,
 			tickets: [...prev.tickets, { discountName: '', price: '' }],
 		}));
+		setFormDataChanged(true);
 	};
 
 	// 할인 항목 삭제
@@ -61,6 +62,7 @@ function RegisterStep1() {
 			posterImageUrl: fileInfo?.publicUrl,
 		}));
 		console.log('포스터 등록 확인', formData);
+		setFormDataChanged(true);
 	};
 
 	const handleRoundChange = (index, field, value) => {
@@ -72,7 +74,31 @@ function RegisterStep1() {
 			updatedRounds[index][field] = value;
 			return { ...prev, rounds: updatedRounds };
 		});
+		setFormDataChanged(true);
 	};
+	const handleNextStep = () => {
+		localStorage.setItem('formData', JSON.stringify(formData));
+		nextStep();
+	};
+	const changedRef = useRef(false);
+	const formDataRef = useRef(formData);
+
+	useEffect(() => {
+		changedRef.current = formDataChanged;
+		formDataRef.current = formData;
+	}, [formDataChanged, formData]);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			if (formDataChanged) {
+				localStorage.setItem('formData', JSON.stringify(formData));
+				setFormDataChanged(false);
+				console.log('데이터 저장');
+			}
+		}, 6000); // 60초
+
+		return () => clearInterval(interval);
+	}, [formDataChanged]);
+
 	return (
 		<RegisterWrapper>
 			<form>
@@ -80,7 +106,13 @@ function RegisterStep1() {
 				<div>
 					<label style={{ marginBottom: '6px' }}>포스터 썸네일</label>
 					<p style={{ marginBottom: '12px' }}>한장만 등록 가능합니다.</p>
-					<ImageUploadBox onUploadSuccess={handlePosterUpload} />
+					<ImageUploadBox
+						onUploadSuccess={handlePosterUpload}
+						webHeight="320px"
+						webWidth="228px"
+						value={formData.posterImageUrl}
+					/>
+					<p>{formData.posterImageUrl}</p>
 				</div>
 				<div>
 					<label>공연 이름</label>
@@ -194,7 +226,7 @@ function RegisterStep1() {
 
 					<UnitInput
 						type="text"
-						name="address"
+						name="price"
 						value={formData.tickets.price}
 						onChange={handleInputChange}
 						placeholder="가격을 입력해주세요"
@@ -278,14 +310,39 @@ function RegisterStep1() {
 					/>
 				</div>
 			</form>
-			<button
-				style={{ marginTop: '44px' }}
-				type="submit"
-				className="btn-primary"
-				onClick={nextStep}
-			>
-				다음
-			</button>
+			<ButtonWrapper>
+				<button
+					style={{ marginTop: '44px', minWidth: '140px' }}
+					type="submit"
+					className="btn-primary"
+					onClick={() => handleNextStep()}
+				>
+					다음
+				</button>
+				<button
+					className="save"
+					type="button"
+					onClick={() =>
+						localStorage.setItem('formData', JSON.stringify(formData))
+					}
+				>
+					저장하기
+				</button>
+				<button
+					className="save"
+					type="button"
+					onClick={() => {
+						const saved = localStorage.getItem('formData');
+						if (saved) {
+							setFormData(JSON.parse(saved));
+						} else {
+							alert('저장된 데이터가 없습니다.');
+						}
+					}}
+				>
+					불러오기
+				</button>
+			</ButtonWrapper>
 		</RegisterWrapper>
 	);
 }
@@ -299,4 +356,19 @@ const InputRow = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 1fr 0.1fr;
 	gap: 12px;
+`;
+const ButtonWrapper = styled.div`
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 10px;
+	button {
+		display: flex;
+		width: 100%;
+	}
+	.save {
+		color: red;
+		font-size: 14px;
+		text-decoration: underline;
+	}
 `;
