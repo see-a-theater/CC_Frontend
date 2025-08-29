@@ -1,7 +1,6 @@
 import { RegisterWrapper } from './Register.style.js';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 function RegisterStep5() {
-	const { nextStep } = useOutletContext();
 	const navigate = useNavigate();
 	return (
 		<RegisterWrapper>

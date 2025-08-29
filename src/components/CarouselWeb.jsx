@@ -3,18 +3,19 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from 'styled-components';
-import Poster from '../assets/images/test-poster2.png';
+import Poster from '@/assets/images/test-poster2.png';
 
 /*배너 넘어갈 때 border-radius 깜빡거리는 오류 있음 */
 
 function CarouselWeb({ banners }) {
 	let sliderRef = useRef(null);
+	/*
 	const play = () => {
 		sliderRef.slickPlay();
 	};
 	const pause = () => {
 		sliderRef.slickPause();
-	};
+	};*/
 	const settings = {
 		dots: true,
 		infinite: true,

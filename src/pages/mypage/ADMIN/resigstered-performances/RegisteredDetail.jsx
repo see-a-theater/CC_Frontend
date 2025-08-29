@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../../../components/TopBar';
+import TopBar from '@/components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
 import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
-import TopBarWeb from '../../../../components/TopBarWeb';
-import chroma from 'chroma-js';
+import TopBarWeb from '@/components/TopBarWeb';
 import Select from 'react-select';
-import React, { useState, useEffect } from 'react';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 
-const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
 const details = {
 	title: '실종',
 	imgSrc: Poster,
@@ -33,6 +30,7 @@ const details = {
 function RegisteredDetail() {
 	const navigate = useNavigate();
 	// 모달창 관련 함수
+	/*
 	const [showAlert, setShowAlert] = useState(false);
 	const handleCancelClick = () => setShowAlert(true);
 	const handleCloseAlert = () => setShowAlert(false);
@@ -41,24 +39,18 @@ function RegisteredDetail() {
 		setShowAlert(false);
 		navigate('cancel/complete');
 	};
+	*/
 	function onPrev() {
 		navigate(-1);
 	}
+	/*
 	const onCancelClick = () => {
 		navigate('cancel', {
 			state: { backgroundLocation: location }, // ✅ 중요!
 		});
 	};
-
-	const {
-		bookingDate,
-		place,
-		performanceDate,
-		status,
-		cancelDeadline,
-		imgSrc,
-	} = details;
-	const header = ticketHeaders;
+*/
+	const { imgSrc } = details;
 
 	const options = [
 		{
@@ -117,7 +109,7 @@ function RegisteredDetail() {
 							홍익대학교 학생회관 3층 소극장
 						</p>
 						<p className="color-gray400" style={{ marginBottom: '16px' }}>
-							2024.10.03 ~2024.10.05
+							2024.10.03 ~ 2024.10.05
 						</p>
 						<Hr />
 						<Table>

@@ -1,7 +1,6 @@
 //yarn add react-select
 import { useEffect, useState } from 'react';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
-import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -24,8 +23,6 @@ function UploadPic() {
 	const [showModal, setShowModal] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(false);
 	const [customOptions, setCustomOptions] = useState([]);
-	const [image, setImage] = useState(null);
-	const [imageName, setImageName] = useState(null);
 	const [inputValue, setInputValue] = useState('');
 
 	const baseOptions = data.map((item) => ({

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Header as HeaderContainer, PageTitle } from '../styles/commonStyles';
+import { Header as HeaderContainer, PageTitle } from '@/pages/ticketingpage/styles/commonStyles';
 
 const HeaderPC = ({ currentStep = 1 }) => {
   const steps = [

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import { useState } from 'react';
-import TicketContainer from '../../../../components/TicketContainer';
-import TopBar from '../../../../components/TopBar';
+import TicketContainer from '@/components/TicketContainer';
+import TopBar from '@/components/TopBar';
 import { useNavigate } from 'react-router-dom';
 import ChevronLeftGray from '@/assets/icons/chevronLeftGray.svg?react';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
@@ -77,8 +77,10 @@ function RegisteredPerformances() {
 			</div>
 			<Wrapper>
 				<PillToggleGroup
+				<PillToggleGroup
 					options={['전체', '예매 진행', '공연 종료']}
 					onSelect={(option) => setSelected(option)}
+				/>
 				/>
 				<div style={{ marginBottom: '28px' }} />
 				{selected === '전체' && (

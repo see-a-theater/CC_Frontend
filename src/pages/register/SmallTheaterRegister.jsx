@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TopBar from '../../components/TopBar';
+import TopBar from '@/components/TopBar';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 /* 현재 step 번호 계산*/

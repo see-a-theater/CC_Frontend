@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Poster from '../assets/images/test-poster1.png';
+import Poster from '@/assets/images/test-poster1.png';
 
 /* 터치로 카드넘김 효과 추가 필요*/
 function Ranking() {
@@ -103,11 +103,8 @@ const Img = styled.div`
 	width: 128px;
 	height: 180px;
 	border-radius: 3px;
-	background: linear-gradient(
-			180deg,
-			rgba(0, 0, 0, 0) 50.58%,
-			rgba(0, 0, 0, 0.5) 100%
-		),
+	background:
+		linear-gradient(180deg, rgba(0, 0, 0, 0) 50.58%, rgba(0, 0, 0, 0.5) 100%),
 		url(${({ background }) => background}) center/cover no-repeat;
 	margin-bottom: 12px;
 	@media (min-width: 768px) {

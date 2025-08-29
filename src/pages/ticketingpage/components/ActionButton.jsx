@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ActionButton as StyledActionButton } from '../styles/commonStyles';
+import { ActionButton as StyledActionButton } from '@/pages/ticketingpage/styles/commonStyles';
 
 const ActionButton = ({ children, isActive, onClick, className = '' }) => {
   
