@@ -4,45 +4,66 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import TimePicker from './TimePicker.jsx';
 
-function DateInput() {
+function DateInput({ value, onChange }) {
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 	const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
 
 	const toggleCalendar = () => {
 		if (isCalendarOpen || isTimePickerOpen) {
-			// 둘 중 하나라도 열려있으면 둘 다 닫기
 			setIsCalendarOpen(false);
 			setIsTimePickerOpen(false);
 		} else {
-			// 둘 다 닫혀있으면 캘린더 열기
 			setIsCalendarOpen(true);
 		}
 	};
+
 	const handleNextClick = () => {
-		setIsCalendarOpen(false); // 캘린더 닫기
-		setIsTimePickerOpen(true); // 시간 선택기 열기
+		setIsCalendarOpen(false);
+		setIsTimePickerOpen(true);
 	};
 
 	const handlePrevClick = () => {
-		setIsCalendarOpen(true); // 캘린더 닫기
-		setIsTimePickerOpen(false); // 시간 선택기 열기
+		setIsCalendarOpen(true);
+		setIsTimePickerOpen(false);
 	};
 
-	const handleCompleteClick = () => {
-		setIsTimePickerOpen(false); // 시간 선택기 닫기
-		// 여기서 필요한 경우 날짜와 시간 정보를 처리할 수 있습니다.
+	const handleCompleteClick = (newDate) => {
+		setIsTimePickerOpen(false);
+		if (onChange) onChange(newDate);
 	};
+
+	function formatKoreanDateTime(date) {
+		if (!date) return '';
+		const d = new Date(date);
+		const year = d.getFullYear();
+		const month = String(d.getMonth() + 1).padStart(2, '0');
+		const day = String(d.getDate()).padStart(2, '0');
+
+		let hours = d.getHours();
+		const minutes = String(d.getMinutes()).padStart(2, '0');
+
+		const meridiem = hours >= 12 ? '오후' : '오전';
+		hours = hours % 12 || 12;
+
+		return `${year}.${month}.${day} ${meridiem} ${hours}시 ${minutes}분`;
+	}
 
 	return (
 		<Wrapper>
 			<Input>
-				<input type="text" placeholder="날짜와 시간을 선택해주세요" />
+				<input
+					type="text"
+					value={formatKoreanDateTime(value)}
+					readOnly
+					placeholder="날짜와 시간을 선택해주세요"
+				/>
 				<img src={CalendarIcon} alt="calendar" onClick={toggleCalendar} />
 			</Input>
+
 			{isCalendarOpen && (
 				<Area>
 					<Div>
-						<Calendar />
+						<Calendar date={value} setDate={onChange} />
 						<Bottom>
 							<button className="primary" onClick={handleNextClick}>
 								다음
@@ -51,15 +72,19 @@ function DateInput() {
 					</Div>
 				</Area>
 			)}
+
 			{isTimePickerOpen && (
 				<Area>
 					<Div>
-						<TimePicker />
+						<TimePicker date={value} setDate={onChange} />
 						<Bottom>
 							<button className="secondary" onClick={handlePrevClick}>
 								이전
 							</button>
-							<button className="primary" onClick={handleCompleteClick}>
+							<button
+								className="primary"
+								onClick={() => handleCompleteClick(value)}
+							>
 								완료
 							</button>
 						</Bottom>
@@ -69,6 +94,7 @@ function DateInput() {
 		</Wrapper>
 	);
 }
+
 export default DateInput;
 
 const Input = styled.div`
@@ -96,7 +122,6 @@ const Input = styled.div`
 		border: none;
 		background: var(--color-gray-200, #f8f8f8);
 		color: #000000;
-		font-family: 'NanumSquare Neo OTF';
 		font-size: 13px;
 		font-style: normal;
 		font-weight: 400;
@@ -119,7 +144,6 @@ const Input = styled.div`
 
 const Wrapper = styled.div``;
 const Area = styled.div`
-	border: 1px solid rgba(222, 226, 230, 0.88);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -157,5 +181,8 @@ const Bottom = styled.div`
 const TimePickerWrapper = styled.div``;
 
 const Div = styled.div`
-	max-width: 300px;
+	max-width: 350px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 `;

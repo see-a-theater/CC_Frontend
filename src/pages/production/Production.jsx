@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Hamburger from '@/components/Hamburger';
 import Masonry from '@/components/Masonry';
 import MasonryWeb from '@/components/MasonryWeb';
 import ProdPlayCard from '@/components/ProdPlayCard';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 import image1 from '@/assets/mock/images/image1.png';
 import image2 from '@/assets/mock/images/image2.png';
@@ -20,18 +22,47 @@ import Gallery from '@/assets/icons/Gallery.svg?react';
 import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
 
 function Production() {
-	const imageList = [
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-	];
+	const { prodId } = useParams();
+
+	const mockData = {
+		isSuccess: true,
+		code: '200',
+		message: 'OK',
+		result: [
+			{
+				photoAlbumId: 0,
+				amateurShowName: '실종',
+				place: 'string',
+				imageUrl: image1,
+			},
+			{
+				photoAlbumId: 2,
+				amateurShowName: '카포네 트릴로지',
+				place: 'string',
+				imageUrl: image2,
+			},
+
+			{
+				photoAlbumId: 3,
+				amateurShowName: '킬링시저',
+				place: 'string',
+				imageUrl: image3,
+			},
+			{
+				photoAlbumId: 4,
+				amateurShowName: '카포네 트릴로지',
+				place: 'string',
+				imageUrl: image4,
+			},
+
+			{
+				photoAlbumId: 5,
+				amateurShowName: '킬링시저',
+				place: 'string',
+				imageUrl: image5,
+			},
+		],
+	};
 	const playList = [
 		{
 			title: '실종',
@@ -66,10 +97,21 @@ function Production() {
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
+	const {
+		data: picData,
+		error,
+		loading,
+	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', picData);
+
 	const [activeTab, setActiveTab] = useState('plays');
 	const navigate = useNavigate();
+
 	const navigateToDetail = () => {
-		navigate('/production/1');
+		navigate(`/production/${prodId}/detail`);
+		window.scrollTo(0, 0);
 	};
 	const navigateToUpload = () => {
 		navigate('/production/upload_photo');
@@ -116,14 +158,14 @@ function Production() {
 							)}
 							<CardArea>
 								{playList?.map((data) => (
-									<ProdPlayCard data={data} />
+									<ProdPlayCard data={data}  onClick={navigateToDetail}/>
 								))}
 							</CardArea>
 						</>
 					)}
 					{activeTab === 'gallery' && (
 						<>
-							<SubText>{imageList.length}개의 사진첩</SubText>
+							<SubText>{mockData.result.length}개의 사진첩</SubText>
 							{token && (
 								<FixedProdButton>
 									<ProdButton onClick={navigateToUpload}>
@@ -132,7 +174,7 @@ function Production() {
 									</ProdButton>
 								</FixedProdButton>
 							)}
-							<Masonry imageData={imageList} />
+							<Masonry data={mockData} />
 						</>
 					)}
 				</ContentArea>
@@ -174,15 +216,15 @@ function Production() {
 								<SubText>{playList.length}개의 연극</SubText>
 								<CardArea>
 									{playList?.map((data) => (
-										<ProdPlayCard data={data} />
+										<ProdPlayCard data={data}  onClick={navigateToDetail}/>
 									))}
 								</CardArea>
 							</>
 						)}
 						{activeTab === 'gallery' && (
 							<>
-								<SubText>{imageList.length}개의 사진첩</SubText>
-								<MasonryWeb imageData={imageList} />
+								<SubText>{mockData.result.length}개의 사진첩</SubText>
+								<MasonryWeb data={mockData} />
 							</>
 						)}
 					</ContentArea>

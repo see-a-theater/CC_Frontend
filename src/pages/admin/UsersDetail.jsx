@@ -1,5 +1,7 @@
-//import { useParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
+import Search from '@/assets/icons/searchBlack.svg?react';
+import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 
 function UsersDetail() {
 	const user_data = {
@@ -21,17 +23,85 @@ function UsersDetail() {
 		{ label: '성별', value: user_data.gender },
 		{ label: '주소', value: user_data.address },
 	];
+	const labelMap = {
+		id: '아이디',
+		name: '이름',
+		email: 'E-mail',
+		phone: '번호',
+		gender: '성별',
+	};
 
-	//const { userId } = useParams();
-	//const url = `/admin/users/${userId}`;
+	const [searchTerm, setSearchTerm] = useState('');
+	const [visibleColumns, setVisibleColumns] = useState([
+		'id',
+		'name',
+		'email',
+		'phone',
+		'gender',
+		'address',
+	]);
+
+	const handleColumnToggle = (column) => {
+		setVisibleColumns((prev) =>
+			prev.includes(column)
+				? prev.filter((c) => c !== column)
+				: [...prev, column],
+		);
+	};
+
+	const filteredRows = useMemo(() => {
+		return rows.filter(
+			(row) =>
+				visibleColumns.includes(getKeyByLabel(row.label)) &&
+				row.value.toLowerCase().includes(searchTerm.toLowerCase()),
+		);
+	}, [searchTerm, visibleColumns]);
+
+	function getKeyByLabel(label) {
+		const map = {
+			아이디: 'id',
+			이름: 'name',
+			번호: 'phone',
+			'E-mail': 'email',
+			생년월일: 'birth',
+			성별: 'gender',
+			주소: 'address',
+		};
+		return map[label];
+	}
 
 	return (
 		<Container>
 			<Content>
+				<SectionTitle>사용자 관리</SectionTitle>
+				<FilterArea>
+					<SearchInput>
+						<input
+							type="text"
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+							placeholder="검색어를 입력하세요"
+						/>
+						<Search width={15} />
+					</SearchInput>
+					<div className="checkboxArea">
+						{Object.entries(labelMap).map(([key, label]) => (
+							<label key={key}>
+								<input
+									type="checkbox"
+									checked={visibleColumns.includes(key)}
+									onChange={() => handleColumnToggle(key)}
+								/>
+								{label}
+							</label>
+						))}
+						<SearchBg />
+					</div>
+				</FilterArea>
 				<Table>
 					<Title>{'<'} 기본 정보</Title>
 					<tbody>
-						{rows.map((row, index) => (
+						{filteredRows.map((row, index) => (
 							<tr key={index}>
 								<th>{row.label}</th>
 								<td>{row.value}</td>
@@ -50,12 +120,13 @@ export default UsersDetail;
 const Container = styled.div`
 	width: 100vw;
 	display: flex;
+	flex-direction: column;
 `;
 const Content = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	padding: 230px;
+	padding: 0px 120px 50px 50px;
 `;
 
 const Title = styled.h2`
@@ -71,6 +142,7 @@ const Table = styled.div`
 	display: flex;
 	margin: 0 auto;
 	flex-direction: column;
+	padding-top: 120px;
 
 	border-collapse: collapse;
 	th {
@@ -111,4 +183,40 @@ const Button = styled.button`
     font-size: font-size: ${({ theme }) => theme.font.fontSize.title16};
     font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 	color: ${({ theme }) => theme.colors.pink600};
+`;
+const SectionTitle = styled.h3`
+	font-size: ${({ theme }) => theme.font.fontSize.headline24};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink600};
+	margin-bottom: 15px;
+`;
+const FilterArea = styled.div`
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 36px;
+
+	.checkboxArea {
+		display: flex;
+		align-items: center;
+		gap: 18px;
+	}
+`;
+const SearchInput = styled.div`
+	display: flex;
+	align-items: center;
+	padding: 0 10px;
+	background: #fff;
+	width: 360px;
+	height: 32px;
+	border-radius: 7px;
+	border: 1px solid #000;
+
+	input {
+		width: 100%;
+		border: none;
+		outline: none;
+		font-size: ${({ theme }) => theme.font.fontSize.body14};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;

@@ -1,13 +1,38 @@
 import styled from 'styled-components';
-import sampleImg from '@/assets/mock/images/실종.png';
+import { useNavigate } from 'react-router-dom';
 
-function PlayCard() {
+function PlayCard({ name, posterImageUrl, place, schedule, amateurShowId }) {
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${amateurShowId}`);
+		window.scrollTo(0, 0);
+	};
 	return (
-		<Container>
+		<Container image={posterImageUrl} onClick={goDetail}>
 			<Text>
-				<h3 className="Title"> 실종 </h3>
-				<p className="Location">홍익대학교 학생회관 3층 소극장</p>
-				<p className="Date">2024.10.03 (목) 19:00</p>
+				<h3 className="Title"> {name} </h3>
+				<p className="Location">{place}</p>
+				<p className="Date">
+					{schedule
+						? (() => {
+								const parts = schedule.split('~');
+								const before = parts[0]?.trim() ?? '';
+								const after = parts[1]?.trim() ?? '';
+								return (
+									<>
+										{before}
+										{after && (
+											<>
+												{' ~'}
+												<br />
+												{after}
+											</>
+										)}
+									</>
+								);
+							})()
+						: '날짜 정보 없음'}
+				</p>
 			</Text>
 		</Container>
 	);
@@ -23,9 +48,9 @@ const Container = styled.div`
 
 	position: relative;
 
-	background:
-		linear-gradient(180deg, rgba(0, 0, 0, 0) 25.94%, rgba(0, 0, 0, 0.6) 77.94%),
-		url('${sampleImg}');
+	background: ${({ image }) =>
+		`linear-gradient(180deg, rgba(0, 0, 0, 0) 25.94%, rgba(0, 0, 0, 0.6) 77.94%),
+		url(${image})`};
 	background-size: cover;
 `;
 const Text = styled.div`
@@ -38,13 +63,13 @@ const Text = styled.div`
 		font-size: ${({ theme }) => theme.font.fontSize.headline24};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 
-        margin-bottom: 28px;
+		margin-bottom: 28px;
 	}
 	.Location {
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 
-        margin-bottom: 8px;
+		margin-bottom: 8px;
 	}
 	.Date {
 		font-size: ${({ theme }) => theme.font.fontSize.body14};

@@ -2,52 +2,56 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
-function TicketContainer({ header, details }) {
+function TicketContainer({ header, details, isPerformer }) {
 	const navigate = useNavigate();
 	const {
-		title,
-		count,
-		bookingDate,
-		place,
-		performanceDate,
+		ticketId,
+		showTitle,
+		posterImageUrl,
+		detailAddress,
+		performanceDateTime,
+		quantity,
+		totalPrice,
+		reserveDateTime,
+		reservationStatus,
 		cancelDeadline,
-		status,
-		imgSrc,
-		navLink,
 	} = details;
 
-	const isExpired = status === '공연 종료';
+	const isExpired = reservationStatus === '공연 종료';
 
 	return (
-		<Wrapper isExpired={isExpired} onClick={() => navigate(navLink)}>
+		<Wrapper isExpired={isExpired} onClick={() => navigate(`${ticketId}`)}>
 			<div className="only-web">
-				<img src={imgSrc} style={{ width: '140px', height: '200px' }} />
+				<img src={posterImageUrl} style={{ width: '140px', height: '200px' }} />
 			</div>
 			<div>
 				<Title>
-					{title} {count}매
+					{showTitle} {quantity} {!isPerformer && <>매</>}
 				</Title>
 				<Table>
 					<tbody>
 						<tr>
 							<th>{header[0]}</th>
-							<td>{bookingDate}</td>
+							<td>{reserveDateTime ?? 'null'}</td>
 						</tr>
 						<tr>
 							<th>{header[1]}</th>
-							<td>{place}</td>
+							<td>{detailAddress ?? 'null'}</td>
 						</tr>
 						<tr>
 							<th>{header[2]}</th>
-							<td>{performanceDate}</td>
+							<td>{performanceDateTime ?? 'null'}</td>
 						</tr>
-						<tr className="only-web">
-							<th>취소가능일시</th>
-							<td>{cancelDeadline}</td>
-						</tr>
+						{header[4] && (
+							<tr className="only-web">
+								<th>{header[4]}</th>
+								<td>{cancelDeadline ?? 'null'}</td>
+							</tr>
+						)}
+
 						<tr>
 							<th>{header[3]}</th>
-							<StatusTD>{status}</StatusTD>
+							<StatusTD>{reservationStatus ?? 'null'}</StatusTD>
 						</tr>
 					</tbody>
 				</Table>
@@ -106,6 +110,7 @@ const Table = styled.table`
 
 	th {
 		width: 88px;
+		min-width: 50px;
 		text-align: left;
 		color: ${({ theme }) => theme.colors.gray400};
 		font-size: ${({ theme }) => theme.font.fontSize.body12};
