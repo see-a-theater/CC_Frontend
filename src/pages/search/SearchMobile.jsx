@@ -1,118 +1,137 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { searchShows, getShowRanking } from './api/searchApi';
 import ChevronPink from '../../assets/icons/ChevronPink.svg';
 import ClosePink from '../../assets/icons/ClosePink.svg';
 import Poster from '../../assets/images/test-poster2.png';
 
 const SearchMobile = () => {
-  const mockUpcoming = [
-    {
-      id: 1,
-      rank: 1,
-      title: '실종',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00'
-    },
-    {
-      id: 2,
-      rank: 2,
-      title: '실종',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00'
-    },
-    {
-      id: 3,
-      rank: 3,
-      title: '실종',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00'
-    },
-    {
-      id: 4,
-      rank: 4,
-      title: '실종',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00'
-    }
-  ];
-  const mockData = [
-    {
-      id: 1,
-      title: '실종',
-      company: '홍익극연구회',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00',
-      status: '판매중',
-      isActive: true
-    },
-    {
-      id: 2,
-      title: '실종',
-      company: '대혼돈',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00',
-      status: '공연종료',
-      isActive: false
-    },
-    {
-      id: 3,
-      title: '실종',
-      company: '어재들',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00',
-      status: '공연종료',
-      isActive: false
-    },
-    {
-      id: 4,
-      title: '실종',
-      company: '씨씨',
-      venue: '홍익대학교 학생회관 3층 소극장',
-      date: '2024.10.03 (목) 19:00 ~ 2024.10.05 (토) 14:00',
-      status: '공연종료',
-      isActive: false
-    }
-  ];
   const navigate = useNavigate();
+  const [recentSearches, setRecentSearches] = useState(['실종', '홍익극연구회', '카포네 트릴로지']);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [upcomingShows, setUpcomingShows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [hasSearched, setHasSearched] = useState(false);
+  const scrollRef = useRef(null);
+
+  // 컴포넌트 마운트 시 임박한 공연 데이터 로드
+  useEffect(() => {
+    const fetchUpcomingShows = async () => {
+      try {
+        setIsInitialLoading(true);
+        const response = await getShowRanking();
+        if (response.isSuccess) {
+          // API 응답을 임박한 공연 형태로 변환 (상위 4개만)
+          const formattedShows = response.result.slice(0, 4).map((show, index) => ({
+            id: show.amateurShowId,
+            rank: index + 1,
+            title: show.name,
+            venue: show.detailAddress,
+            date: show.schedule,
+            posterImageUrl: show.posterImageUrl
+          }));
+          setUpcomingShows(formattedShows);
+        }
+      } catch (error) {
+        console.error('임박한 공연 데이터 로드 실패:', error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    fetchUpcomingShows();
+  }, []);
+
   const handleBackClick = () => {
     navigate(-1);
   };
-  const [recentSearches, setRecentSearches] = useState(['실종', '홍익극연구회', '카포네 트릴로지']);
-  const [searchTerm, setSearchTerm] = useState('');
+
   const removeRecentSearch = (index) => {
     setRecentSearches(prev => prev.filter((_, i) => i !== index));
   };
+
   const clearAllSearches = () => {
     setRecentSearches([]);
   };
+
   const handleSearch = (value) => {
     setSearchTerm(value);
+    if (!value.trim()) {
+      setHasSearched(false);
+      setSearchResults([]);
+    }
   };
+
+  const performSearch = async (keyword) => {
+    if (!keyword.trim()) return;
+
+    try {
+      setIsLoading(true);
+      const response = await searchShows(keyword.trim());
+      
+      if (response.isSuccess) {
+        // API 응답을 기존 형태로 변환
+        const formattedResults = response.result.content.map(item => ({
+          id: item.showId,
+          title: item.title,
+          company: item.performerName,
+          venue: item.hallName,
+          date: item.schedule,
+          status: getStatusText(item.status),
+          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING',
+          posterImageUrl: item.posterImageUrl
+        }));
+        
+        setSearchResults(formattedResults);
+        setHasSearched(true);
+      }
+    } catch (error) {
+      console.error('검색 실패:', error);
+      setSearchResults([]);
+      setHasSearched(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       addToRecentSearches(searchTerm.trim());
+      performSearch(searchTerm.trim());
     }
   };
+
   const addToRecentSearches = (newSearch) => {
     if (newSearch) {
       setRecentSearches(prev => {
-        // 중복 제거 후 맨 앞에 추가
         const filteredSearches = prev.filter(search => search !== newSearch);
-        return [newSearch, ...filteredSearches].slice(0, 20); // 최대 20개까지 유지(임시)
+        return [newSearch, ...filteredSearches].slice(0, 20);
       });
     }
   };
+
   const handleRecentSearchClick = (search) => {
     setSearchTerm(search);
+    performSearch(search);
   };
-  const filteredResults = mockData.filter(result =>
-    result.title.includes(searchTerm) || 
-    result.company.includes(searchTerm)
-  );
 
-  const scrollRef = useRef(null);
+  // API 상태 텍스트 변환 함수
+  const getStatusText = (status) => {
+    const statusMap = {
+      'APPROVED_ONGOING': '판매중',
+      'APPROVED_YET': '판매예정',
+      'APPROVED_ENDED': '공연종료',
+      'WAITING_APPROVAL': '승인대기',
+      'REJECTED': '반려'
+    };
+    return statusMap[status] || '정보없음';
+  };
+
+  const displayResults = hasSearched ? searchResults : [];
 
   return (
     <AppContainer>
@@ -129,7 +148,7 @@ const SearchMobile = () => {
         </SearchBox>
       </SearchBar>
 
-      {!searchTerm ? (
+      {!hasSearched && !searchTerm.trim() ? (
         <>
           {/* 최근검색어 */}
           <RecentSearchSection>
@@ -148,8 +167,9 @@ const SearchMobile = () => {
                   <DeleteButton 
                     src={ClosePink} 
                     onClick={(e) => {
-                      e.stopPropagation(); // 부모 클릭 이벤트 막기
-                      removeRecentSearch(index); }}
+                      e.stopPropagation();
+                      removeRecentSearch(index);
+                    }}
                   />
                 </RecentSearchBox>
               ))}
@@ -160,47 +180,75 @@ const SearchMobile = () => {
           {/* 임박한 공연 */}
           <UpcomingSection>
             <SectionTitle>임박한 공연</SectionTitle>
-            <SlideContainer ref={scrollRef}>
-              <SlideContent>
-                {mockUpcoming.map((performance) => (
-                  <PerformanceCard key={performance.id}>
-                    <PerformanceImage>
-                      <img src={Poster} style={{width: '100%', height: '100%', borderRadius: '3px'}}/>
-                      <PerformanceNumber>{performance.rank}</PerformanceNumber>
-                    </PerformanceImage>
-                    <PerformanceInfo>
-                      <PerformanceTitle>{performance.title}</PerformanceTitle>
-                      <PerformanceVenue>{performance.venue}</PerformanceVenue>
-                      <PerformanceDate>{performance.date}</PerformanceDate>
-                    </PerformanceInfo>
-                  </PerformanceCard>
-                ))}
-              </SlideContent>
-            </SlideContainer>
+            {isInitialLoading ? (
+              <LoadingMessage>임박한 공연을 불러오는 중...</LoadingMessage>
+            ) : upcomingShows.length > 0 ? (
+              <SlideContainer ref={scrollRef}>
+                <SlideContent>
+                  {upcomingShows.map((performance) => (
+                    <PerformanceCard key={performance.id}>
+                      <PerformanceImage>
+                        <img 
+                          src={performance.posterImageUrl || Poster} 
+                          style={{width: '100%', height: '100%', borderRadius: '3px'}}
+                          onError={(e) => { e.target.src = Poster; }}
+                        />
+                        <PerformanceNumber>{performance.rank}</PerformanceNumber>
+                      </PerformanceImage>
+                      <PerformanceInfo>
+                        <PerformanceTitle>{performance.title}</PerformanceTitle>
+                        <PerformanceVenue>{performance.venue}</PerformanceVenue>
+                        <PerformanceDate>{performance.date}</PerformanceDate>
+                      </PerformanceInfo>
+                    </PerformanceCard>
+                  ))}
+                </SlideContent>
+              </SlideContainer>
+            ) : (
+              <NoDataMessage>임박한 공연이 없습니다.</NoDataMessage>
+            )}
           </UpcomingSection>
         </>
       ) : (
-        <SearchResults> {/* 검색 결과 */}
+        <SearchResults>
           <div style={{color: '#929292', fontSize: '12px', marginBottom: '20px' }}>
-            검색 결과 {filteredResults.length}개
+            {isLoading ? '검색 중...' : `검색 결과 ${displayResults.length}개`}
           </div>
-          {filteredResults.map((result) => (
-            <SearchResultItem key={result.id}>
-              <ResultImage>
-                <img src={Poster} style={{width: '100%', height: '100%', borderRadius: '3px'}}/>
-              </ResultImage>
-              <ResultInfo>
-                <ResultStatus $isActive={result.isActive}>{result.status}</ResultStatus>
-                <ResultTitle>{result.title}</ResultTitle>
-                <ResultCompany>{result.company}</ResultCompany>
-                <ResultDetails>
-                  {result.venue}
-                  <div style={{height: '6px'}}/>
-                  {result.date}
-                </ResultDetails>
-              </ResultInfo>
-            </SearchResultItem>
-          ))}
+          
+          {isLoading ? (
+            <LoadingMessage>검색 중...</LoadingMessage>
+          ) : displayResults.length > 0 ? (
+            displayResults.map((result) => (
+              <SearchResultItem key={result.id}>
+                <ResultImage>
+                  <img 
+                    src={result.posterImageUrl || Poster} 
+                    style={{width: '100%', height: '100%', borderRadius: '3px'}}
+                    onError={(e) => { e.target.src = Poster; }}
+                  />
+                </ResultImage>
+                <ResultInfo>
+                  <ResultStatus $isActive={result.isActive}>{result.status}</ResultStatus>
+                  <ResultTitle>{result.title}</ResultTitle>
+                  <ResultCompany>{result.company}</ResultCompany>
+                  <ResultDetails>
+                    {result.venue}
+                    <div style={{height: '6px'}}/>
+                    {result.date}
+                  </ResultDetails>
+                </ResultInfo>
+              </SearchResultItem>
+            ))
+          ) : hasSearched ? ( 
+            <NoResultsMessage>
+              <div>검색 결과가 없습니다.</div>
+              <div>다른 검색어로 시도해보세요.</div>
+            </NoResultsMessage>
+          ) : (
+            <NoResultsMessage>
+              <div>보고싶은 연극이나 공연진을 검색하세요.</div>
+            </NoResultsMessage>
+          )}
         </SearchResults>
       )}
     </AppContainer>
@@ -219,7 +267,6 @@ const AppContainer = styled.div`
   flex-direction: column;
   overflow: hidden;
 `;
-
 
 // 상단 검색바 영역   ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const SearchBar = styled.div`
@@ -259,7 +306,6 @@ const SearchInput = styled.input`
     color: #929292;
   }
 `;
-
 
 // 최근 검색어 영역   ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const RecentSearchSection = styled.div`
@@ -307,6 +353,7 @@ const RecentSearchBox = styled.div`
   font-size: 12px;
   font-weight: 500;
   gap: 12px;
+  cursor: pointer;
 `;
 
 const DeleteButton = styled.img`
@@ -321,7 +368,6 @@ const Divider = styled.div`
   width: calc(100% + 40px);
   margin-left: -20px;
 `;
-
 
 // 임박한 공연 영역   ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const UpcomingSection = styled.div`
@@ -389,7 +435,6 @@ const PerformanceDate = styled.div`
   color: #929292;
 `;
 
-
 // 검색결과 영역  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 const SearchResults = styled.div`
   margin-top: 20px;
@@ -407,7 +452,7 @@ const SearchResultItem = styled.div`
   display: flex;
   
   &:last-child {
-
+    margin-bottom: 0;
   }
 `;
 
@@ -451,4 +496,30 @@ const ResultDetails = styled.div`
   font-size: 10px;
   font-weight: 500;
   color: #929292;
+`;
+
+// 로딩 및 빈 상태 메시지
+const LoadingMessage = styled.div`
+  padding: 40px 20px;
+  text-align: center;
+  color: #929292;
+  font-size: 14px;
+`;
+
+const NoDataMessage = styled.div`
+  padding: 40px 20px;
+  text-align: center;
+  color: #929292;
+  font-size: 14px;
+`;
+
+const NoResultsMessage = styled.div`
+  padding: 60px 20px;
+  text-align: center;
+  color: #929292;
+  font-size: 14px;
+  
+  div + div {
+    margin-top: 8px;
+  }
 `;
