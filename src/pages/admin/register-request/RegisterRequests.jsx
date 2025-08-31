@@ -5,7 +5,7 @@ import SearchBarBlack from '@/components/SearchBarBlack';
 import SearchOptionBar from '@/components/Admin/SearchOptionBar';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AdminListPage } from '@/STYLE/admin.style';
+import { AdminListPage } from '@/pages/admin/STYLE/admin.style';
 import Pagination from 'react-js-pagination';
 function RegisterRequests() {
 	const navigate = useNavigate();

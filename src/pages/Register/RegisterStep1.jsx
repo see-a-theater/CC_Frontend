@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+
 function RegisterStep1() {
 	const [formDataChanged, setFormDataChanged] = useState(false);
 	const [roundCount, setRoundCount] = useState(1);

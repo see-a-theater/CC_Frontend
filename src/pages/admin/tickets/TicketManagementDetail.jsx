@@ -3,7 +3,7 @@ import {
 	TablePageWrapper,
 	Content,
 	OptionBarWrapper,
-} from '@/STYLE/admin.detail.style';
+} from '@/pages/admin/STYLE/admin.detail.style';
 const details = [
 	{
 		id: '1',

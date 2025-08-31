@@ -18,7 +18,6 @@ import Info from './pages/info/Info';
 import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import Notification from './pages/notification/Notification';
-
 import UploadPic from './pages/production/UploadPic';
 import ProdDetail from './pages/production/ProdDetail';
 import Production from './pages/production/Production';
@@ -60,7 +59,7 @@ function App() {
 				<Route path="/admin/*" element={<AdminRoutes />} />
 
 				<Route path="*" element={<NotFoundPage />} />
-          
+
 				<Route path="test/upload-pic" element={<TestUploadPic />} />
 			</Routes>
 		</AuthProvider>
