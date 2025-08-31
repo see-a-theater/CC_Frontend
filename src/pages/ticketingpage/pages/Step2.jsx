@@ -20,6 +20,9 @@ const Step2 = ({
     dateTime, 
     people, 
     eventInfo, 
+    ticketOptions,
+    selectedTicket,
+    setSelectedTicket,
     discountType, 
     paymentType,
     deliveryType, 
@@ -36,81 +39,94 @@ const Step2 = ({
     setDepositorName,
     termsAgreed,
     setTermsAgreed,
-    getCurrentStepContent
+    getCurrentStepContent,
+    reserveTicket
   } 
 }) => {
 
   const isPC = useResponsive();
   const currentContent = getCurrentStepContent();
+  
   // PC: 개별 단계 / 모바일: 할인+수령+결제 통합
   const showDiscountOnly = isPC && currentContent === 'discount';
   const showDeliveryOnly = isPC && currentContent === 'delivery';
   const showPaymentOnly = isPC && currentContent === 'payment';
   const showAllOptions = !isPC && currentContent === 'options';
 
-  const discountOptions = [
-    { value: 'none', label: '없음' },
-    { value: 'standard', label: '홍대생 할인' }
-  ];
+  // 티켓 옵션을 할인 옵션 형태로 변환
+  const discountOptions = ticketOptions.map(ticket => ({
+    value: ticket.amateurTicketId,
+    label: `${ticket.discountName} - ${ticket.price.toLocaleString()}원`,
+    ticketData: ticket
+  }));
 
   const deliveryOptions = [
     { value: 'venue', label: '현장 수령' }
   ];
 
   const paymentOptions = [
-    /* { value: 'bank', label: '입금 (주) 홍익극연구회' }, */   // 계좌이체 제거
     { value: 'pay', label: '카카오페이' }
   ];
 
-  // 할인 선택 추가 컨텐츠 정의 > 모바일용
+  // 할인(티켓) 선택 핸들러
+  const handleDiscountChange = (ticketId) => {
+    const selectedOption = discountOptions.find(option => option.value === ticketId);
+    if (selectedOption) {
+      setSelectedTicket(selectedOption.ticketData);
+      setDiscountType(ticketId);
+    } else {
+      setSelectedTicket(null);
+      setDiscountType(null);
+    }
+  };
+
+  // 할인 선택 추가 컨텐츠 정의
   const discountAdditionalContent = {
     ...(isPC ? {} : {
-      standard: (
-        <AdditionalInputField>
-          <input
-            type="text"
-            placeholder="학번을 입력하세요"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-          />
-        </AdditionalInputField>
-      )
+      // 홍대생 할인 티켓일 경우에만 학번 입력 필드 표시
+      ...(selectedTicket && selectedTicket.discountName.includes('홍대생') ? {
+        [selectedTicket.amateurTicketId]: (
+          <AdditionalInputField>
+            <input
+              type="text"
+              placeholder="학번을 입력하세요"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+          </AdditionalInputField>
+        )
+      } : {})
     })
   };
 
   // 결제 수단 추가 컨텐츠 정의
   const paymentAdditionalContent = {
-    /*  //계좌이체 제거
-    bank: (
-      <div style={{ marginTop: '-4px' }}>
-        <BankInfo>
-          국민은행 112233445566745
-        </BankInfo>
-        <AdditionalInputField style={{ marginTop: '8px' }}>
-          <input
-            type="text"
-            placeholder="입금자명을 입력하세요"
-            value={depositorName}
-            onChange={(e) => setDepositorName(e.target.value)}
-          />
-        </AdditionalInputField>
-        <PaymentNotice>
-          예매후 24시간동안 미입금시 자동 취소됩니다.
-        </PaymentNotice>
-      </div>
-    ),*/
     pay: (
       <CheckboxContainer style={{ marginLeft: isPC ? '0px' : '-22px' }}>
-        {/* 카카오페이는 marginLeft: 0으로 조정 (이미 RadioGroup에서 22px 적용) */}
         <CheckboxInput
           type="checkbox"
           checked={termsAgreed}
           onChange={(e) => setTermsAgreed(e.target.checked)}
         />
         <CheckboxLabel>결제대행 서비스 이용 약관 동의</CheckboxLabel>
-        <Showmore src={ShowMore} alt=">" /* onClick={ 추후 추가 } */ />
+        <Showmore src={ShowMore} alt=">" />
       </CheckboxContainer>
     )
+  };
+
+  // 다음 버튼 클릭 핸들러
+  const handleNextStep = async () => {
+    if (currentContent === 'payment' || currentContent === 'options') {
+      // 마지막 단계에서는 실제 예매 진행
+      try {
+        await reserveTicket();
+      } catch (error) {
+        console.error('예매 실패:', error);
+        // 에러 처리는 useTicketing에서 함
+      }
+    } else {
+      goToNextStep();
+    }
   };
 
   const payment = calculatePayment();
@@ -124,7 +140,7 @@ const Step2 = ({
         <>
           <EventInfo style={{ marginTop: '0px' }}>
             <EventTitle>{eventInfo.title}</EventTitle>
-            <EventLink src={ShowMore} alt=">" /*onClick={ 추후추가 }*/ />
+            <EventLink src={ShowMore} alt=">" />
           </EventInfo>
           <EventVenue>{eventInfo.venue}</EventVenue>
           <EventPeriod style={{ width: 'auto' }}>{eventInfo.period}</EventPeriod>
@@ -132,19 +148,19 @@ const Step2 = ({
       )}
       
       <PcLayout>
-        {(showDiscountOnly || showAllOptions) && (    // 할인 선택 - PC 2단계 & 모바일 2단계
+        {(showDiscountOnly || showAllOptions) && (
           <FormSection2>
-            {!isPC && ( <SectionTitle>할인 선택</SectionTitle> )}
+            {!isPC && ( <SectionTitle>티켓 선택</SectionTitle> )}
             <SelectionSection>
-                {!isPC && ( <Label>할인 선택</Label> )}
-                {isPC && ( <label style={{fontSize: '20px', fontWeight: 'bold', color: '#000000'}}>할인 선택</label> )}
+                {!isPC && ( <Label>티켓 종류</Label> )}
+                {isPC && ( <label style={{fontSize: '20px', fontWeight: 'bold', color: '#000000'}}>티켓 선택</label> )}
                 <RadioGroup 
-                options={discountOptions} 
-                selectedValue={discountType} 
-                onChange={setDiscountType} 
-                additionalContent={discountAdditionalContent}
+                  options={discountOptions} 
+                  selectedValue={discountType} 
+                  onChange={handleDiscountChange} 
+                  additionalContent={discountAdditionalContent}
                 />
-                {isPC && discountType === 'standard' && (   // PC용 홍대생 할인 인풋
+                {isPC && selectedTicket && selectedTicket.discountName.includes('홍대생') && (
                   <>
                     <label style={{fontSize: '20px', fontWeight: 'bold', color: '#000000', marginTop: '32px'}}>할인 인증</label>
                     <SelectionSection>
@@ -170,7 +186,7 @@ const Step2 = ({
           </FormSection2>
         )}
         
-        {(showDeliveryOnly || (showAllOptions && discountType)) && (  // 수령 선택 - PC 3단계 & 모바일 2단계
+        {(showDeliveryOnly || (showAllOptions && discountType)) && (
           <FormSection2>
               {!isPC && ( <SectionTitle>티켓 수령</SectionTitle> )}
               <SelectionSection>
@@ -185,7 +201,7 @@ const Step2 = ({
           </FormSection2>
         )}
 
-        {(showPaymentOnly || (showAllOptions && discountType && deliveryType)) && (   // 결제 선택 - PC 4단계 & 모바일 2단계
+        {(showPaymentOnly || (showAllOptions && discountType && deliveryType)) && (
           <FormSection2>
               {!isPC && ( <SectionTitle>결제</SectionTitle> )}
               <SelectionSection>
@@ -211,7 +227,7 @@ const Step2 = ({
           </SummaryRow>
           <SummaryRow>
             <div>인원</div>
-            <span>{people || ''}</span>
+            <span>{people || ''}명</span>
           </SummaryRow>
           <SummaryRow>
             <div>티켓 금액</div>
@@ -219,8 +235,8 @@ const Step2 = ({
           </SummaryRow>
           <SummaryRow>
             <div>할인</div>
-            <span className={discountType ? "discount" : ""}>
-              {discountType ? `-${payment.discountAmount.toLocaleString()}원` : ''}
+            <span className={payment.discountAmount > 0 ? "discount" : ""}>
+              {payment.discountAmount > 0 ? `-${payment.discountAmount.toLocaleString()}원` : ''}
             </span>
           </SummaryRow>
           <SummaryRow>
@@ -229,20 +245,20 @@ const Step2 = ({
           </SummaryRow>
           <SummaryRow className="total">
             <div>총 결제 금액</div>
-            {!isPC && ( <span>{(payment.totalPrice * people).toLocaleString()}원</span> )}
-            {isPC && ( <span style={{fontSize: '24px', bottom: '4px'}}>{(payment.totalPrice * people).toLocaleString()}원</span> )}
+            {!isPC && ( <span>{(payment.totalPrice * (people || 1)).toLocaleString()}원</span> )}
+            {isPC && ( <span style={{fontSize: '24px', bottom: '4px'}}>{(payment.totalPrice * (people || 1)).toLocaleString()}원</span> )}
           </SummaryRow>
         </SummarySection>
       </PcLayout>
       {!isPC && (
-        <ActionButton isActive={nextActive} onClick={goToNextStep}>
-          다음
+        <ActionButton isActive={nextActive} onClick={handleNextStep}>
+          {(currentContent === 'options') ? '예매하기' : '다음'}
         </ActionButton>
       )}
       {isPC && (
         <div style={{ marginLeft: '718px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '20px'}}>
-          <ActionButton isActive={nextActive} onClick={goToNextStep}>
-            다음
+          <ActionButton isActive={nextActive} onClick={handleNextStep}>
+            {(currentContent === 'payment') ? '예매하기' : '다음'}
           </ActionButton>
           <BackButton onClick={goToPreviousStep}>이전</BackButton>
         </div>

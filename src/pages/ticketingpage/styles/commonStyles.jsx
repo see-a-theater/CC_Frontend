@@ -152,8 +152,8 @@ export const PosterContainer = styled.div`
 
 export const Poster = styled.img`
   ${media.mobile} {
-    min-width: 160px;
-    min-height: 220px;
+    width: 160px;
+    height: 220px;
     border-radius: 3px;
   }
   ${media.pc} {
