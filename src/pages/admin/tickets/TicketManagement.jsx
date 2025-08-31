@@ -6,7 +6,7 @@ import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
 import SubNav from '@/components/Admin/SubNav';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AdminListPage } from '../STYLE/admin.style';
+import { AdminListPage } from '../STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
 function TicketManagement() {
 	const navigate = useNavigate();
