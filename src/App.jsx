@@ -28,8 +28,8 @@ import RegisterStep5 from './pages/register/RegisterStep5';
 import TicketCancelComplete from './pages/mypage/ticket/TicketCancelComplete';
 import TicketCancel from './pages/mypage/ticket/TicketCancel';
 import AccountConnection from './pages/mypage/account-connection/AccountConnection';
-import RegisteredPerformances from './pages/mypage/ADMIN/resigsterd-performances/RegisteredPerformances';
-import RegisteredDetail from './pages/mypage/ADMIN/resigsterd-performances/RegisteredDetail';
+import RegisteredPerformances from './pages/mypage/ADMIN/resigstered-performances/RegisteredPerformances';
+import RegisteredDetail from './pages/mypage/ADMIN/resigstered-performances/RegisteredDetail';
 import BookingHistory from './pages/mypage/booking-history/BookingHistory';
 import Admin from './pages/admin/Admin';
 import Dashboard from './pages/admin/Dashboard';
@@ -125,7 +125,10 @@ function App() {
 					<Route path="users/:userId" element={<UsersDetail />} />
 					<Route path="gallery/:galleryId" element={<GalleryDetail />} />
 					<Route path="plays/:playId" element={<PlaysDetail />} />
-					<Route path="plays/:playId/register" element={<AdminPlayRegister/>}/>
+					<Route
+						path="plays/:playId/register"
+						element={<AdminPlayRegister />}
+					/>
 
 					<Route path="register-requests" element={<RegisterRequests />} />
 					<Route

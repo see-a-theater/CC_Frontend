@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
-import SearchBarBlack from '@/SearchBarBlack';
+import SearchBarBlack from '@/components/SearchBarBlack.jsx';
 function SearchOptionBar() {
 	return (
 		<>
