@@ -1,8 +1,17 @@
 import ImageUploadBox from '../../components/ImageUploadBox.jsx';
 import { RegisterWrapper } from './Register.style.js';
 import { useOutletContext } from 'react-router-dom';
+import styled from 'styled-components';
+import { useState } from 'react';
 function RegisterStep2() {
 	const { nextStep, formData, setFormData } = useOutletContext();
+	const [errors, setErrors] = useState({
+		notice: {
+			content: '',
+			noticeImageUrl: '',
+			timeInfo: '',
+		},
+	});
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 
@@ -35,6 +44,26 @@ function RegisterStep2() {
 		}
 		console.log(formData);
 	};
+
+	// 제출 시 전체 검증
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newErrors = {
+			notice: {},
+		};
+		// 기본 정보
+		if (!formData.notice.timeInfo)
+			newErrors.notice.timeInfo = '공연 시간 정보는 필수입니다.';
+		if (!formData.notice.content)
+			newErrors.notice.content = '공지사항은 필수입니다.';
+
+		setErrors(newErrors);
+		console.log(newErrors);
+		if (!newErrors.notice.timeInfo) {
+			console.log(formData);
+			nextStep();
+		}
+	};
 	return (
 		<RegisterWrapper>
 			<form>
@@ -48,6 +77,9 @@ function RegisterStep2() {
 						value={formData.notice.timeInfo}
 						onChange={handleInputChange}
 					/>
+					{errors.notice.timeInfo && (
+						<Err style={{ color: 'red' }}>{errors.notice.timeInfo}</Err>
+					)}
 				</div>
 				<div>
 					<label>공지사항</label>
@@ -60,6 +92,9 @@ function RegisterStep2() {
 						value={formData.notice.content}
 						onChange={handleInputChange}
 					/>
+					{errors.notice.content && (
+						<Err style={{ color: 'red' }}>{errors.notice.content}</Err>
+					)}
 				</div>
 				<div>
 					<label style={{ marginBottom: '6px' }}>공연 상세 이미지</label>
@@ -76,7 +111,7 @@ function RegisterStep2() {
 				style={{ marginTop: '44px' }}
 				type="submit"
 				className="btn-primary"
-				onClick={nextStep}
+				onClick={handleSubmit}
 			>
 				다음
 			</button>
@@ -85,3 +120,4 @@ function RegisterStep2() {
 }
 
 export default RegisterStep2;
+const Err = styled.p``;
