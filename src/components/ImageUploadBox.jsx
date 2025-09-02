@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 import Camera from '@/assets/icons/Camera.svg';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useEffect } from 'react';
+
 function ImageUploadBox({
-	mobileHeight,
-	mobileWidth,
-	webHeight,
+	size,
+	width,
+	height,
 	webWidth,
+	webHeight,
 	round,
 	onUploadSuccess,
-	value,
+	type,
 }) {
-	console.log('value', value);
-	const [imageSrc, setImageSrc] = useState(value || null);
-	console.log('imageSrc', imageSrc);
-
-	useEffect(() => {
-		setImageSrc(value || null);
-	}, [value]);
+	const [imageSrc, setImageSrc] = useState(null);
 
 	const handleImageChange = async (e) => {
 		const file = e.target.files[0];
@@ -68,8 +63,8 @@ function ImageUploadBox({
 	};
 	return (
 		<Box
-			mobileHeight={mobileHeight}
-			mobileWidth={mobileWidth}
+			width={width}
+			height={height}
 			webWidth={webWidth}
 			webHeight={webHeight}
 			round={round}
@@ -90,17 +85,15 @@ export default ImageUploadBox;
 
 const Box = styled.div`
 	position: relative;
-
-	width: ${(props) => (props.mobileWidth ? props.mobileWidth : '150px')};
-	height: ${(props) => (props.mobileHeight ? props.mobileHeight : '150px')};
+	background: ${({ theme }) => theme.colors.gray200};
+	width: ${(props) => (props.width ? props.width : '150px')};
+	height: ${(props) => (props.height ? props.height : '150px')};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
 	overflow: hidden;
-	background: #f8f8f8;
-	border-radius: 5px;
-
+	${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
 	@media (min-width: 768px) {
 		width: ${(props) => props.webWidth || props.webWidth || '240px'};
 		height: ${(props) => props.webHeight || props.webHeight || '240px'};
@@ -110,7 +103,6 @@ const Box = styled.div`
 		width: 20px;
 		height: 20px;
 		object-fit: cover;
-		${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
 	}
 
 	input[type='file'] {
@@ -130,11 +122,8 @@ const Box = styled.div`
 `;
 
 const IconWrapper = styled.div`
-	display: flex;
-	flex: 1;
-	justify-content: center;
-	align-items: center;
-	& > img {
-		width: 20%;
+	@media (min-width: 768px) {
+		width: 40px;
+		height: 40px;
 	}
 `;
