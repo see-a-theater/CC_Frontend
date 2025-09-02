@@ -5,7 +5,7 @@ function RegisterStep4() {
 	const { nextStep, formData, setFormData } = useOutletContext();
 
 	return (
-		<>
+		<div style={{ height: '100%', width: '100%' }}>
 			<div className="only-mobile" style={{ height: '100%' }}>
 				<RegisterWrapper>
 					<form style={{ height: '100%', justifyContent: 'space-between' }}>
@@ -78,35 +78,58 @@ function RegisterStep4() {
 					</button>
 				</RegisterWrapper>
 			</div>
-			<div className="only-web">
+			<div
+				className="only-web-flex"
+				div
+				style={{
+					height: '100%',
+					width: '100%',
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+				}}
+			>
 				<WebWrapper>
-					<div style={{ display: 'flex', flexDirection: 'column' }}>
-						<h1 style={{ marginBottom: '10px' }}>참고 사항</h1>
-						<ul style={{ marginBottom: '40px' }}>
-							<li>
-								<span>1.</span>
-								<p>기본 수수료는 5,000원입니다.</p>
-							</li>
-							<li>
-								<span>2.</span>
-								<p>등록 후 관리자가 확인 후 페이지에 올라가게 됩니다.</p>
-							</li>
-							<li>
-								<span>3.</span>
-								<p>
-									공연이 등록되는데 1일 정도 소요됩니다. 공연 인증되어 공연이
-									등록되면 알람이 가며, 마이페이지에서도 확인이 가능합니다.
-								</p>
-							</li>
-						</ul>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}
+					>
+						<div>
+							<h1 style={{ marginBottom: '10px' }}>참고 사항</h1>
+							<ul style={{ marginBottom: '40px' }}>
+								<li>
+									<span>1.</span>
+									<p>기본 수수료는 5,000원입니다.</p>
+								</li>
+								<li>
+									<span>2.</span>
+									<p>등록 후 관리자가 확인 후 페이지에 올라가게 됩니다.</p>
+								</li>
+								<li>
+									<span>3.</span>
+									<p>
+										공연이 등록되는데 1일 정도 소요됩니다. 공연 인증되어 공연이
+										등록되면 알람이 가며, 마이페이지에서도 확인이 가능합니다.
+									</p>
+								</li>
+							</ul>
 
-						<div className="checkbox-register" style={{ marginBottom: '98px' }}>
-							<strong>참고사항에 대해 동의하십니까?</strong>
-							<label>
-								<input type="checkbox" />
-								동의합니다
-							</label>
+							<div
+								className="checkbox-register"
+								style={{ marginBottom: '98px' }}
+							>
+								<strong>참고사항에 대해 동의하십니까?</strong>
+								<label>
+									<input type="checkbox" />
+									동의합니다
+								</label>
+							</div>
 						</div>
+
 						<ButtonWrapper>
 							<button className="btn-square-primary" onClick={nextStep}>
 								등록하기
@@ -116,13 +139,16 @@ function RegisterStep4() {
 					</div>
 				</WebWrapper>
 			</div>
-		</>
+		</div>
 	);
 }
 
 export default RegisterStep4;
 
 const WebWrapper = styled.div`
+display: flex;
+
+height: 60%;
 	h1 {
 		/*최상단 핑크색 제목 */
 		color: ${({ theme }) => theme.colors.pink600};

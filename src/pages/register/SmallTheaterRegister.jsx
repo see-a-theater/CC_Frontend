@@ -42,9 +42,10 @@ function SmallTheaterRegister() {
 		],
 		tickets: [
 			{
-				discountName: '',
-				price: 0,
+				discountName: '일반',
+				price: '',
 			},
+			{ discountName: '', price: '' },
 		],
 		staff: [
 			{
@@ -66,9 +67,11 @@ function SmallTheaterRegister() {
 	});
 	return (
 		<Wrapper>
-			<TopBar onPrev={prevStep} onNext={nextStep}>
-				{currentStep !== 5 && '공연 등록'}
-			</TopBar>
+			{currentStep !== 4 && currentStep !== 5 && (
+				<TopBar onPrev={prevStep} onNext={nextStep}>
+					공연 등록
+				</TopBar>
+			)}
 
 			<div className="only-mobile">
 				{currentStep !== 5 && <ProgressBar percentage={currentStep / 4} />}
@@ -89,7 +92,7 @@ const Wrapper = styled.div`
 	height: 100vh;
 	overflow: auto;
 	@media (min-width: 768px) {
-		padding: 0px 160px;
+		padding: 0px 25%;
 	}
 `;
 
