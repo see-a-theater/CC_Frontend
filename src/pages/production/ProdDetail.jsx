@@ -1,7 +1,10 @@
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
+
 import Hamburger from '@/components/Hamburger';
 import Carousel from '@/components/Carousel';
-
-import styled from 'styled-components';
 
 import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
 import ChevronRight from '@/assets/icons/chevronRightGrey.svg?react';
@@ -13,7 +16,16 @@ import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 
 function ProdDetail() {
-	//api 불러오는 코드 추가
+	const { prodId } = useParams();
+
+	const {
+		data: picData,
+		error: picError,
+		loading: picLoading,
+	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
+	console.log(picData)
+
+	//위에서 받은 photoAlbumId를 통해 사진첩 단건 조회
 
 	const mockData = [
 		{
@@ -101,7 +113,7 @@ function ProdDetail() {
 						'{mockData[0].production}'의 사진첩 더보기
 					</p>
 					<ImgList>
-						{imageList?.result.map((data) => (
+						{picData?.result.singlePhotoAlbumDTOs.map((data) => (
 							<ImgCard>
 								<img src={data.imageUrl} />
 								<p>{data.amateurShowName}</p>
@@ -145,12 +157,12 @@ function ProdDetail() {
 							'{mockData[0].production}'의 사진첩 더보기
 						</p>
 						<ImgList>
-							{imageList?.result.map((data) => (
+							{picData?.result.singlePhotoAlbumDTOs.map((data) => (
 								<ImgCard>
 									<img src={data.imageUrl} />
 									<div className="textArea">
 										<p className="title">{data.amateurShowName}</p>
-										<p className="theatre">{data.place}</p>
+										<p className="theatre">{data.detailAddress}</p>
 									</div>
 								</ImgCard>
 							))}
@@ -345,7 +357,7 @@ const SideBar = styled.div`
 `;
 const Production = styled.div`
 	display: flex;
-	gap: 8px;
+	gap: 18px;
 	align-items: center;
 	margin-bottom: 48px;
 

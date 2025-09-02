@@ -46,7 +46,7 @@ function Playlist() {
 		<Container>
 			<Web>
 				<SideMenuWrapper>
-					<HomeIconMenu isWeb={true} />
+					<HomeIconMenu isWeb={true} selectedMenu="plays" />
 				</SideMenuWrapper>
 				<WebContent>
 					<SearchBar />
@@ -60,6 +60,7 @@ function Playlist() {
 									place={data.place}
 									posterImageUrl={data.posterImageUrl}
 									schedule={data.schedule}
+									amateurShowId={data.amateurShowId}
 								/>
 							))}
 						</CardWrapper>
@@ -74,6 +75,7 @@ function Playlist() {
 									place={data.place}
 									posterImageUrl={data.posterImageUrl}
 									schedule={data.schedule}
+									amateurShowId={data.amateurShowId}
 								/>
 							))}
 						</BoxWrapper>
@@ -102,6 +104,7 @@ function Playlist() {
 											place={data.place}
 											posterImageUrl={data.posterImageUrl}
 											schedule={data.schedule}
+											amateurShowId={data.amateurShowId}
 										/>
 									</Slide>
 								))}
@@ -128,6 +131,7 @@ function Playlist() {
 								place={data.place}
 								posterImageUrl={data.posterImageUrl}
 								schedule={data.schedule}
+								amateurShowId={data.amateurShowId}
 							/>
 						))}
 					</MappingArea>

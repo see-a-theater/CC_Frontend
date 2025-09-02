@@ -19,11 +19,12 @@ function Gallery() {
 	console.log('loading:', loading);
 	console.log('data:', picData);
 
+	if (loading || !picData?.result) {
+		return <div>로딩 중...</div>;
+	}
+
 	return (
 		<>
-			<SideMenuWrapper>
-				<HomeIconMenu isWeb={true} selectedMenu="gallery" />
-			</SideMenuWrapper>
 			<Mobile>
 				<Hamburger title={'사진첩'} />
 				<Masonry imageData={picData?.result} />
@@ -31,7 +32,7 @@ function Gallery() {
 
 			<Web>
 				<SideMenuWrapper>
-					<HomeIconMenu isWeb={true} />
+					<HomeIconMenu isWeb={true} selectedMenu="plays"/>
 				</SideMenuWrapper>
 				<Container>
 					<SearchBar />

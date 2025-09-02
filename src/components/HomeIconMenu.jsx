@@ -52,8 +52,8 @@ function HomeIconMenu({ isWeb, selectedMenu }) {
 					<div className="logo" onClick={() => navigate('/')}>
 						<Logo />
 					</div>
-					<div onClick={() => navigate('/small-theater/current')}>
-						{selectedMenu === 'small-theater' ? <MovieFilled /> : <Movie />}
+					<div onClick={() => navigate('/plays')}>
+						{selectedMenu === 'plays' ? <MovieFilled /> : <Movie />}
 						<span>소극장 공연</span>
 					</div>
 					<div onClick={() => navigate('/board')}>
