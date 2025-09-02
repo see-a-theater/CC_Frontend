@@ -1,29 +1,59 @@
 import styled from 'styled-components';
+import { useRef, useState } from 'react';
 function BoardPreviewCardList({ data }) {
 	const mockData = [
 		{
 			title: '상상도 못한 게시판..ㄴ(°0°)ㄱ',
-			text: '우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
+			content:
+				'우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
 		},
 		{
 			title: '상상도 못한 게시판..ㄴ(°0°)ㄱ',
-			text: '우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
+			content:
+				'우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
 		},
 		{
 			title: '상상도 못한 게시판..ㄴ(°0°)ㄱ',
-			text: '우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
+			content:
+				'우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
 		},
 		{
 			title: '상상도 못한 게시판..ㄴ(°0°)ㄱ',
-			text: '우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
+			content:
+				'우오앙 여기도 이런 게시판이 있구나 신기방기 많이 많이 게시판 이용해야겟다~ 이건 아마 3줄 넘어가면 ... 으로 대체합시...',
 		},
 	];
+
+	const scrollRef = useRef(null);
+	const [isDragging, setIsDragging] = useState(false);
+	const [startX, setStartX] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState(0);
+	const handleMouseDown = (e) => {
+		setIsDragging(true);
+		setStartX(e.pageX - scrollRef.current.offsetLeft);
+		setScrollLeft(scrollRef.current.scrollLeft);
+	};
+	const handleMouseLeave = () => setIsDragging(false);
+	const handleMouseUp = () => setIsDragging(false);
+	const handleMouseMove = (e) => {
+		if (!isDragging) return;
+		e.preventDefault();
+		const x = e.pageX - scrollRef.current.offsetLeft;
+		const walk = (x - startX) * 1;
+		scrollRef.current.scrollLeft = scrollLeft - walk;
+	};
+
 	return (
 		<Wrapper>
-			<CardList>
-				현재 데이터 없어서 핫게 컴포넌트 출력 x (Mobile)
-				{data &&
-					data.map((item, index) => (
+			<CardList
+				ref={scrollRef}
+				onMouseDown={handleMouseDown}
+				onMouseLeave={handleMouseLeave}
+				onMouseUp={handleMouseUp}
+				onMouseMove={handleMouseMove}
+			>
+				{mockData &&
+					mockData.map((item, index) => (
 						<Card key={item.boardId}>
 							<h3>{item.title}</h3>
 							<p>{item.content}</p>
