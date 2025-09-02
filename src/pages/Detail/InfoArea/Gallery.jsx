@@ -10,65 +10,22 @@ import styled from 'styled-components';
 
 import Masonry from '@/components/Masonry';
 
-function Gallery() {
-	{
-		/* 추후 memberId 받아와서 사진 정보 받아오는 걸로 수정 */
-	}
-	{
-		/* 
-			const {
-				data: picData,
-				error,
-				loading,
-			} = useCustomFetch(`/photoAlbums/member/${memberId}`);
-			 
-			console.log('error:', error);
-			console.log('loading:', loading);
-			console.log('data:', picData);
-		*/
-	}
+function Gallery(props) {
+	console.log(props.data.result.memberId);
 
-	const mockData = {
-		isSuccess: true,
-		code: '200',
-		message: 'OK',
-		result: [
-			{
-				photoAlbumId: 1,
-				amateurShowName: '실종',
-				place: '홍익극연구회',
-				imageUrl: image1,
-			},
-			{
-				photoAlbumId: 2,
-				amateurShowName: '카포네 트릴로지',
-				place: '홍익극연구회',
-				imageUrl: image2,
-			},
-			{
-				photoAlbumId: 3,
-				amateurShowName: '실종',
-				place: '홍익극연구회',
-				imageUrl: image3,
-			},
-			{
-				photoAlbumId: 4,
-				amateurShowName: '실종',
-				place: '홍익극연구회',
-				imageUrl: image4,
-			},
-			{
-				photoAlbumId: 5,
-				amateurShowName: '킬링시저',
-				place: '홍익극연구회',
-				imageUrl: image5,
-			},
-		],
-	};
+	const {
+		data: picData,
+		error,
+		loading,
+	} = useCustomFetch(`/photoAlbums/member/${props?.data.result.memberId}`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('data:', picData);
 
 	return (
 		<Container>
-			<Masonry data={mockData} />
+			<Masonry imageData={picData} />
 		</Container>
 	);
 }

@@ -14,10 +14,8 @@ export async function getPresignedUrl(accessToken, imageExtension, filePath) {
 
 	const data = await res.json();
 
-	console.log('✅ S3 응답:', data); // 디버깅용
-
 	return {
-		uploadUrl: data.url,
+		uploadUrl: data.uploadUrl,
 		publicUrl: data.publicUrl,
 		keyName: data.keyName,
 	};
