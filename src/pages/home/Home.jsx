@@ -16,25 +16,39 @@ import { useEffect } from 'react';
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
 const banners = [
 	{
-		id: 1,
-		imgSrc: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
-		title: '실종',
-		location: '홍익대학교 학생회관 3층 소극장',
-		date: '2024.10.03 (목) 19:00',
+		amateurShowId: 1,
+		posterImageUrl: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
+		name: '실종',
+		place: '홍익대학교 학생회관 3층 소극장',
+		schedule: '2024.10.03 (목) 19:00',
 	},
 	{
-		id: 2,
-		imgSrc: Poster,
-		title: '공연2',
-		location: '장소2',
-		date: '2024.11.15 (금) 20:00',
+		amateurShowId: 2,
+		posterImageUrl: Poster,
+		name: '공연2',
+		place: '장소2',
+		schedule: '2024.11.15 (금) 20:00',
 	},
 	{
-		id: 3,
-		imgSrc: Poster,
-		title: '공연3',
-		location: '장소3',
-		date: '2024.12.01 (일) 18:30',
+		amateurShowId: 3,
+		posterImageUrl: Poster,
+		name: '공연3',
+		place: '장소3',
+		schedule: '2024.12.01 (일) 18:30',
+	},
+	{
+		amateurShowId: 4,
+		posterImageUrl: Poster,
+		name: '공연4',
+		place: '장소4',
+		schedule: '2024.12.01 (일) 18:30',
+	},
+	{
+		amateurShowId: 5,
+		posterImageUrl: Poster,
+		name: '공연5',
+		place: '장소5',
+		schedule: '2024.12.01 (일) 18:30',
 	},
 ];
 
@@ -86,10 +100,10 @@ function Home() {
 					</div>
 					<h1>오늘 마감인 공연</h1>
 					<div className="only-web">
-						<CarouselWeb banners={dataClosing?.result} />
+						<CarouselWeb banners={banners} />
 					</div>
 					<div className="only-mobile">
-						<CarouselMobile banners={dataClosing?.result} />
+						<CarouselMobile banners={banners} />
 					</div>
 					<div className="only-mobile">
 						<HomeIconMenu />
@@ -102,7 +116,7 @@ function Home() {
 					<h1>
 						<span className="only-web-inline">✨</span>소극장 공연 랭킹
 					</h1>
-					<Ranking data={dataRanking?.result} />
+					<Ranking data={banners} />
 					<div style={{ paddingRight: '20px' }}>
 						<button className="light only-mobile" style={{ marginTop: '26px' }}>
 							소극장 공연 보러가기
@@ -124,7 +138,7 @@ function Home() {
 					<div className="only-web" style={{ paddingRight: '60px' }}>
 						<BoardPreviewCardWeb data={dataHotBoard?.content} />
 					</div>
-					v 게시글 전체조회 필요 (현재는 일반/홍보 각각만 가능)
+					⚠ 게시글 전체조회 필요 (현재는 일반/홍보 각각만 가능)
 					<div style={{ paddingRight: '20px' }}>
 						<BoardPreviewList data={dataBoard?.content} />
 					</div>
