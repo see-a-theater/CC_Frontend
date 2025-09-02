@@ -7,7 +7,7 @@ import Masonry from '@/components/Masonry';
 import MasonryWeb from '@/components/MasonryWeb';
 import ProdPlayCard from '@/components/ProdPlayCard';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Heart from '@/assets/icons/Heart.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';

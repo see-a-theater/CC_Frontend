@@ -5,7 +5,8 @@ import image4 from '@/assets/mock/images/image4.png';
 import image5 from '@/assets/mock/images/image5.png';
 
 import styled from 'styled-components';
-import useCustomFetch from '@/utils/hooks/useAxios';
+
+// import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Masonry from '@/components/Masonry';
 

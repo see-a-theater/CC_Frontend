@@ -1,7 +1,5 @@
-export async function getPresignedUrl(imageExtension, filePath) {
-	const accessToken = localStorage.getItem('accessToken');
-
-	const url = `https://api.seeatheater.site/upload/s3/presignedUrl?imageExtension=${imageExtension}&filePath=${filePath}`;
+export async function getPresignedUrl(accessToken, imageExtension, filePath) {
+	const url = `${import.meta.env.VITE_APP_API_URL}/upload/s3/presignedUrl?imageExtension=${imageExtension}&filePath=${filePath}`;
 
 	const res = await fetch(url, {
 		method: 'GET',
