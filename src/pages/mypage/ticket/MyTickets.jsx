@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TicketContainer from '../../../components/TicketContainer';
 import TopBar from '../../../components/TopBar';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 import Poster from '@/assets/images/test-poster2.png';
 import TopBarWeb from '../../../components/TopBarWeb';
 import PillToggleGroup from '../../../components/PillToggleGroup';
+import useCustomFetch from '../../../utils/hooks/useAxios';
 function MyTickets() {
 	const [selected, setSelected] = useState('전체');
 	const navigate = useNavigate();
@@ -15,10 +16,11 @@ function MyTickets() {
 	function onPrev() {
 		navigate(-1);
 	}
-	const ticketHeaders = ['예매일', '장소', '관람일시', '상태'];
+	const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소일시'];
+
 	const details = [
 		{
-			title: '실종',
+			name: '실종',
 			count: 2,
 			imgSrc: Poster,
 			bookingDate: '2025-01-15',
@@ -29,7 +31,7 @@ function MyTickets() {
 			navLink: '1',
 		},
 		{
-			title: '실종',
+			name: '실종',
 			count: 2,
 			imgSrc: Poster,
 			bookingDate: '2025-01-15',
@@ -40,6 +42,29 @@ function MyTickets() {
 			navLink: '1',
 		},
 	];
+
+	localStorage.setItem(
+		'accessToken',
+		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
+	);
+	const page = 0;
+	const size = 5;
+	const {
+		data: dataAllTicket,
+		loading: loadingAllTicket,
+		error: errorAllTicket,
+	} = useCustomFetch(`/myTickets/list?status=ALL`);
+
+	const {
+		data: dataReservedTicket,
+		loading: loadingReservedTicket,
+		error: errorReservedTicket,
+	} = useCustomFetch(`/myTickets/list?status=RESERVED`);
+	const {
+		data: dataCancelledTicket,
+		loading: loadingCancelledTicket,
+		error: errorCancelledTicket,
+	} = useCustomFetch(`/myTickets/list?status=CANCELLED`);
 	return (
 		<MyTicketsWrapper>
 			<div className="only-mobile">
@@ -57,18 +82,19 @@ function MyTickets() {
 				<div style={{ marginBottom: '28px' }} />
 				{selected === '전체' && (
 					<>
-						{details.map((detail) => (
-							<>
-								<TicketContainer details={detail} header={ticketHeaders} />
-							</>
-						))}
+						{dataAllTicket?.result &&
+							dataAllTicket?.result.map((detail) => (
+								<>
+									<TicketContainer details={detail} header={ticketHeaders} />
+								</>
+							))}
 					</>
 				)}
 				{selected === '예매 진행' && (
 					<>
-						{details
-							.filter((detail) => detail.status === '예매 진행중')
-							.map((detail) => (
+						<p>예매진행) 데이터 들어온 후 확인 필요 </p>
+						{dataReservedTicket?.content &&
+							dataReservedTicket?.content.map((detail) => (
 								<>
 									<TicketContainer details={detail} header={ticketHeaders} />
 								</>
@@ -77,9 +103,9 @@ function MyTickets() {
 				)}
 				{selected === '공연 종료' && (
 					<>
-						{details
-							.filter((detail) => detail.status === '공연 종료')
-							.map((detail) => (
+						<p>공연 종료) 데이터 들어온 후 확인 필요 </p>
+						{dataCancelledTicket?.content &&
+							dataCancelledTicket?.content.map((detail) => (
 								<>
 									<TicketContainer details={detail} header={ticketHeaders} />
 								</>

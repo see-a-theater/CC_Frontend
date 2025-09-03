@@ -2,15 +2,14 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Minus from '../assets/icons/Minus.svg';
 import Plus from '../assets/icons/Plus.svg';
-function Counter({ size }) {
-	const [count, setCount] = useState(1);
-
+function Counter({ size, count, setCount }) {
 	const handleDecrease = () => {
 		if (count > 1) setCount(count - 1);
 	};
 
 	const handleIncrease = () => {
 		setCount(count + 1);
+		console.log(count);
 	};
 
 	return (

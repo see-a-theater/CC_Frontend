@@ -8,9 +8,14 @@ import TicketDetail from './ticket/TicketDetail';
 import LikedTheater from './liked-theater/LikedTheater';
 import MyPageMenu from './MypageMenu';
 import { Outlet } from 'react-router-dom';
+import useCustomFetch from '../../utils/hooks/useAxios';
 function MyPage() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
+	localStorage.setItem(
+		'accessToken',
+		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
+	);
 	return (
 		<>
 			<SideMenuWrapper>

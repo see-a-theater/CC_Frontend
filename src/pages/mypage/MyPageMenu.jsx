@@ -2,19 +2,38 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Hamburger from '../../components/Hamburger';
 import HomeIconMenu from '../../components/HomeIconMenu';
+import useCustomFetch from '../../utils/hooks/useAxios';
 function MyPageMenu() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
+
+	const { data, loading, error } = useCustomFetch('/member/myPage');
+
+	const {
+		data: image,
+		loading: imgloading,
+		error: imgerror,
+	} = useCustomFetch('/images/2');
+
+	console.log('image', image?.result?.imageUrl);
+
+	const { id, name, username, email, phone, address, status } =
+		data?.result || {};
+	if (data) {
+		console.log(data?.result);
+	}
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', flex: '1' }}>
 			<div className="only-mobile">
 				<Hamburger />
 			</div>
+
 			<Wrapper>
 				<LeftWrapper>
 					<h1 className="title">마이페이지</h1>
 					<h1 className="color-pink only-web" style={{ marginTop: '62px' }}>
-						QWERS<span className="bold">님</span>
+						{name}
+						<span className="bold">님</span>
 					</h1>
 					<button style={{ marginTop: '22px' }}>로그아웃</button>
 				</LeftWrapper>
@@ -31,7 +50,8 @@ function MyPageMenu() {
 					</button>
 
 					<h1 className="color-pink only-mobile">
-						QWERS<span className="bold">님</span>
+						{name}
+						<span className="bold">님</span>
 					</h1>
 					<section>
 						<h1>MY</h1>

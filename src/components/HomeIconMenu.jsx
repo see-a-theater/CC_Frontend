@@ -49,7 +49,7 @@ function HomeIconMenu({ isWeb, selectedMenu }) {
 		<>
 			<Wrapper $isWeb={isWeb} $bgBlack={isAboutCC}>
 				<MenuWrapper $isWeb={isWeb}>
-					<div className="logo" onClick={() => navigate('/')}>
+					<div className="logo" onClick={() => navigate('/home')}>
 						<Logo />
 					</div>
 					<div onClick={() => navigate('/plays')}>
@@ -129,9 +129,9 @@ const MenuWrapper = styled.div`
 			height: 40px;
 		}
 		svg {
-			width: 24px; /* 원하는 아이콘 크기 */
+			width: 24px;
 			height: 24px;
-			object-fit: contain; /* 비율 유지 */
+			object-fit: contain;
 			@media (min-width: 768px) {
 				width: 40px;
 				height: 40px;

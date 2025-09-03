@@ -1,5 +1,8 @@
 //yarn add react-select
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
+import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -113,6 +116,7 @@ function UploadPic() {
 		setFile(selectedFile);
 	};
 
+	const { accessToken } = useAuth();
 	const handleUpload = async () => {
 		if (!isFormValid) {
 			alert('모든 필수 정보를 입력해 주세요.');
