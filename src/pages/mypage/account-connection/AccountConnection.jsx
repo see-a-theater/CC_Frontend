@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
-import TopBarWeb from '../../../components/TopBarWeb';
+import TopBar from '@/components/TopBar';
+import TopBarWeb from '@/components/TopBarWeb';
 import styled from 'styled-components';
 import KakaoRound from '@/assets/icons/KakaoRound.svg?react';
 import GoogleRound from '@/assets/icons/GoogleRound.svg?react';

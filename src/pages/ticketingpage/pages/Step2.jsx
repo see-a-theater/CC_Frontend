@@ -1,19 +1,19 @@
 
 import React from 'react';
-import PosterInfo from '../components/PosterInfo';
-import RadioGroup from '../components/RadioGroup';
-import ActionButton from '../components/ActionButton';
+import PosterInfo from '@/pages/ticketingpage/components/PosterInfo';
+import RadioGroup from '@/pages/ticketingpage/components/RadioGroup';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
 import { 
   FormSection2, SelectionSection, SectionTitle, 
   EventTitle, EventVenue, EventPeriod, EventInfo, 
-  EventLink, PcLayout, SummarySection, BackButton } from '../styles/commonStyles';
-import { SummaryRow } from '../styles/summaryStyles';
+  EventLink, PcLayout, SummarySection, BackButton } from '@/pages/ticketingpage/styles/commonStyles';
+import { SummaryRow } from '@/pages/ticketingpage/styles/summaryStyles';
 import { 
   Divider, Label, AdditionalInputField,
   BankInfo, PaymentNotice, CheckboxContainer,
-  CheckboxInput, CheckboxLabel, Showmore } from '../styles/formStyles'; 
-import useResponsive from '../hooks/useResponsive';
-import ShowMore from '../components/icons/ShowMore.svg';
+  CheckboxInput, CheckboxLabel, Showmore } from '@/pages/ticketingpage/styles/formStyles'; 
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
+import ShowMore from '@/pages/ticketingpage/components/icons/ShowMore.svg';
 
 const Step2 = ({ 
   ticketing: { 

@@ -1,4 +1,4 @@
-import ImageUploadBox from '../../components/ImageUploadBox.jsx';
+import ImageUploadBox from '@/components/ImageUploadBox.jsx';
 import { RegisterWrapper } from './Register.style.js';
 import { useOutletContext } from 'react-router-dom';
 function RegisterStep2() {

@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import Camera from '../assets/icons/Camera.svg';
+import Camera from '@/assets/icons/Camera.svg';
 import styled from 'styled-components';
-import useCustomFetch from '../utils/hooks/useAxios';
 import axios from 'axios';
+import { useEffect } from 'react';
+function ImageUploadBox({
+	mobileHeight,
+	mobileWidth,
+	webHeight,
+	webWidth,
+	round,
+	onUploadSuccess,
+	value,
+}) {
+	console.log('value', value);
+	const [imageSrc, setImageSrc] = useState(value || null);
+	console.log('imageSrc', imageSrc);
 
-function ImageUploadBox({ size, webSize, round, onUploadSuccess }) {
-	const [imageSrc, setImageSrc] = useState(null);
+	useEffect(() => {
+		setImageSrc(value || null);
+	}, [value]);
 
 	const handleImageChange = async (e) => {
 		const file = e.target.files[0];
@@ -54,11 +67,19 @@ function ImageUploadBox({ size, webSize, round, onUploadSuccess }) {
 		}
 	};
 	return (
-		<Box size={size} webSize={webSize} round={round}>
+		<Box
+			mobileHeight={mobileHeight}
+			mobileWidth={mobileWidth}
+			webWidth={webWidth}
+			webHeight={webHeight}
+			round={round}
+		>
 			{imageSrc ? (
 				<img src={imageSrc} alt="uploaded" />
 			) : (
-				<img src={Camera} alt="camera icon" />
+				<IconWrapper>
+					<img src={Camera} alt="camera icon" />
+				</IconWrapper>
 			)}
 			<input type="file" accept="image/*" onChange={handleImageChange} />
 		</Box>
@@ -70,17 +91,19 @@ export default ImageUploadBox;
 const Box = styled.div`
 	position: relative;
 
-	width: ${(props) => (props.size ? props.size : '150px')};
-	height: ${(props) => (props.size ? props.size : '150px')};
+	width: ${(props) => (props.mobileWidth ? props.mobileWidth : '150px')};
+	height: ${(props) => (props.mobileHeight ? props.mobileHeight : '150px')};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
 	overflow: hidden;
+	background: #f8f8f8;
+	border-radius: 5px;
 
 	@media (min-width: 768px) {
-		width: ${(props) => props.webSize || props.size || '240px'};
-		height: ${(props) => props.webSize || props.size || '240px'};
+		width: ${(props) => props.webWidth || props.webWidth || '240px'};
+		height: ${(props) => props.webHeight || props.webHeight || '240px'};
 	}
 
 	img {
@@ -88,7 +111,6 @@ const Box = styled.div`
 		height: 20px;
 		object-fit: cover;
 		${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
-		background-color: gainsboro;
 	}
 
 	input[type='file'] {
@@ -104,5 +126,15 @@ const Box = styled.div`
 	img {
 		width: 100%;
 		height: 100%;
+	}
+`;
+
+const IconWrapper = styled.div`
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+	& > img {
+		width: 20%;
 	}
 `;

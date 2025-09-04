@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
+import TopBar from '@/components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
 import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
-import TopBarWeb from '../../../components/TopBarWeb';
+import TopBarWeb from '@/components/TopBarWeb';
 import Alert from './TicketCancel';
 import React, { useState, useEffect } from 'react';
 import useCustomFetch from '../../../utils/hooks/useAxios';
@@ -39,6 +39,7 @@ function TicketDetail() {
 
 	console.log('ticket detail', data);
 	// 모달창 관련 함수
+
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [isChecked, setIsChecked] = useState(false);
@@ -55,7 +56,7 @@ function TicketDetail() {
 	if (loading) return <div>로딩중...</div>;
 	if (error) return <div>에러 발생: {error.message}</div>;
 	if (!data?.result) return <div>데이터가 없습니다.</div>;
-	//
+
 	const {
 		showTitle,
 		quantity,

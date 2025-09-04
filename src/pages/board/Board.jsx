@@ -1,4 +1,4 @@
-import HomeIconMenu from '../../components/HomeIconMenu';
+import HomeIconMenu from '@/components/HomeIconMenu';
 import styled from 'styled-components';
 function Board() {
 	return (

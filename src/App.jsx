@@ -60,7 +60,7 @@ function App() {
 				<Route path="/admin/*" element={<AdminRoutes />} />
 
 				<Route path="*" element={<NotFoundPage />} />
-          
+
 				<Route path="test/upload-pic" element={<TestUploadPic />} />
 			</Routes>
 		</AuthProvider>

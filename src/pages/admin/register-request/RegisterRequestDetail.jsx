@@ -1,11 +1,9 @@
-import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
-import styled from 'styled-components';
-import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
+import SearchOptionBar from '@/components/Admin/SearchOptionBar';
 import {
 	TablePageWrapper,
 	Content,
 	OptionBarWrapper,
-} from '../STYLE/admin.detail.style';
+} from '@/pages/admin/STYLE/admin.detail.style';
 const requests = [
 	{
 		id: 'diana8843',
