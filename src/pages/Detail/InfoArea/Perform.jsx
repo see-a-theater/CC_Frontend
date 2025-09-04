@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import KakaoMap from '@/components/KakaoMap';
 
 function Perform(props) {
 	console.log('show data:', props);
@@ -20,14 +21,17 @@ function Perform(props) {
 					<Location>
 						<div className="textArea">
 							<p className="additional">상세주소</p>
-							<p>{props?.data.result.place}</p>
+							<p>{props?.data.result.roadAddress}</p>
 							<p className="copy">복사</p>
 						</div>
-						<div className="map"></div>
+						<div className="map">
+						</div>
 					</Location>
 					<WebLocation>
-						<p>{props?.data.result.place}</p>
-						<div className="map"></div>
+						<p>{props?.data.result.roadAddress}</p>
+						<div className="map" id="map">
+							{/*<KakaoMap location={props?.data.result.roadAddress} />*/}
+						</div>
 					</WebLocation>
 				</>
 			</Content>

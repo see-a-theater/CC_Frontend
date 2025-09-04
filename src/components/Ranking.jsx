@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster1.png';
 
 /* 터치로 카드넘김 효과 추가 필요*/
-function Ranking() {
-	console.log('Poster path:', Poster);
+function Ranking({ data }) {
+	// console.log('Poster path:', Poster);
 	const mockData = [
 		{
 			title: '실종',
@@ -45,16 +45,17 @@ function Ranking() {
 	return (
 		<Wrapper>
 			<CardList>
-				{mockData.map((item, index) => (
-					<Card key={index}>
-						<Img background={item.img}>
-							<IndexLabel>{index + 1}</IndexLabel>
-						</Img>
-						<h3>{item.title}</h3>
-						<p>{item.location}</p>
-						<p className="extra">{item.date}</p>
-					</Card>
-				))}
+				{data &&
+					data.map((item, index) => (
+						<Card key={index}>
+							<Img background={item.posterImageUrl}>
+								<IndexLabel>{index + 1}</IndexLabel>
+							</Img>
+							<h3>{item.name}</h3>
+							<p>{item.place}</p>
+							<p className="extra">{item.schedule}</p>
+						</Card>
+					))}
 			</CardList>
 		</Wrapper>
 	);

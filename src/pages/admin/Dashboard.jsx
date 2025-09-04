@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import LineChart from '@/components/Admin/LineChart';
 import Table from '@/components/Admin/Table';
-
 import Search from '@/assets/icons/searchBlack.svg?react';
+
+import useCustomFetch from '@/utils/hooks/useAxios';
 
 function Dashboard() {
 	const mock_stat = [
@@ -41,6 +42,26 @@ function Dashboard() {
 
 	const statLabels = mock_stat.map((item) => `${item.year} ${item.month}`);
 	const statData = mock_stat.map((item) => item.data);
+
+	const {
+		data: MonthVisitsData,
+		error: MonthError,
+		loading: MonthLoading,
+	} = useCustomFetch(`/admin/dashboard/visits/monthly`);
+
+	console.log('MonthError:', MonthError);
+	console.log('MonthLoading:', MonthLoading);
+	console.log('MonthVisitsData:', MonthVisitsData);
+
+	const {
+		data: HourlyVisitsData,
+		error: HourlyError,
+		loading: HourlyLoading,
+	} = useCustomFetch(`/admin/dashboard/visits/monthly`);
+
+	console.log('HourlyError:', HourlyError);
+	console.log('HourlyLoading:', HourlyLoading);
+	console.log('HourlyVisitsData:', HourlyVisitsData);
 
 	return (
 		<Container>

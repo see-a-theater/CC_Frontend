@@ -1,18 +1,25 @@
 import CastCard from '@/components/Detail/CastCard';
 import Staff from '@/components/Detail/Staff';
 
-//import profile from '@/assets/mock/images/프로필.png';
 import styled from 'styled-components';
 
-function Cast(props) {
-	console.log('props:', props);
+import ChevronRight from '@/assets/icons/chevronRightGray.svg?react';
+import { useNavigate } from 'react-router-dom';
 
+function Cast(props) {
+	const navigate = useNavigate();
+	const goPerformer = () => {
+		navigate(`/production/${props?.data.result.memberId}`);
+		window.scrollTo(0, 0);
+	};
 	return (
 		<Container>
 			<Content>
 				<Title>극단</Title>
-				{/*극단 정보 부재*/}
-				<p>홍익극연구회</p>
+				<ContentH onClick={goPerformer}>
+					<Text>{props?.data.result.performerName}</Text>
+					<ChevronRight height={15} />
+				</ContentH>
 			</Content>
 
 			<Content>
@@ -54,6 +61,21 @@ const Content = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+`;
+const ContentH = styled.div`
+	display: flex;
+	align-items: center;
+`;
+const Text = styled.div`
+	font-size: ${({ theme }) => theme.font.fontSize.body13};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.medium};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 const Title = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body16};

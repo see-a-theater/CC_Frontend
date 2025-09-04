@@ -1,30 +1,59 @@
 import styled from 'styled-components';
+import useCustomFetch from '@/utils/hooks/useAxios';
+import { useNavigate } from 'react-router-dom';
 
-function ProdPlayCard({ data, onClick }) {
-	const isEnded = !data.activeNow;
+function ProdPlayCard({
+	detailAddress,
+	posterImageUrl,
+	showId,
+	status,
+	title,
+}) {
+	const {
+		data: playData,
+		error,
+		loading,
+	} = useCustomFetch(showId ? `/amateurs/${showId}` : null);
+
+	const isEnded = true; //수정 필요
+
+	const navigate = useNavigate();
+	const navigateToPlay = () => {
+		navigate(`/plays/detail/${showId}`);
+		window.scrollTo(0, 0);
+	};
 
 	return (
-		<Container onClick={onClick}>
-			<PosterCard imageUrl={data.src} isEnded={isEnded}>
+		<Container onClick={navigateToPlay}>
+			<PosterCard imageUrl={posterImageUrl} isEnded={isEnded}>
 				{isEnded && <Tag>공연종료</Tag>}
 			</PosterCard>
-			<Title>{data.title}</Title>
-			<Location>{data.location}</Location>
+
+			<Title>{title}</Title>
+			<Location>{detailAddress}</Location>
 
 			<Date>
-				{' '}
 				<p>
-					{data?.date
+					{playData?.result?.schedule
 						? (() => {
-								const [before, after] = data.date.split('~');
+								const parts = playData.result.schedule.split('~');
+								const before = parts[0]?.trim() || '';
+								const after = parts[1]?.trim() || ''; // parts[1] 없을 수도 있음
+
 								return (
 									<>
-										{before.trim()} ~<br />
-										{after.trim()}
+										{before}
+										{after && (
+											<>
+												{' ~'}
+												<br />
+												{after}
+											</>
+										)}
 									</>
 								);
 							})()
-						: null}
+						: '일정 정보 없음'}
 				</p>
 			</Date>
 		</Container>
