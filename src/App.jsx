@@ -25,6 +25,7 @@ import MyPageRoutes from './routes/MyPageRoutes.jsx';
 import AdminRoutes from './routes/AdminRoutes.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
+import TestUploadPic from './pages/TEST/TestUploadPic';
 function App() {
 	return (
 		<AuthProvider>
