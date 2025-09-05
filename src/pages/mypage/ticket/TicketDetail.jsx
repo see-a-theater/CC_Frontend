@@ -72,6 +72,22 @@ function TicketDetail() {
 	const detail = data?.result;
 	const header = ticketHeaders;
 
+	const formatDateTime = (isoString) => {
+		const d = new Date(isoString);
+		const week = ['일', '월', '화', '수', '목', '금', '토'];
+
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+			d.getDate(),
+		).padStart(2, '0')} (${week[d.getDay()]}) ${String(d.getHours()).padStart(
+			2,
+			'0',
+		)}:${String(d.getMinutes()).padStart(2, '0')}`;
+	};
+
+	const statusLabel = {
+		CANCELLED: '예매 취소',
+		RESERVED: '예매 완료',
+	};
 	return (
 		<>
 			<MyTicketsWrapper>
@@ -108,7 +124,7 @@ function TicketDetail() {
 							<h1>
 								{showTitle ?? 'null'} {quantity ?? 'null'}매
 							</h1>
-							<p className="color-pink">예매 완료</p>
+							<p className="color-pink">{statusLabel[reservationStatus]}</p>
 						</div>
 					</div>
 					{/*웹 포스터*/}
@@ -122,7 +138,7 @@ function TicketDetail() {
 							<tbody>
 								<tr>
 									<th>예매일</th>
-									<td>{reserveDateTime ?? 'null'}</td>
+									<td>{reserveDateTime?.split('T')[0] ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>장소</th>
@@ -130,11 +146,11 @@ function TicketDetail() {
 								</tr>
 								<tr>
 									<th>관람일시</th>
-									<td>{performanceDateTime ?? 'null'}</td>
+									<td>{formatDateTime(performanceDateTime) ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>상태</th>
-									<td>{reservationStatus ?? 'null'}</td>
+									<td>{statusLabel[reservationStatus] ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>취소가능일시</th>
@@ -174,26 +190,45 @@ function TicketDetail() {
 								있습니다.
 							</span>
 						</div>
-						<div
-							className="checkbox"
-							style={{
-								marginBottom: '60px',
-							}}
-						>
-							<label
+						{reservationStatus === 'CANCELLED' ? (
+							<></>
+						) : (
+							<div
+								className="checkbox"
 								style={{
-									textAlign: 'center',
-									display: 'flex',
-									justifyContent: 'center',
+									marginBottom: '60px',
 								}}
 							>
-								취소 수수료를 확인하였으며, 이에 동의합니다
-								<input type="checkbox" />
-							</label>
-						</div>
-						<button className="btn-light" onClick={handleCancelClick}>
-							예매 취소
-						</button>
+								<label
+									style={{
+										textAlign: 'center',
+										display: 'flex',
+										justifyContent: 'center',
+									}}
+								>
+									취소 수수료를 확인하였으며, 이에 동의합니다
+									<input
+										type="checkbox"
+										checked={isChecked}
+										onChange={(e) => setIsChecked(e.target.checked)}
+									/>
+								</label>
+							</div>
+						)}
+
+						{reservationStatus === 'CANCELLED' ? (
+							<button
+								className="btn-light"
+								onClick={handleCancelClick}
+								disabled={true}
+							>
+								취소 완료된 티켓입니다
+							</button>
+						) : (
+							<button className="btn-light" onClick={handleCancelClick}>
+								예매 취소
+							</button>
+						)}
 					</DetailWrapper>
 				</Wrapper>
 			</MyTicketsWrapper>

@@ -10,6 +10,8 @@ import TopBarWeb from '../../../components/TopBarWeb';
 import PillToggleGroup from '../../../components/PillToggleGroup';
 import useCustomFetch from '../../../utils/hooks/useAxios';
 function MyTickets() {
+	const role = localStorage.getItem('role');
+
 	const [selected, setSelected] = useState('전체');
 	const navigate = useNavigate();
 
@@ -54,12 +56,30 @@ function MyTickets() {
 		loading: loadingAllTicket,
 		error: errorAllTicket,
 	} = useCustomFetch(`/myTickets/list?status=ALL`);
-
+	// 공연 등록자
+	const {
+		data: dataEndedTicket,
+		loading: loadingEndedTicket,
+		error: errorEndedTicket,
+	} = useCustomFetch(
+		`/member/myPage/reserveList?page=0&size=20&status=APPROVED_ENDED`,
+	);
+	console.log('공연 종료', dataEndedTicket);
+	const {
+		data: dataOngoingTicket,
+		loading: loadingOngoingTicket,
+		error: errorOngoingTicket,
+	} = useCustomFetch(
+		`/member/myPage/reserveList?page=0&size=20&status=APPROVED_ONGOING`,
+	);
+	console.log('예매 진행', dataOngoingTicket);
+	// 유저
 	const {
 		data: dataReservedTicket,
 		loading: loadingReservedTicket,
 		error: errorReservedTicket,
 	} = useCustomFetch(`/myTickets/list?status=RESERVED`);
+	console.log('예약티켓', dataReservedTicket);
 	const {
 		data: dataCancelledTicket,
 		loading: loadingCancelledTicket,
@@ -68,16 +88,26 @@ function MyTickets() {
 	return (
 		<MyTicketsWrapper>
 			<div className="only-mobile">
-				<TopBar onPrev={onPrev}>등록한 공연</TopBar>
+				<TopBar onPrev={onPrev}>
+					{' '}
+					{role === 'admin' ? '등록한 공연' : '내 티켓'}
+				</TopBar>
 			</div>
 			<div className="only-web-flex">
 				<TopBarWeb>내 티켓</TopBarWeb>
 			</div>
 			<Wrapper>
-				<PillToggleGroup
-					options={['전체', '예매 진행', '공연 종료']}
-					onSelect={(option) => setSelected(option)}
-				/>
+				{role === 'admin' ? (
+					<PillToggleGroup
+						options={['전체', '예매 진행', '공연 종료']}
+						onSelect={(option) => setSelected(option)}
+					/>
+				) : (
+					<PillToggleGroup
+						options={['전체', '예매 완료', '예매 취소']}
+						onSelect={(option) => setSelected(option)}
+					/>
+				)}
 
 				<div style={{ marginBottom: '28px' }} />
 				{selected === '전체' && (
@@ -90,26 +120,58 @@ function MyTickets() {
 							))}
 					</>
 				)}
-				{selected === '예매 진행' && (
+				{selected === '예매 완료' && (
 					<>
-						<p>예매진행) 데이터 들어온 후 확인 필요 </p>
-						{dataReservedTicket?.content &&
-							dataReservedTicket?.content.map((detail) => (
+						{dataReservedTicket?.result &&
+							dataReservedTicket?.result.map((detail) => (
 								<>
 									<TicketContainer details={detail} header={ticketHeaders} />
 								</>
 							))}
 					</>
 				)}
-				{selected === '공연 종료' && (
+				{selected === '예매 취소' && (
 					<>
-						<p>공연 종료) 데이터 들어온 후 확인 필요 </p>
-						{dataCancelledTicket?.content &&
-							dataCancelledTicket?.content.map((detail) => (
+						{dataCancelledTicket?.result &&
+							dataCancelledTicket?.result.map((detail) => (
 								<>
 									<TicketContainer details={detail} header={ticketHeaders} />
 								</>
 							))}
+					</>
+				)}
+				{selected === '예매 진행' && (
+					<>
+						{dataOngoingTicket?.content ? (
+							dataOngoingTicket?.content.map((detail) => (
+								<>
+									<TicketContainer
+										details={detail}
+										header={ticketHeaders}
+										isPerformer={true}
+									/>
+								</>
+							))
+						) : (
+							<p>내역이 없습니다</p>
+						)}
+					</>
+				)}
+				{selected === '공연 종료' && (
+					<>
+						{dataEndedTicket?.content && dataEndedTicket.content.length > 0 ? (
+							dataEndedTicket?.content.map((detail) => (
+								<>
+									<TicketContainer
+										details={detail}
+										header={ticketHeaders}
+										isPerformer={true}
+									/>
+								</>
+							))
+						) : (
+							<p>내역이 없습니다</p>
+						)}
 					</>
 				)}
 			</Wrapper>
