@@ -21,7 +21,7 @@ function SmallTheaterRegister() {
 	/* /small-theater/register/step1~step5 */
 	const [formData, setFormData] = useState({
 		name: '',
-		place: '',
+
 		schedule: '',
 		runtime: '',
 		account: '',
@@ -60,7 +60,7 @@ function SmallTheaterRegister() {
 				totalTicket: 0,
 			},
 		],
-		imageRequestDTO: {
+		posterImageRequestDTO: {
 			keyName: '',
 			imageUrl: '',
 		},

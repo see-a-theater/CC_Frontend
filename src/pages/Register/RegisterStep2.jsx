@@ -45,6 +45,18 @@ function RegisterStep2() {
 		console.log(formData);
 	};
 
+	const handleNoticeImageUpload = (fileInfo) => {
+		console.log('포스터 파일정보', fileInfo);
+		// fileInfo는 { keyName: "...", imageUrl: "..." } 형태라고 가정
+		setFormData((prev) => ({
+			...prev,
+			notice: {
+				...prev.notice, // ✅ 기존 notice만 펼치기
+				noticeImageUrl: fileInfo?.publicUrl || '', // ✅ imageUrl 반영
+			},
+		}));
+		console.log('포스터 등록 확인', formData);
+	};
 	// 제출 시 전체 검증
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -99,13 +111,19 @@ function RegisterStep2() {
 				<div>
 					<label style={{ marginBottom: '6px' }}>공연 상세 이미지</label>
 					<p>(선택사항)</p>
-					<ImageUploadBox />
+					<ImageUploadBox
+						onUploadSuccess={handleNoticeImageUpload}
+						width="157px"
+						height="220px"
+						webWidth="228px"
+						webHeight="320px"
+					/>
 				</div>
-				<div>
+				{/*	<div>
 					<label style={{ marginBottom: '6px' }}>공연장 사진</label>
 					<p>(사진을 등록하면 자동으로 시야확인에 추가됩니다.)</p>
 					<ImageUploadBox />
-				</div>
+				</div>*/}
 			</form>
 			<button
 				style={{ marginTop: '44px' }}
