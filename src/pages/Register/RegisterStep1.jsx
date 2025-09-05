@@ -59,7 +59,10 @@ function RegisterStep1() {
 		// fileInfo는 { keyName: "...", imageUrl: "..." } 형태라고 가정
 		setFormData((prev) => ({
 			...prev,
-			posterImageUrl: fileInfo?.publicUrl,
+			posterImageRequestDTO: {
+				keyName: fileInfo?.keyName,
+				imageUrl: fileInfo?.publicUrl,
+			},
 		}));
 		console.log('포스터 등록 확인', formData);
 	};
