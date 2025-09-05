@@ -60,8 +60,6 @@ function MyPageMenu() {
 								<li onClick={() => navigate('registered-performances')}>
 									등록한 공연
 								</li>
-								<li>나의 사진첩</li>
-								<li onClick={() => navigate('booking-history')}>예매 내역</li>
 							</ul>
 						)}
 						{role === 'user' && (
@@ -158,7 +156,7 @@ const Wrapper = styled.div`
 		align-items: center;
 		gap: 20px;
 		border-radius: 3px;
-		background: ${({ theme }) => theme.colors.gray200};
+		border: 1px solid ${({ theme }) => theme.colors.grayOutline};
 	}
 	.extra {
 		color: ${({ theme }) => theme.colors.gray400};
