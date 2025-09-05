@@ -4,6 +4,7 @@ import styled from 'styled-components';
 function RegisterStep5() {
 	const { nextStep } = useOutletContext();
 	const navigate = useNavigate();
+	const showId = localStorage.getItem('등록한 공연 id');
 	return (
 		<div style={{ height: '100%' }}>
 			<div className="only-mobile" style={{ height: '100%' }}>
@@ -22,9 +23,9 @@ function RegisterStep5() {
 					<button
 						type="submit"
 						className="btn-primary"
-						onClick={() => navigate('/mypage')}
+						onClick={() => navigate(`/plays/detail/${showId}`)}
 					>
-						마이페이지 바로가기
+						내가 작성한 공연 보러가기
 					</button>
 				</RegisterWrapper>
 			</div>
@@ -41,7 +42,12 @@ function RegisterStep5() {
 						<h1 style={{ marginBottom: '60px' }}>공연이 등록되었습니다</h1>
 
 						<ButtonWrapper>
-							<button className="btn-square">내가 작성한 공연 보러가기</button>
+							<button
+								className="btn-square"
+								onClick={() => navigate(`/plays/detail/${showId}`)}
+							>
+								내가 작성한 공연 보러가기
+							</button>
 						</ButtonWrapper>
 					</div>
 				</WebWrapper>

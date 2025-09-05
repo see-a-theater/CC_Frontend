@@ -4,6 +4,39 @@ import { useOutletContext } from 'react-router-dom';
 function RegisterStep4() {
 	const { nextStep, formData, setFormData } = useOutletContext();
 
+	const handleEnroll = async (e) => {
+		e.preventDefault(); // 폼 제출 기본 동작 막기
+		console.log('폼데이터', formData);
+
+		try {
+			const response = await fetch(
+				'https://api.seeatheater.site/amateurs/enroll',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_ACCESS_TOKEN}`,
+					},
+					body: JSON.stringify(formData),
+				},
+			);
+
+			if (!response.ok) {
+				throw new Error(`등록 실패: ${response.status}`);
+			}
+
+			const data = await response.json();
+			console.log('등록 성공:', data);
+
+			alert('공연 등록이 완료되었습니다.');
+			localStorage.setItem('등록한 공연 id', data?.result?.amateurShowId);
+			nextStep();
+		} catch (err) {
+			console.error(err);
+			alert('등록 중 오류가 발생했습니다.');
+		}
+	};
+
 	return (
 		<div style={{ height: '100%', width: '100%' }}>
 			<div className="only-mobile" style={{ height: '100%' }}>
@@ -44,35 +77,7 @@ function RegisterStep4() {
 						style={{ marginTop: '44px' }}
 						type="button"
 						className="btn-primary"
-						onClick={async (e) => {
-							e.preventDefault(); // 폼 제출 기본 동작 막기
-
-							try {
-								const response = await fetch(
-									'https://api.seeatheater.site/amateurs/enroll',
-									{
-										method: 'POST',
-										headers: {
-											'Content-Type': 'application/json',
-
-											Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_ACCESS_TOKEN}`,
-										},
-										body: JSON.stringify(formData),
-									},
-								);
-
-								if (!response.ok) {
-									throw new Error(`등록 실패: ${response.status}`);
-								}
-
-								const data = await response.json();
-								console.log('등록 성공:', data);
-								alert('공연 등록이 완료되었습니다.');
-							} catch (err) {
-								console.error(err);
-								alert('등록 중 오류가 발생했습니다.');
-							}
-						}}
+						onClick={handleEnroll}
 					>
 						등록하기
 					</button>
@@ -131,7 +136,7 @@ function RegisterStep4() {
 						</div>
 
 						<ButtonWrapper>
-							<button className="btn-square-primary" onClick={nextStep}>
+							<button className="btn-square-primary" onClick={handleEnroll}>
 								등록하기
 							</button>
 							<button className="btn-square">취소</button>
