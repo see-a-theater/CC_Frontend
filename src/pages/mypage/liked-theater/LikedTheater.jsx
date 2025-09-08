@@ -1,7 +1,7 @@
-import TopBar from '../../../components/TopBar';
-import Poster from '../../../assets/images/test-poster2.png';
+import TopBar from '@/components/TopBar';
+import Poster from '@/assets/images/test-poster2.png';
 import styled from 'styled-components';
-
+import HeartFull from '@/assets/icons/heart-full.svg?react';
 import TopBarWeb from '../../../components/TopBarWeb';
 import useCustomFetch from '../../../utils/hooks/useAxios';
 

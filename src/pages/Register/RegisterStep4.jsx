@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
 import { useOutletContext } from 'react-router-dom';
 function RegisterStep4() {
-	const { nextStep, formData, setFormData } = useOutletContext();
+	const { nextStep, formData, _setFormData } = useOutletContext();
 
 	const handleEnroll = async (e) => {
 		e.preventDefault(); // 폼 제출 기본 동작 막기

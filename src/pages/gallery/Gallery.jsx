@@ -4,14 +4,13 @@ import Hamburger from '@/components/Hamburger';
 import SearchBar from '@/components/SearchBar';
 import HomeIconMenu from '@/components/HomeIconMenu';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import styled from 'styled-components';
 
 function Gallery() {
 	const token = 'producer';
 	localStorage.setItem('token', token);
-	
 
 	const { data: picData, error, loading } = useCustomFetch(`/photoAlbums`);
 
@@ -19,11 +18,12 @@ function Gallery() {
 	console.log('loading:', loading);
 	console.log('data:', picData);
 
+	if (loading || !picData?.result) {
+		return <div>로딩 중...</div>;
+	}
+
 	return (
 		<>
-			<SideMenuWrapper>
-				<HomeIconMenu isWeb={true} selectedMenu="gallery" />
-			</SideMenuWrapper>
 			<Mobile>
 				<Hamburger title={'사진첩'} />
 				<Masonry imageData={picData?.result} />
@@ -31,7 +31,7 @@ function Gallery() {
 
 			<Web>
 				<SideMenuWrapper>
-					<HomeIconMenu isWeb={true} />
+					<HomeIconMenu isWeb={true} selectedMenu="plays"/>
 				</SideMenuWrapper>
 				<Container>
 					<SearchBar />

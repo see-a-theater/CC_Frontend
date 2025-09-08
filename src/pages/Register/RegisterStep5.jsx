@@ -2,7 +2,6 @@ import { RegisterWrapper } from './Register.style.js';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 function RegisterStep5() {
-	const { nextStep } = useOutletContext();
 	const navigate = useNavigate();
 	const showId = localStorage.getItem('등록한 공연 id');
 	return (

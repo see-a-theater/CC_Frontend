@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import Camera from '../assets/icons/Camera.svg';
+import Camera from '@/assets/icons/Camera.svg';
 import styled from 'styled-components';
-import useCustomFetch from '../utils/hooks/useAxios';
 import axios from 'axios';
 
 function ImageUploadBox({
@@ -76,6 +75,9 @@ function ImageUploadBox({
 				<IconWrapper>
 					<img src={Camera} alt="camera icon" />
 				</IconWrapper>
+				<IconWrapper>
+					<img src={Camera} alt="camera icon" />
+				</IconWrapper>
 			)}
 			<input type="file" accept="image/*" onChange={handleImageChange} />
 		</Box>
@@ -96,6 +98,8 @@ const Box = styled.div`
 	overflow: hidden;
 	${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
 	@media (min-width: 768px) {
+		width: ${(props) => props.webWidth || props.webWidth || '240px'};
+		height: ${(props) => props.webHeight || props.webHeight || '240px'};
 		width: ${(props) => props.webWidth || props.webWidth || '240px'};
 		height: ${(props) => props.webHeight || props.webHeight || '240px'};
 	}
