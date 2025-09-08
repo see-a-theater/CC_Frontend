@@ -5,7 +5,6 @@ import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import styled from 'styled-components';
 import Select from 'react-select';
 
-import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import useCustomFetch from '@/utils/hooks/useAxios';
 
