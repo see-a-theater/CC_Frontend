@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import SearchBar from '../../../components/SearchBar';
+import SearchBar from '@/components/SearchBar';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
-import SearchBarBlack from '../../../components/SearchBarBlack';
-import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
+import SearchBarBlack from '@/components/SearchBarBlack';
+import SearchOptionBar from '@/components/Admin/SearchOptionBar';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AdminListPage } from '../STYLE/admin-list.style';
+import { AdminListPage } from '@/pages/admin/STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
 function RegisterRequests() {
 	const navigate = useNavigate();
@@ -75,7 +75,7 @@ function RegisterRequests() {
 			status: '등록',
 		},
 	];
-	const [stockList, setStockList] = useState(requests);
+	const [stockList, _setStockList] = useState(requests);
 	const [page, setPage] = useState(1);
 	const itemsPerPage = 3;
 	const changePageHandler = (page) => {

@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import HomeIconMenu from '../../components/HomeIconMenu';
-import Hr from '../../components/Hr';
-import Ranking from '../../components/Ranking';
+import HomeIconMenu from '@/components/HomeIconMenu';
+import Hr from '@/components/Hr';
+import Ranking from '@/components/Ranking';
 import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
-import BoardPreviewCardList from '../../components/BoardPreviewCardList';
-import BoardPreviewList from '../../components/BoardPreviewList';
-import BoardPreviewCardWeb from '../../components/BoardPreviewCardWeb';
-import SearchBar from '../../components/SearchBar';
-import CarouselWeb from '../../components/CarouselWeb';
-import CarouselMobile from '../../components/CarouselMobile';
-import Hamburger from '../../components/Hamburger';
-import Poster from '../../assets/images/test-poster2.png';
+import BoardPreviewCardList from '@/components/BoardPreviewCardList';
+import BoardPreviewList from '@/components/BoardPreviewList';
+import BoardPreviewCardWeb from '@/components/BoardPreviewCardWeb';
+import SearchBar from '@/components/SearchBar';
+import CarouselWeb from '@/components/CarouselWeb';
+import CarouselMobile from '@/components/CarouselMobile';
+import Hamburger from '@/components/Hamburger';
+import Poster from '@/assets/images/test-poster2.png';
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
 const banners = [
 	{
@@ -37,6 +37,35 @@ const banners = [
 ];
 
 function Home() {
+	localStorage.setItem(
+		'accessToken',
+		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
+	);
+	const {
+		data: dataClosing,
+		loading: loadingClosing,
+		error: errorClosing,
+	} = useCustomFetch('/amateurs/closing');
+
+	const {
+		data: dataRanking,
+		loading: loadingRanking,
+		error: errorRanking,
+	} = useCustomFetch('/amateurs/ranking');
+
+	const {
+		data: dataHotBoard,
+		loading: loadingHotBoard,
+		error: errorHotBoard,
+	} = useCustomFetch('/boards/hot');
+
+	const {
+		data: dataBoard,
+		loading: loadingBoard,
+		error: errorBoard,
+	} = useCustomFetch('/boards?boardType=NORMAL&page=0&size=5');
+
+	console.log(dataClosing?.result);
 	return (
 		<HomeWrapper>
 			<SideMenuWrapper>
@@ -55,10 +84,10 @@ function Home() {
 					</div>
 					<h1>오늘 마감인 공연</h1>
 					<div className="only-web">
-						<CarouselWeb banners={banners} />
+						<CarouselWeb banners={dataClosing?.result} />
 					</div>
 					<div className="only-mobile">
-						<CarouselMobile banners={banners} />
+						<CarouselMobile banners={dataClosing?.result} />
 					</div>
 					<div className="only-mobile">
 						<HomeIconMenu />
@@ -71,7 +100,7 @@ function Home() {
 					<h1>
 						<span className="only-web-inline">✨</span>소극장 공연 랭킹
 					</h1>
-					<Ranking />
+					<Ranking data={dataRanking?.result} />
 					<div style={{ paddingRight: '20px' }}>
 						<button className="light only-mobile" style={{ marginTop: '26px' }}>
 							소극장 공연 보러가기
@@ -88,13 +117,14 @@ function Home() {
 						<ChevronRight />
 					</Bar>
 					<div className="only-mobile">
-						<BoardPreviewCardList />
+						<BoardPreviewCardList data={dataHotBoard?.content} />
 					</div>
 					<div className="only-web" style={{ paddingRight: '60px' }}>
-						<BoardPreviewCardWeb />
+						<BoardPreviewCardWeb data={dataHotBoard?.content} />
 					</div>
+					v 게시글 전체조회 필요 (현재는 일반/홍보 각각만 가능)
 					<div style={{ paddingRight: '20px' }}>
-						<BoardPreviewList />
+						<BoardPreviewList data={dataBoard?.content} />
 					</div>
 					<div style={{ paddingRight: '20px', marginTop: '28px' }}>
 						<button className="light only-mobile">게시판 보러가기</button>

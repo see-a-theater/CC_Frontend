@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import Poster from '../assets/images/test-poster1.png';
+import Poster from '@/assets/images/test-poster1.png';
 
 /* 터치로 카드넘김 효과 추가 필요*/
-function Ranking() {
-	console.log('Poster path:', Poster);
+function Ranking({ data }) {
+	// console.log('Poster path:', Poster);
 	const mockData = [
 		{
 			title: '실종',
@@ -45,16 +45,17 @@ function Ranking() {
 	return (
 		<Wrapper>
 			<CardList>
-				{mockData.map((item, index) => (
-					<Card key={index}>
-						<Img background={item.img}>
-							<IndexLabel>{index + 1}</IndexLabel>
-						</Img>
-						<h3>{item.title}</h3>
-						<p>{item.location}</p>
-						<p className="extra">{item.date}</p>
-					</Card>
-				))}
+				{data &&
+					data.map((item, index) => (
+						<Card key={index}>
+							<Img background={item.posterImageUrl}>
+								<IndexLabel>{index + 1}</IndexLabel>
+							</Img>
+							<h3>{item.name}</h3>
+							<p>{item.place}</p>
+							<p className="extra">{item.schedule}</p>
+						</Card>
+					))}
 			</CardList>
 		</Wrapper>
 	);
@@ -103,11 +104,8 @@ const Img = styled.div`
 	width: 128px;
 	height: 180px;
 	border-radius: 3px;
-	background: linear-gradient(
-			180deg,
-			rgba(0, 0, 0, 0) 50.58%,
-			rgba(0, 0, 0, 0.5) 100%
-		),
+	background:
+		linear-gradient(180deg, rgba(0, 0, 0, 0) 50.58%, rgba(0, 0, 0, 0.5) 100%),
 		url(${({ background }) => background}) center/cover no-repeat;
 	margin-bottom: 12px;
 	@media (min-width: 768px) {

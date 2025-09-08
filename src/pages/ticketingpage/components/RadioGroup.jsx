@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { RadioButtonGroup, RadioOption, RadioCircle, RadioLabel } from '../styles/formStyles';
+import { RadioButtonGroup, RadioOption, RadioCircle, RadioLabel } from '@/pages/ticketingpage/styles/formStyles';
 
 const RadioGroup = ({ options, selectedValue, onChange, additionalContent = {} }) => {
   return (

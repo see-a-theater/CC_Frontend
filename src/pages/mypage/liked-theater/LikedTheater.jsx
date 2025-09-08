@@ -1,8 +1,11 @@
-import TopBar from '../../../components/TopBar';
-import Poster from '../../../assets/images/test-poster2.png';
+import TopBar from '@/components/TopBar';
+import Poster from '@/assets/images/test-poster2.png';
 import styled from 'styled-components';
 import HeartFull from '@/assets/icons/heart-full.svg?react';
 import TopBarWeb from '../../../components/TopBarWeb';
+import useCustomFetch from '../../../utils/hooks/useAxios';
+
+import TheaterCard from '../../../components/TheaterCard';
 function LikedTheater() {
 	const theaters = [
 		{
@@ -42,6 +45,10 @@ function LikedTheater() {
 			isLiked: true,
 		},
 	];
+
+	const { data, loading, error } = useCustomFetch('/member-like/likes');
+	console.log('좋아요한 극단', data?.result);
+
 	return (
 		<LikedTheaterWrapper>
 			<div className="only-mobile">
@@ -52,14 +59,8 @@ function LikedTheater() {
 			</div>
 			<Wrapper>
 				<CardWrapper>
-					{theaters.map((theater) => (
-						<Card>
-							<img src={theater.imgSrc} />
-							<div>
-								<p>{theater.name}</p>
-								<HeartFull />
-							</div>
-						</Card>
+					{data?.result?.map((theater) => (
+						<TheaterCard data={theater} />
 					))}
 				</CardWrapper>
 			</Wrapper>
