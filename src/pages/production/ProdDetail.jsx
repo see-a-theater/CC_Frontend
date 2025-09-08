@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Hamburger from '@/components/Hamburger';
 import Carousel from '@/components/Carousel';
@@ -9,6 +9,7 @@ import Carousel from '@/components/Carousel';
 import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
 import ChevronRight from '@/assets/icons/chevronRightGrey.svg?react';
 import ThreeDots from '@/assets/icons/threeDotsVertical.svg?react';
+
 import image1 from '@/assets/mock/images/image1.png';
 import image2 from '@/assets/mock/images/image2.png';
 import image3 from '@/assets/mock/images/image3.png';
@@ -17,15 +18,27 @@ import image5 from '@/assets/mock/images/image5.png';
 
 function ProdDetail() {
 	const { prodId } = useParams();
+	const { AlbumId } = useParams();
+	const navigate = useNavigate();
+	const goBack = () => {
+		navigate(-1);
+		window.scrollTo(0, 0);
+	};
 
 	const {
 		data: picData,
 		error: picError,
 		loading: picLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
-	console.log(picData)
 
-	//위에서 받은 photoAlbumId를 통해 사진첩 단건 조회
+	const {
+		data: AlbumData,
+		error: AlbumError,
+		loading: AlbumLoading,
+	} = useCustomFetch(`https://api.seeatheater.site/photoAlbums/${AlbumId}`);
+
+	console.log('picData', picData);
+	console.log('AlbumData', AlbumData);
 
 	const mockData = [
 		{
@@ -94,27 +107,32 @@ function ProdDetail() {
 	return (
 		<>
 			<Mobile>
-				<Hamburger back={true} title={mockData[0].production} />
+				<Hamburger back={true} title={picData?.result.performerName} />
 
 				<Content>
-					<Carousel data={imageList} />
+					<Carousel CarouselData={AlbumData?.result.imageResultDTOs} />
 
 					<TextArea>
-						<h3 className="title">{mockData[0].theatre}</h3>
+						<h3 className="title">{AlbumData?.result.amateurShowName}</h3>
+
 						<p className="subInfo">{mockData[0].date}</p>
 						<p className="subInfo">{mockData[0].location}</p>
 						<Hr />
-						<p className="message">{mockData[0].message}</p>
+						<p className="message">{AlbumData?.result.content}</p>
 					</TextArea>
 				</Content>
 				<Divide />
 				<MorePic>
 					<p className="galleryTitle">
-						'{mockData[0].production}'의 사진첩 더보기
+						'{picData?.result.performerName}'의 사진첩 더보기
 					</p>
 					<ImgList>
 						{picData?.result.singlePhotoAlbumDTOs.map((data) => (
-							<ImgCard>
+							<ImgCard
+								onClick={() => {
+									navigate(`/production/${prodId}/${data.photoAlbumId}`);
+								}}
+							>
 								<img src={data.imageUrl} />
 								<p>{data.amateurShowName}</p>
 							</ImgCard>
@@ -127,38 +145,42 @@ function ProdDetail() {
 				<SideBar />
 				<Container>
 					<Production>
-						<ChevronLeft />
-						<h3 className="productionName">홍익극연구회</h3>
+						<ChevronLeft onClick={goBack}/>
+						<h3 className="productionName">{picData?.result.performerName}</h3>
 					</Production>
 					<Intro>
 						<div className="photoArea">
-							<Carousel data={imageList} />
+							<Carousel CarouselData={AlbumData?.result.imageResultDTOs} />
 						</div>
 
 						<TextArea>
 							<div className="titleBar">
 								<div className="titleArea">
-									<h3 className="title">{mockData[0].theatre}</h3>
+									<h3 className="title">{AlbumData?.result.amateurShowName}</h3>
 									<ChevronRight />
 								</div>
 								<ThreeDots />
 							</div>
-
+							{/* 기간, 극장에 대한 데이터 따로 조회해야 함 */}
 							<p className="subInfo">{mockData[0].date}</p>
 							<p className="subInfo">{mockData[0].location}</p>
 							<Hr />
-							<p className="message">{mockData[0].message}</p>
+							<p className="message">{AlbumData?.result.content}</p>
 						</TextArea>
 					</Intro>
 
 					<Hr />
 					<MorePic>
 						<p className="galleryTitle">
-							'{mockData[0].production}'의 사진첩 더보기
+							'{picData?.result.performerName}'의 사진첩 더보기
 						</p>
 						<ImgList>
 							{picData?.result.singlePhotoAlbumDTOs.map((data) => (
-								<ImgCard>
+								<ImgCard
+									onClick={() => {
+										navigate(`/production/${prodId}/${data.photoAlbumId}`);
+									}}
+								>
 									<img src={data.imageUrl} />
 									<div className="textArea">
 										<p className="title">{data.amateurShowName}</p>

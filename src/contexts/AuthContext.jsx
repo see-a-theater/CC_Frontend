@@ -3,7 +3,9 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-	const [accessToken, setAccessToken] = useState(null);
+	const [accessToken, setAccessToken] = useState(
+		import.meta.env.VITE_DEV_ACCESS_TOKEN || null,
+	);
 
 	const login = (token) => {
 		setAccessToken(token);

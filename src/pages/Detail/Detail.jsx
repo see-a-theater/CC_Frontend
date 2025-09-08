@@ -3,6 +3,8 @@ import Info from './Info';
 import { useParams } from 'react-router-dom';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
+import EyeRollingSVG from '@/components/EyeRollingSVG.jsx';
+
 function Detail() {
 	const { playId } = useParams();
 
@@ -17,7 +19,7 @@ function Detail() {
 	console.log('SummData:', playData);
 
 	if (loading || !playData?.result) {
-		return <div>로딩 중...</div>;
+		return <EyeRollingSVG/>;
 	}
 
 	return (

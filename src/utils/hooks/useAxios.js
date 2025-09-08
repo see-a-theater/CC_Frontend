@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '@/utils/apis/axiosInstance';
 import { useAuth } from '@/contexts/AuthContext';
 
-const REFRESH_TOKEN_URL = `${import.meta.env.VITE_APP_API_URL}//auth/refresh`;
+const REFRESH_TOKEN_URL = `${import.meta.env.VITE_APP_API_URL}/auth/refresh`;
 
 const useAxios = () => {
 	const { accessToken, login, logout } = useAuth();
@@ -20,6 +20,10 @@ const useAxios = () => {
 	);
 
 	const responseInterceptor = useCallback(
+		(response) => {
+			return response;
+		},
+
 		async (error) => {
 			const originalRequest = error.config;
 
@@ -59,7 +63,10 @@ const useAxios = () => {
 
 	useEffect(() => {
 		const req = axiosInstance.interceptors.request.use(requestInterceptor);
-		const res = axiosInstance.interceptors.response.use(responseInterceptor);
+		const res = axiosInstance.interceptors.response.use(
+			responseInterceptor.onFulfilled,
+			responseInterceptor.onRejected,
+		);
 
 		return () => {
 			axiosInstance.interceptors.request.eject(req);

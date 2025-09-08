@@ -26,6 +26,8 @@ import MyPageRoutes from './routes/MyPageRoutes.jsx';
 import AdminRoutes from './routes/AdminRoutes.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
+import TestUploadPic from './pages/TEST/TestUploadPic.jsx'
+
 function App() {
 	return (
 		<AuthProvider>
@@ -52,7 +54,7 @@ function App() {
 				<Route path="/notification" element={<Notification />} />
 
 				<Route path="/production/:prodId" element={<Production />} />
-				<Route path="/production/:prodId/detail" element={<ProdDetail />} />
+				<Route path="/production/:prodId/:AlbumId" element={<ProdDetail />} />
 				<Route path="/production/upload_photo" element={<UploadPic />} />
 
 				<Route path="/mypage/*" element={<MyPageRoutes />} />
