@@ -4,15 +4,24 @@ import LogoWeb from '@/assets/icons/login/LogoWeb.svg?react';
 import LogoMobile from '@/assets/icons/login/LogoMobile.svg?react';
 import chevron from '@/assets/icons/chevronLeftPink.svg?react';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Login() {
 	const isMobile = useIsMobile();
-	const naviagate = useNavigate();
+	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		const role = searchParams.get('role');
+		if (role) {
+			sessionStorage.setItem('selectedRole', role);
+		}
+	}, [searchParams]);
 
 	return (
 		<Container>
-			<Chevron onClick={naviagate(-1)} />
+			<Chevron onClick={() => navigate(-1)} />
 			{isMobile ? <LogoMobile /> : <LogoWeb />}
 			<KakaoLoginButton />
 		</Container>

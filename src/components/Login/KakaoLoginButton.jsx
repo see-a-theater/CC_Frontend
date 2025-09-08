@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import KaKaoLogo from '@/assets/icons/KakaoRound.svg?react';
 
 function KakaoLoginButton() {
-	const api_key = import.meta.env.VITE_KAKAO_REST_API_KEY;
-	const redirect_uri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-	const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+	const client_id = import.meta.env.VITE_KAKAO_CLIENT_ID;
+	// const redirect_uri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+	const redirect_uri = 'http://localhost:5173/auth/kakao/callback';
+	// const redirect_uri = 'https://seeatheater.site/auth/kakao/callback';
+	const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
 
 	const handleKakaoLogin = () => {
 		window.location.href = KAKAO_AUTH_URL;

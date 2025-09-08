@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '@/utils/apis/axiosInstance';
 import { useAuth } from '@/contexts/AuthContext';
 
-const REFRESH_TOKEN_URL = `${import.meta.env.VITE_APP_API_URL}//auth/refresh`;
+const REFRESH_TOKEN_URL = `${import.meta.env.VITE_APP_API_URL}/auth/refresh`;
 
 const useAxios = () => {
 	const { accessToken, login, logout } = useAuth();

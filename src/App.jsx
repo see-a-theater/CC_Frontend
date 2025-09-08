@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 // 아래는 각 페이지를 담당할 컴포넌트들
 import Onboarding from './pages/login/Onboarding.jsx';
 import Login from './pages/login/Login.jsx';
+import KakaoCallback from './pages/login/KakaoCallback.jsx';
 import Logout from './pages/logout/Logout';
 import Withdrawal from './pages/withdrawal/Withdrawal';
 
@@ -33,6 +34,7 @@ function App() {
 				<Route path="/" element={<Onboarding />} />
 
 				<Route path="/login" element={<Login />} />
+				<Route path="/auth/kakao/callback" element={<KakaoCallback />} />
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/withdrawal" element={<Withdrawal />} />
 
