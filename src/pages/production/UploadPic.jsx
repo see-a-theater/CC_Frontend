@@ -1,11 +1,14 @@
 //yarn add react-select
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
-import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import styled from 'styled-components';
 import Select from 'react-select';
 
-import ImageUploadBox from '@/components/ImageUploadBox';
+import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
+import useCustomFetch from '@/utils/hooks/useAxios';
+
+import ImageUploadBox from '@/components/ImageUploadBox2';
 import TopBar from '@/components/TopBar';
 import Modal from '@/components/Production/Modal';
 import CalendarPeriod from '@/components/CalendarPeriod';
@@ -24,9 +27,9 @@ function UploadPic() {
 	const [showModal, setShowModal] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(false);
 	const [customOptions, setCustomOptions] = useState([]);
-	const [image, setImage] = useState(null);
-	const [imageName, setImageName] = useState(null);
 	const [inputValue, setInputValue] = useState('');
+	const [textContent, setTextContent] = useState('');
+	const isFormValid = Boolean(selected?.title && selected?.date && file);
 
 	const baseOptions = data.map((item) => ({
 		value: `${item.title}-${item.date}`,
@@ -48,6 +51,7 @@ function UploadPic() {
 			label: <Title>직접 입력</Title>,
 		},
 	];
+
 	const filteredOptions = baseOptions.filter(
 		(option) =>
 			option.title.includes(inputValue) || option.date.includes(inputValue),
@@ -65,9 +69,10 @@ function UploadPic() {
 	const handleModalSubmit = (title, range) => {
 		const [start, end] = range;
 		const formattedRange = `${start.toLocaleDateString()} ~ ${end.toLocaleDateString()}`;
-
 		const newOption = {
-			value: `${title}-${formattedRange}`,
+			value: Date.now(),
+			title,
+			date: formattedRange,
 			label: (
 				<LabelWrapper>
 					<Title>{title}</Title>
@@ -75,7 +80,6 @@ function UploadPic() {
 				</LabelWrapper>
 			),
 		};
-
 		setCustomOptions((prev) => [...prev, newOption]);
 		setSelected(newOption);
 		setShowModal(false);
@@ -104,38 +108,57 @@ function UploadPic() {
 		setShowCalendar(false);
 		setInputValue('');
 	};
-
-	const ReadImage = (e) => {
-		const file = e.target.files[0];
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			setImage(reader.result);
-		};
-		if (file) {
-			reader.readAsDataURL(file);
-			setImageName(file.name);
-		}
+	const handleFileChange = (selectedFile) => {
+		setFile(selectedFile);
 	};
 
-	useEffect(() => {
-		async function fetchData() {
-			try {
-				// 예: jpg 파일을 photoAlbum 경로에 업로드할 Presigned URL 요청
-				const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
-					'jpg',
-					'photoAlbum',
-				);
-
-				console.log('📌 업로드 URL:', uploadUrl);
-				console.log('📌 Public URL:', publicUrl);
-				console.log('📌 Key Name:', keyName);
-			} catch (err) {
-				console.error('❌ 에러:', err.message);
-			}
+	const { accessToken } = useAuth();
+	const handleUpload = async () => {
+		if (!isFormValid) {
+			alert('모든 필수 정보를 입력해 주세요.');
+			return;
 		}
 
-		fetchData();
-	}, []);
+		try {
+			const extension = file.name.split('.').pop().toLowerCase();
+
+			const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
+				extension,
+				'photoAlbum',
+			);
+
+			console.log('✅ S3 응답:', uploadUrl); // 디버깅용
+			console.log('✅ keyName:', keyName); // 디버깅용
+			console.log('✅ publicUrl:', publicUrl); // 디버깅용
+
+			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
+
+			await uploadImageToS3(file, extension, url);
+
+			const postBody = {
+				//추후 ID 수정
+				amateurShowId: 4,
+				content: textContent,
+				imageRequestDTOs: [{ keyName, imageUrl: publicUrl }],
+			};
+
+			const token = localStorage.getItem('accessToken');
+			const res = await fetch('https://api.seeatheater.site/photoAlbums', {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(postBody),
+			});
+
+			if (!res.ok) throw new Error(`서버 응답 오류: ${res.status}`);
+			alert('등록 완료!');
+		} catch (err) {
+			console.error(err);
+			alert('업로드 실패: ' + err.message);
+		}
+	};
 
 	return (
 		<>
@@ -153,11 +176,17 @@ function UploadPic() {
 						onMenuOpen={() => setMenuOpen(true)}
 						onMenuClose={() => setMenuOpen(false)}
 					/>
-					<ImageUploadBox size="362px" aspect-ratio="1" onChange={ReadImage} />
+					<ImageUploadBox
+						size="362px"
+						aspect-ratio="1"
+						onFileSelect={handleFileChange}
+					/>
 					<textarea
 						className="add"
 						placeholder="공연에서 있었던 이야기를 작성해 주세요"
 						rows="10"
+						value={textContent}
+						onChange={(e) => setTextContent(e.target.value)}
 					/>
 				</Content>
 				{showModal && (
@@ -166,7 +195,6 @@ function UploadPic() {
 						onSubmit={handleModalSubmit}
 					/>
 				)}
-				{/* {dateRange && console.log('선택된 날짜:', dateRange)} */}
 			</Mobile>
 
 			<Web>
@@ -225,16 +253,25 @@ function UploadPic() {
 									)}
 								</SearchWrapper>
 							)}
-							<UploadBtn>등록</UploadBtn>
+							<UploadBtn onClick={handleUpload} disabled={!isFormValid}>
+								등록
+							</UploadBtn>
 						</UpperArea>
 
-						<ImageUploadBox size="362px" aspect-ratio="1" />
+						<ImageUploadBox
+							size="362px"
+							aspect-ratio="1"
+							onFileSelect={handleFileChange}
+						/>
 						<textarea
 							className="add"
 							placeholder="공연에서 있었던 이야기를 작성해 주세요"
 							rows="10"
+							value={textContent}
+							onChange={(e) => setTextContent(e.target.value)}
 						/>
 					</Content>
+
 					{showCalendar && (
 						<CalendarWrapper>
 							<CalendarPeriod onChange={handleCalendarSubmit} />
@@ -386,11 +423,11 @@ const UploadBtn = styled.button`
 	justify-content: center;
 	align-items: center;
 	border-radius: 3px;
-	background: ${({ theme }) => theme.colors.gray200};
-
+	background-color: ${({ disabled, theme }) =>
+		disabled ? theme.colors.gray300 : theme.colors.pink500};
+	color: ${({ theme }) => theme.colors.grayWhite};
 	font-size: ${({ theme }) => theme.font.fontSize.body14};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
-	color: ${({ theme }) => theme.colors.gray400};
 `;
 
 const SearchWrapper = styled.div`

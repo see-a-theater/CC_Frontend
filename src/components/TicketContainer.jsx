@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 function TicketContainer({ header, details, isPerformer }) {

@@ -10,7 +10,7 @@ function FullScreenMenu({ onClose }) {
 	const menuItems = [
 		{
 			label: '홈',
-			path: '/',
+			path: '/home',
 		},
 		{
 			label: '소극장 공연',

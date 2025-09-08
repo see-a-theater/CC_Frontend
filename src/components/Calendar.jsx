@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import styled from 'styled-components';
 import 'react-calendar/dist/Calendar.css';
 import { useEffect } from 'react';
-function MyCalendar({ date, setDate }) {
+function MyCalendar({ setDate }) {
 	const [value, onChange] = useState(new Date());
 
 	useEffect(() => {

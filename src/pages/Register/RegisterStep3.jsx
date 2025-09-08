@@ -1,7 +1,6 @@
-import ImageUploadBox from '../../components/ImageUploadBox.jsx';
+import ImageUploadBox from '@/components/ImageUploadBox.jsx';
 import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
-import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 function RegisterStep3() {

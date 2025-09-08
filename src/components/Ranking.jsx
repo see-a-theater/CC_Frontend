@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
-import Poster from '../assets/images/test-poster1.png';
+import Poster from '@/assets/images/test-poster1.png';
 
 function Ranking({ data }) {
 	const listRef = useRef(null);

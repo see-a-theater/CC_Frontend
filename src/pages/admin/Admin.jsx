@@ -8,7 +8,6 @@ import ChevronDown from '@/assets/icons/ChevronDown.svg?react';
 import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
-	const role = localStorage.getItem('role');
 
 	const [selectedMenu, setSelectedMenu] = useState('dashboard');
 	const [openSubMenu, setOpenSubMenu] = useState(false);

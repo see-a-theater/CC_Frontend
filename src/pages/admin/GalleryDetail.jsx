@@ -1,11 +1,35 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 import Image from '@/assets/mock/images/image1.png';
 
+import useCustomFetch from '@/utils/hooks/useAxios';
+
 function GalleryDetail() {
+	const { galleryId } = useParams();
+	console.log('galleryId:', galleryId);
+
+	const {
+		data: picData,
+		error,
+		loading,
+	} = useCustomFetch(`/photoAlbums/${galleryId}`);
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('picData:', picData);
+
+	const {
+		data: AdminPicData,
+		error: AdError,
+		loading: AdLoading,
+	} = useCustomFetch(`/admin/photoAlbum/${galleryId}`);
+	console.log('AdError:', AdError);
+	console.log('AdLoading:', AdLoading);
+	console.log('AdminPicData:', AdminPicData);
+
 	const [searchTerm, setSearchTerm] = useState('');
 	return (
 		<Container>
@@ -27,14 +51,15 @@ function GalleryDetail() {
 						<Button>사진첩 내리기</Button>
 					</div>
 
-					<p className="uploader">게시글 작성자: Seethe</p>
+					<p className="uploader">
+						게시글 작성자: {AdminPicData?.result.uploaderName}
+					</p>
 					<div className="gallery-content">
-						<img src={Image} alt="갤러리 이미지" />
-						<p>
-							홍익극연구회 20회 공연 '실종'을 무사히 마쳤습니다~! 3일동안 수고한
-							우리 배우분들과 스텝분들에게 감사인사를 🙏 어쩌구 저쩌구 자축~~~~~
-							700px 넘어가면 단락 넘어가도록 해주세요
-						</p>
+						<img
+							src={picData?.result.imageResultDTOs[0].imageUrl}
+							alt="갤러리 이미지"
+						/>
+						<p>{AdminPicData?.result.content}</p>
 					</div>
 				</GallData>
 			</Content>
