@@ -24,7 +24,7 @@ import MyPageManagement from '@/pages/admin/mypage/MypageManagement.jsx';
 function AdminRoutes() {
 	return (
 		<Routes>
-			<Route path="admin" element={<Admin />}>
+			<Route path="/" element={<Admin />}>
 				<Route path="dashboard" element={<Dashboard />} />
 
 				<Route path="users" element={<Users />} />
