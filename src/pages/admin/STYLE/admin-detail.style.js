@@ -14,7 +14,7 @@ export const TablePageWrapper = styled.div`
 		td,
 		th {
 			color: #424242;
-			font-family: Pretendard;
+
 			font-size: 16px;
 			font-style: normal;
 			font-weight: 700;
@@ -39,7 +39,7 @@ export const TablePageWrapper = styled.div`
 		background: var(--color-pink-100, #fff7f5);
 		color: var(--color-pink-600, #f67676);
 		text-align: center;
-		font-family: Pretendard;
+
 		font-size: 16px;
 		font-style: normal;
 		font-weight: 800;
