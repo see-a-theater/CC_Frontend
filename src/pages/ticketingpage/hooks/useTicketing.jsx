@@ -1,7 +1,7 @@
-// ticketingpage/hooks/useTicketing.jsx
+
 import { useState, useEffect } from 'react';
-import useResponsive from './useResponsive';
-import { ticketingAPI } from '../api/ticketApi.js';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
+import { ticketingAPI } from '@/pages/ticketingpage/api/ticketApi.js';
 
 const useTicketing = (amateurShowId) => {
   // 기본 상태
@@ -32,6 +32,7 @@ const useTicketing = (amateurShowId) => {
   const [studentId, setStudentId] = useState('');
   const [depositorName, setDepositorName] = useState('');
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [reservationData, setReservationData] = useState(null);  // 예매 완료 상태 (카카오페이 결제 후)
 
   // 공연 간략 정보 조회
   const fetchShowInfo = async () => {
@@ -40,13 +41,12 @@ const useTicketing = (amateurShowId) => {
     setLoading(true);
     try {
       const response = await ticketingAPI.getShowSimple(amateurShowId);
-      // API 응답이 { result: ... } 형태이므로 result 추출
       const showData = response.result || response;
       
       setEventInfo({
         title: showData.name || '',
-        venue: showData.place || '',
-        period: '', // API에서 제공하지 않으므로 추후 다른 API에서 가져와야 함
+        venue: showData.detailAddress  || '',
+        period: '', // 
         posterUrl: showData.posterImageUrl || ''
       });
     } catch (err) {
@@ -93,7 +93,6 @@ const useTicketing = (amateurShowId) => {
     setLoading(true);
     try {
       const response = await ticketingAPI.getTicketTypes(amateurShowId);
-      // API 응답이 { result: [...] } 형태이므로 result 추출
       const tickets = response.result || response;
       
       // 배열인지 확인
@@ -237,32 +236,73 @@ const useTicketing = (amateurShowId) => {
 
     setLoading(true);
     try {
+      // 1단계: 먼저 티켓을 예매하여 memberTicketId를 받아옴
       const requestData = {
         quantity: people
       };
 
-      const response = await ticketingAPI.reserveTicket(
+      const reserveResponse = await ticketingAPI.reserveTicket(
         amateurShowId,
         selectedRound.roundId,
         selectedTicket.amateurTicketId,
         requestData
       );
 
-      // 예매 완료 후 완료 페이지로 이동
-      setStep(5);
-      return response;
+      // API 응답에서 memberTicketId 추출
+      const ticketData = reserveResponse.result || reserveResponse;
+      const memberTicketId = ticketData.memberTicketId;
+
+      if (!memberTicketId) {
+        throw new Error('티켓 예매 중 오류가 발생했습니다.');
+      }
+
+      // 2단계: 카카오페이 결제 준비
+      const paymentResponse = await ticketingAPI.prepareKakaoPayment(memberTicketId);
+      const paymentData = paymentResponse.result || paymentResponse;
+
+      // 결제 데이터 저장 (결제 완료 후 사용)
+      setReservationData({
+        ...ticketData,
+        memberTicketId
+      });
+
+      // 3단계: 카카오페이 결제 페이지로 리디렉션
+      if (paymentData.next_redirect_pc_url || paymentData.next_redirect_mobile_url) {
+        // PC인지 모바일인지에 따라 적절한 URL 선택
+        const redirectUrl = isPC ? 
+          paymentData.next_redirect_pc_url : 
+          paymentData.next_redirect_mobile_url;
+        
+        // 카카오페이 결제 페이지로 이동
+        window.location.href = redirectUrl;
+      } else {
+        throw new Error('결제 페이지 URL을 받아올 수 없습니다.');
+      }
+
     } catch (err) {
       setError('예매 처리 중 오류가 발생했습니다.');
       console.error('Error reserving ticket:', err);
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
+    // loading은 결제 완료 후 approve 콜백에서 false로 설정됨
+  };
+
+  // 결제 승인 완료 후 호출되는 함수 (결제 성공 시)
+  const handlePaymentSuccess = () => {
+    setLoading(false);
+    setStep(5); // 완료 페이지로 이동
+  };
+
+  // 결제 실패 시 호출되는 함수
+  const handlePaymentFailure = (errorMessage = '결제가 취소되었거나 실패했습니다.') => {
+    setLoading(false);
+    setError(errorMessage);
   };
 
   // 예약 정보 확인 화면으로 이동
   const viewReservation = () => {
-    window.alert('예약 정보 확인 화면으로 이동합니다.');
+    window.alert('예약 정보 확인 화면으로 이동합니다.');  // 실제로는 예약 내역 페이지로 라우팅해야 함 navigate('');
   };
 
   // 결제 정보 계산
@@ -297,6 +337,21 @@ const useTicketing = (amateurShowId) => {
     }
   }, [amateurShowId]);
 
+  // URL 파라미터에서 결제 결과 확인 (페이지 로드 시)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pgToken = urlParams.get('pg_token');
+    const partnerOrderId = urlParams.get('partner_order_id');
+    
+    if (pgToken && partnerOrderId) {
+      // 결제 성공으로 돌아온 경우
+      handlePaymentSuccess();
+      
+      // URL에서 파라미터 제거 (브라우저 히스토리 정리)
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   return {
     // 상태
     dateTimeOptions,
@@ -317,6 +372,7 @@ const useTicketing = (amateurShowId) => {
     error,
     selectedRound,
     selectedTicket,
+    reservationData,
     
     // 액션
     setDateTime: handleDateTimeChange,
@@ -332,6 +388,8 @@ const useTicketing = (amateurShowId) => {
     setDepositorName,
     setTermsAgreed,
     setSelectedTicket,
+    handlePaymentSuccess,
+    handlePaymentFailure,
     
     // 유틸리티
     calculatePayment,

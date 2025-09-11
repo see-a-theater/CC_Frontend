@@ -54,7 +54,17 @@ export const ticketingAPI = {
         body: JSON.stringify(requestData)
       }
     );
-  }
+  },
+
+  // 카카오페이 결제 준비
+  prepareKakaoPayment: async (ticketId) => {
+    return await apiRequest(
+      `/kakaoPay/ready?ticketId=${ticketId}`,
+      {
+        method: 'POST'
+      }
+    );
+  }  
 };
 
 export default ticketingAPI;

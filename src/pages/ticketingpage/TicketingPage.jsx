@@ -1,15 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppContainer, MainContent, ScrollableContent } from './styles/commonStyles';
-import Header from './components/Header';
-import HeaderPC from './components/HeaderPC';
-import Step1 from './pages/Step1';
-import Step2 from './pages/Step2';
-import Step3 from './pages/Step3';
-import LoadingSpinner from './components/LoadingSpinner';
-import ErrorMessage from './components/ErrorMessage';
-import useTicketing from './hooks/useTicketing';
-import useResponsive from './hooks/useResponsive';
+import { AppContainer, MainContent, ScrollableContent } from '@/pages/ticketingpage/styles/commonStyles';
+import Header from '@/pages/ticketingpage/components/Header';
+import HeaderPC from '@/pages/ticketingpage/components/HeaderPC';
+import Step1 from '@/pages/ticketingpage/pages/Step1';
+import Step2 from '@/pages/ticketingpage/pages/Step2';
+import Step3 from '@/pages/ticketingpage/pages/Step3';
+import LoadingSpinner from '@/pages/ticketingpage/components/LoadingSpinner';
+import ErrorMessage from '@/pages/ticketingpage/components/ErrorMessage';
+import useTicketing from '@/pages/ticketingpage/hooks/useTicketing';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const TicketingPage = ({ amateurShowId }) => {
   const ticketing = useTicketing(amateurShowId);

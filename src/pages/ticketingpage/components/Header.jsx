@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Header as HeaderContainer, BackButton, PageTitle } from '../styles/commonStyles';
+import { Header as HeaderContainer, BackButton, PageTitle } from '@/pages/ticketingpage/styles/commonStyles';
 
 const Header = ({ onBack }) => {
   return (

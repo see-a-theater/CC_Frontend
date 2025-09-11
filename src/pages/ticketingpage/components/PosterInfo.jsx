@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { PosterContainer, Poster, EventTitle, EventVenue } from '../styles/commonStyles';
-import PosterImg from './icons/PosterImg.svg';
-import useResponsive from '../hooks/useResponsive';
+import { PosterContainer, Poster, EventTitle, EventVenue } from '@/pages/ticketingpage/styles/commonStyles';
+import PosterImg from '@/pages/ticketingpage/components/icons/PosterImg.svg';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const PosterInfo = ({ eventInfo }) => {
   const { title, venue, posterUrl } = eventInfo;

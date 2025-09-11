@@ -1,19 +1,20 @@
 
 import React from 'react';
-import PosterInfo from '../components/PosterInfo';
-import RadioGroup from '../components/RadioGroup';
-import ActionButton from '../components/ActionButton';
+import PosterInfo from '@/pages/ticketingpage/components/PosterInfo';
+import RadioGroup from '@/pages/ticketingpage/components/RadioGroup';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
+import LoadingSpinner from '@/pages/ticketingpage/components/LoadingSpinner';
 import { 
   FormSection2, SelectionSection, SectionTitle, 
   EventTitle, EventVenue, EventPeriod, EventInfo, 
-  EventLink, PcLayout, SummarySection, BackButton } from '../styles/commonStyles';
+  EventLink, PcLayout, SummarySection, BackButton } from '@/pages/ticketingpage/styles/commonStyles';
 import { SummaryRow } from '../styles/summaryStyles';
 import { 
   Divider, Label, AdditionalInputField,
   BankInfo, PaymentNotice, CheckboxContainer,
-  CheckboxInput, CheckboxLabel, Showmore } from '../styles/formStyles'; 
-import useResponsive from '../hooks/useResponsive';
-import ShowMore from '../components/icons/ShowMore.svg';
+  CheckboxInput, CheckboxLabel, Showmore } from '@/pages/ticketingpage/styles/formStyles'; 
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
+import ShowMore from '@/pages/ticketingpage/components/icons/ShowMore.svg';
 
 const Step2 = ({ 
   ticketing: { 
@@ -40,7 +41,9 @@ const Step2 = ({
     termsAgreed,
     setTermsAgreed,
     getCurrentStepContent,
-    reserveTicket
+    reserveTicket,
+    loading,
+    error
   } 
 }) => {
 
@@ -117,9 +120,9 @@ const Step2 = ({
   // 다음 버튼 클릭 핸들러
   const handleNextStep = async () => {
     if (currentContent === 'payment' || currentContent === 'options') {
-      // 마지막 단계에서는 실제 예매 진행
       try {
         await reserveTicket();
+        // reserveTicket 함수 내에서 카카오페이 페이지로 리디렉션됨
       } catch (error) {
         console.error('예매 실패:', error);
         // 에러 처리는 useTicketing에서 함
@@ -130,6 +133,24 @@ const Step2 = ({
   };
 
   const payment = calculatePayment();
+
+  if (loading && (currentContent === 'payment' || currentContent === 'options')) {
+    return <LoadingSpinner message="결제 페이지로 이동 중..." />;
+  }
+
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px', color: '#F67676' }}>
+        <p>{error}</p>
+        <ActionButton 
+          isActive={true} 
+          onClick={() => window.location.reload()}
+        >
+          다시 시도
+        </ActionButton>
+      </div>
+    );
+  }
 
   return (
     <>
