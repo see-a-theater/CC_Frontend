@@ -16,6 +16,7 @@ const useCustomFetch = (url, method = 'GET', body = null) => {
 		if (!customUrl) return;
 		setLoading(true);
 		setError(false);
+
 		try {
 			const response = await axiosClient({
 				method: customMethod,

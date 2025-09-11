@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import FullScreenMenu from './components/FullScreenMenu';
-import { AuthProvider } from './contexts/AuthContext';
 
 // 아래는 각 페이지를 담당할 컴포넌트들
 import Onboarding from './pages/login/Onboarding.jsx';
@@ -29,43 +28,41 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import TestUploadPic from './pages/TEST/TestUploadPic';
 function App() {
 	return (
-		<AuthProvider>
-			<Routes>
-				<Route path="/" element={<Onboarding />} />
+		<Routes>
+			<Route path="/" element={<Onboarding />} />
 
-				<Route path="/login" element={<Login />} />
-				<Route path="/auth/kakao/callback" element={<KakaoCallback />} />
-				<Route path="/logout" element={<Logout />} />
-				<Route path="/withdrawal" element={<Withdrawal />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/auth/kakao/callback" element={<KakaoCallback />} />
+			<Route path="/logout" element={<Logout />} />
+			<Route path="/withdrawal" element={<Withdrawal />} />
 
-				<Route path="/home" element={<Home />} />
-				<Route path="/menu" element={<FullScreenMenu />} />
+			<Route path="/home" element={<Home />} />
+			<Route path="/menu" element={<FullScreenMenu />} />
 
-				<Route path="/small-theater/*" element={<SmallTheaterRoutes />} />
+			<Route path="/small-theater/*" element={<SmallTheaterRoutes />} />
 
-				{/*<Route path="/ticketing" element={<TicketingPage />} />*/}
-				<Route path="/board" element={<Board />} />
-				<Route path="/gallery" element={<Gallery />} />
-				<Route path="/info" element={<Info />} />
+			{/*<Route path="/ticketing" element={<TicketingPage />} />*/}
+			<Route path="/board" element={<Board />} />
+			<Route path="/gallery" element={<Gallery />} />
+			<Route path="/info" element={<Info />} />
 
-				<Route path="/plays" element={<Playlist />} />
-				<Route path="/plays/detail/:playId" element={<Detail />} />
+			<Route path="/plays" element={<Playlist />} />
+			<Route path="/plays/detail/:playId" element={<Detail />} />
 
-				<Route path="/notification" element={<Notification />} />
+			<Route path="/notification" element={<Notification />} />
 
-				<Route path="/production/:prodId" element={<Production />} />
-				<Route path="/production/:prodId/detail" element={<ProdDetail />} />
-				<Route path="/production/upload_photo" element={<UploadPic />} />
+			<Route path="/production/:prodId" element={<Production />} />
+			<Route path="/production/:prodId/detail" element={<ProdDetail />} />
+			<Route path="/production/upload_photo" element={<UploadPic />} />
 
-				<Route path="/mypage/*" element={<MyPageRoutes />} />
+			<Route path="/mypage/*" element={<MyPageRoutes />} />
 
-				<Route path="/admin/*" element={<AdminRoutes />} />
+			<Route path="/admin/*" element={<AdminRoutes />} />
 
-				<Route path="*" element={<NotFoundPage />} />
+			<Route path="*" element={<NotFoundPage />} />
 
-				<Route path="test/upload-pic" element={<TestUploadPic />} />
-			</Routes>
-		</AuthProvider>
+			<Route path="test/upload-pic" element={<TestUploadPic />} />
+		</Routes>
 	);
 }
 export default App;

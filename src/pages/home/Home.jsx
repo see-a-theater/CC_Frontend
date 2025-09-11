@@ -54,10 +54,6 @@ const banners = [
 ];
 
 function Home() {
-	localStorage.setItem(
-		'accessToken',
-		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
-	);
 	const {
 		data: dataClosing,
 		loading: loadingClosing,

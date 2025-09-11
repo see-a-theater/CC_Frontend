@@ -45,10 +45,6 @@ function MyTickets() {
 		},
 	];
 
-	localStorage.setItem(
-		'accessToken',
-		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
-	);
 	const page = 0;
 	const size = 5;
 	const {

@@ -1,12 +1,11 @@
 //yarn add react-select
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 
-import { useAuth } from '@/contexts/AuthContext';
+import useAxios from '@/utils/hooks/useAxios';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
-import useAxios from '@/utils/hooks/useAxios';
 import useCustomFetch from '@/utils/hooks/useAxios';
 
 import ImageUploadBox from '@/components/ImageUploadBox2';
@@ -125,7 +124,6 @@ function UploadPic() {
 			const extension = file.name.split('.').pop().toLowerCase();
 
 			const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
-				axiosClient,
 				extension,
 				'photoAlbum',
 			);
@@ -135,7 +133,7 @@ function UploadPic() {
 			console.log('✅ publicUrl:', publicUrl); // 디버깅용
 
 			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
-			await uploadImageToS3(file, extension, url);
+			await uploadImageToS3(axiosClient, extension, url);
 
 			const postBody = {
 				//추후 ID 수정
