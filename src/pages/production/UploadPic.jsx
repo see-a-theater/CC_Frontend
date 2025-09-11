@@ -1,9 +1,9 @@
 //yarn add react-select
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import styled from 'styled-components';
 import Select from 'react-select';
 
-import { useAuth } from '@/contexts/AuthContext';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import useAxios from '@/utils/hooks/useAxios';
