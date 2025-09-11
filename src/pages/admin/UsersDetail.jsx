@@ -13,8 +13,7 @@ function UsersDetail() {
 		data: userData,
 		error: userError,
 		loading: userLoading,
-	} = useCustomFetch(`https://api.seeatheater.site/admin/member/${userId}`);
-	console.log(userData?.result);
+	} = useCustomFetch(`/admin/member/${userId}`);
 
 	const safeValue = (val) =>
 		val === null || val === undefined || val === '' ? ' ' : val;
@@ -132,7 +131,6 @@ function UsersDetail() {
 							type="text"
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							placeholder="검색어를 입력하세요"
 						/>
 						<Search width={15} />
 					</SearchInput>

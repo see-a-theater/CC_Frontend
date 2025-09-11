@@ -1,43 +1,144 @@
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 
 function PlaysDetail() {
 	const { playId } = useParams();
-	console.log(playId);
 
-	const play_data = {
-		title: '실종',
-		uploader: '홍길동',
-		uploaderId: 'HONGID',
-		date: '2025-01-09 / 14:50',
-		tag: '#극중극 #드라마',
-		overview: `1998년 가을, ‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.
-                    모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.
-                    모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.
-                    모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.
-                    모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.
-                    모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다.`,
-		account: '토스 0001-0001-0001-0001',
-		contact: '인스타그램 @hongdse_111',
-		situation: '확인 전',
-	};
-	const rows = [
-		{ label: '등록자명', value: play_data.uploader },
-		{ label: '아이디', value: play_data.uploaderId },
-		{ label: '날짜', value: play_data.date },
-		{ label: '해시태그', value: play_data.tag },
-		{ label: '줄거리', value: play_data.overview },
-		{ label: '계좌번호', value: play_data.account },
-		{ label: '연락처', value: play_data.contact },
-		{ label: '상태', value: play_data.situation },
-	];
+	const {
+		data: playDetailData,
+		error: playError,
+		loading: playLoading,
+	} = useCustomFetch(`/admin/amateurShow/${playId}`);
+	console.log(playDetailData);
+
+	const safeValue = (val) =>
+		val === null || val === undefined || val === '' ? ' ' : val;
 
 	const [isEditing, setIsEditing] = useState(false);
-	const [editedData, setEditedData] = useState(play_data);
+	const [editValues, setEditValues] = useState({
+		showName: '',
+		performerName: '',
+		showId: '',
+		createdAt: '',
+		hashTag: '',
+		summary: '',
+		account: '',
+		contact: '',
+		showStatus: '',
+	});
+
+	useEffect(() => {
+		if (playDetailData?.result) {
+			setEditValues({
+				showName: playDetailData.result.showName ?? '',
+				performerName: playDetailData.result.performerName ?? '',
+				showId: playDetailData.result.showId ?? '',
+				createdAt: playDetailData.result.createdAt ?? '',
+				hashTag: playDetailData.result.hashTag ?? '',
+				summary: playDetailData.result.summary ?? '',
+				account: playDetailData.result.account ?? '',
+				contact: playDetailData.result.contact ?? '',
+				showStatus: playDetailData.result.showStatus ?? '',
+			});
+		}
+	}, [playDetailData]);
+
+	const rows = [
+		{
+			key: 'showName',
+			label: '소극장 공연 이름',
+			value: safeValue(editValues.showName),
+		},
+		{
+			key: 'performerName',
+			label: '등록자명',
+			value: safeValue(editValues.performerName),
+		},
+		{ key: 'showId', label: '아이디', value: safeValue(editValues.showId) },
+		{ key: 'createdAt', label: '날짜', value: safeValue(editValues.createdAt) },
+		{ key: 'hashTag', label: '해시태그', value: safeValue(editValues.hashTag) },
+		{ key: 'summary', label: '줄거리', value: safeValue(editValues.summary) },
+		{ key: 'account', label: '계좌번호', value: safeValue(editValues.account) },
+		{ key: 'contact', label: '연락처', value: safeValue(editValues.contact) },
+		{
+			key: 'showStatus',
+			label: '상태',
+			value: safeValue(editValues.showStatus),
+		},
+	];
+
+	const labelMap = {
+		showName: '소극장 공연 이름',
+		performerName: '등록자명',
+		showId: '아이디',
+		createdAt: '날짜',
+		hashTag: '해시태그',
+		summary: '줄거리',
+		account: '계좌번호',
+		contact: '연락처',
+		showStatus: '상태',
+	};
+	const filterLabelMap = {
+		showName: '공연이름',
+		performerName: '등록자이름',
+		createdAt: '날짜',
+	};
+
+	const [searchTerm, setSearchTerm] = useState('');
+	const [visibleColumns, setVisibleColumns] = useState(
+		Object.keys(filterLabelMap),
+	);
+
+	const handleColumnToggle = (column) => {
+		setVisibleColumns((prev) =>
+			prev.includes(column)
+				? prev.filter((c) => c !== column)
+				: [...prev, column],
+		);
+	};
+	const filteredRows = useMemo(() => {
+		return rows.filter((row) => {
+			if (Object.keys(filterLabelMap).includes(row.key)) {
+				return (
+					visibleColumns.includes(row.key) &&
+					row.value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+				);
+			}
+			return true;
+		});
+	}, [searchTerm, visibleColumns, editValues]);
+
+	const handleInputChange = (key, value) => {
+		setEditValues((prev) => ({ ...prev, [key]: value }));
+	};
+
+	const handleSave = async () => {
+		try {
+			const response = await fetch(
+				`https://api.seeatheater.site/admin/amateurShow/${playId}`,
+				{
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(editValues),
+				},
+			);
+			if (!response.ok) {
+				throw new Error('수정 실패');
+			}
+			setIsEditing(false);
+		} catch (error) {
+			console.error(error);
+			alert('수정 중 오류가 발생했습니다.');
+		}
+	};
 
 	const navigate = useNavigate();
 	const goBack = () => {
@@ -49,56 +150,8 @@ function PlaysDetail() {
 		});
 	};
 
-	const labelMap = {
-		title: '소극장 공연 이름',
-		date: '날짜/시간',
-		uploader: '등록자명',
-	};
-
-	const [searchTerm, setSearchTerm] = useState('');
-	const [visibleColumns, setVisibleColumns] = useState([
-		'title',
-		'uploader',
-		'uploaderId',
-		'date',
-		'tag',
-		'overview',
-		'account',
-		'contact',
-		'situation',
-	]);
-
-	const handleColumnToggle = (column) => {
-		setVisibleColumns((prev) =>
-			prev.includes(column)
-				? prev.filter((c) => c !== column)
-				: [...prev, column],
-		);
-	};
-
-	{
-		/*const filteredRows = useMemo(() => {
-		return rows.filter(
-			(row) =>
-				visibleColumns.includes(getKeyByLabel(row.label)) &&
-				row.value.toLowerCase().includes(searchTerm.toLowerCase()),
-		);
-	}, [searchTerm, visibleColumns]); */
-	}
-
-	function getKeyByLabel(label) {
-		const map = {
-			등록자명: 'uploader',
-			아이디: 'uploaderId',
-			날짜: 'date',
-			해시태그: 'tag',
-			줄거리: 'overview',
-			계좌번호: 'account',
-			연락처: 'contact',
-			상태: 'situation',
-		};
-		return map[label];
-	}
+	if (playLoading) return <div>로딩 중...</div>;
+	if (playError) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
 	return (
 		<Container>
@@ -113,7 +166,7 @@ function PlaysDetail() {
 					<Search width={15} />
 				</SearchInput>
 				<div className="checkboxArea">
-					{Object.entries(labelMap).map(([key, label]) => (
+					{Object.entries(filterLabelMap).map(([key, label]) => (
 						<label key={key}>
 							<input
 								type="checkbox"
@@ -126,55 +179,46 @@ function PlaysDetail() {
 					<SearchBg />
 				</div>
 			</FilterArea>
+
 			<Content>
 				<Table>
 					<Title onClick={goBack}>
-						{'<'} {play_data.title}
+						{'<'} {editValues.showName}
 					</Title>
 					<tbody>
-						{rows.map((row, index) => {
-							const key = getKeyByLabel(row.label);
-							const value = editedData[key];
-
-							return (
-								<tr key={index}>
-									<th>{row.label}</th>
-									<td>
-										{isEditing ? (
-											key === 'overview' ? (
-												<TextArea
-													value={value}
-													onChange={(e) =>
-														setEditedData((prev) => ({
-															...prev,
-															[key]: e.target.value,
-														}))
-													}
-												/>
-											) : (
-												<Input
-													type="text"
-													value={value}
-													onChange={(e) =>
-														setEditedData((prev) => ({
-															...prev,
-															[key]: e.target.value,
-														}))
-													}
-												/>
-											)
+						{filteredRows.map((row, index) => (
+							<tr key={index}>
+								<th>{row.label}</th>
+								<td>
+									{isEditing ? (
+										row.key === 'summary' ? (
+											<textarea
+												value={editValues[row.key] ?? ''}
+												onChange={(e) =>
+													handleInputChange(row.key, e.target.value)
+												}
+											/>
 										) : (
-											<div>{value}</div>
-										)}
-									</td>
-								</tr>
-							);
-						})}
+											<input
+												type="text"
+												value={editValues[row.key] ?? ''}
+												onChange={(e) =>
+													handleInputChange(row.key, e.target.value)
+												}
+											/>
+										)
+									) : (
+										row.value
+									)}
+								</td>
+							</tr>
+						))}
 					</tbody>
 				</Table>
+
 				<div className="buttons">
 					{isEditing ? (
-						<PButton onClick={() => setIsEditing(false)}> 적용하기 </PButton>
+						<Button onClick={handleSave}>수정완료</Button>
 					) : (
 						<>
 							<Button onClick={() => setIsEditing(true)}>수정하기</Button>

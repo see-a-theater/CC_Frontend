@@ -8,6 +8,8 @@ import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import React, { useState, useMemo } from 'react';
 
 function Users() {
+	const [currentPage, setCurrentPage] = useState(0);
+	const itemsPerPage = 20;
 	const headerRow = {
 		memberId: '아이디',
 		name: '이름',
@@ -21,9 +23,7 @@ function Users() {
 		data: userData,
 		error: userError,
 		loading: userLoading,
-	} = useCustomFetch(`/admin/member/list?page=0&size=20`);
-
-	console.log('userData:', userData);
+	} = useCustomFetch(`/admin/member/list?page=${currentPage}&size=${itemsPerPage}`);
 
 	const apiRows = useMemo(() => {
 		if (!userData || !userData.result) return [];
@@ -48,8 +48,6 @@ function Users() {
 		'gender',
 		'manage',
 	]);
-	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 20;
 
 	const handleColumnToggle = (column) => {
 		setVisibleColumns((prev) =>
@@ -71,7 +69,7 @@ function Users() {
 	}, [searchTerm, visibleColumns, user_data]);
 
 	const paginatedData = useMemo(() => {
-		const start = (currentPage - 1) * itemsPerPage;
+		const start = currentPage * itemsPerPage;
 		return filteredData.slice(start, start + itemsPerPage);
 	}, [filteredData, currentPage]);
 

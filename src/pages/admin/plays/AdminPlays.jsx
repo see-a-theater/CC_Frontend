@@ -4,81 +4,52 @@ import FilterHeader from '@/components/Admin/FilterHeader';
 
 import { useState, useMemo } from 'react';
 
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+
 function AdminPlays() {
-	const play_data = [
-		{
-			title: '소극장 공연 이름',
-			date: '날짜/시간',
-			uploader: '등록자명',
-			situation: '상태',
-			manage: '관리',
-			id: 0,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '확인 전',
-			manage: '/admin/plays/',
-			id: 1,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '등록',
-			manage: '/admin/plays/',
-			id: 3,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '반려',
-			manage: '/admin/plays/',
-			id: 4,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '확인 전',
-			manage: '/admin/plays/',
-			id: 5,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '등록',
-			manage: '/admin/plays/',
-			id: 6,
-		},
-		{
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			uploader: '홍길동',
-			situation: '반려',
-			manage: '/admin/plays/',
-			id: 7,
-		},
-	];
+	const [currentPage, setCurrentPage] = useState(0);
+	const itemsPerPage = 20;
+	const headerRow = {
+		showName: '소극장 공연 이름',
+		createdAt: '날짜/시간',
+		performerName: '등록자명',
+		amateurShowStatus: '상태',
+		manage: '관리',
+	};
+
+	const {
+		data: playData,
+		error: playError,
+		loading: playLoading,
+	} = useCustomFetch(`/admin/amateurShow/showList?page=${currentPage}&size=${itemsPerPage}`);
+
+	const apiRows = useMemo(() => {
+		if (!playData || !playData.result) return [];
+		return playData?.result.map((item) => ({
+			showName: item.showName,
+			createdAt: item.createdAt,
+			performerName: item.performerName,
+			amateurShowStatus: item.amateurShowStatus,
+			manage: `/admin/plays/${item.showId}`,
+		}));
+	}, [playData]);
+
+	const play_data = [headerRow, ...apiRows];
+
 	const [searchTerm, setSearchTerm] = useState('');
 	const [visibleColumns, setVisibleColumns] = useState([
-		'title',
-		'date',
-		'uploader',
-		'situation',
+		'showName',
+		'createdAt',
+		'performerName',
+		'amateurShowStatus',
 		'manage',
 	]);
-	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 20;
 
-	const filterKeys = ['title', 'date', 'uploader'];
+	const filterKeys = ['showName', 'createdAt', 'performerName'];
 	const filterLabels = {
-		title: '공연 이름',
-		date: '날짜/시간',
-		uploader: '등록자명',
+		showName: '공연 이름',
+		createdAt: '날짜/시간',
+		performerName: '등록자명',
 	};
 
 	const filteredData = useMemo(() => {
@@ -93,7 +64,7 @@ function AdminPlays() {
 	}, [searchTerm, visibleColumns, play_data]);
 
 	const paginatedData = useMemo(() => {
-		const start = (currentPage - 1) * itemsPerPage;
+		const start = currentPage * itemsPerPage;
 		return filteredData.slice(start, start + itemsPerPage);
 	}, [filteredData, currentPage]);
 
@@ -114,7 +85,7 @@ function AdminPlays() {
 					/>
 
 					<UserTable
-						data={[play_data[0], ...paginatedData]}
+						data={[headerRow, ...paginatedData]}
 						currentPage={currentPage}
 						setCurrentPage={setCurrentPage}
 						totalPages={totalPages}
