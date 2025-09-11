@@ -8,12 +8,18 @@ function Onboarding() {
 	const isMobile = useIsMobile();
 	const navigate = useNavigate();
 
+	const handleLoginClick = (roleType) => {
+		navigate(`/login?role=${roleType}`);
+	};
+
 	return (
 		<Container>
 			{isMobile ? <LogoMobile /> : <LogoWeb />}
 			<div className="buttons">
-				<button onClick={() => navigate('/login')}>예매자로 로그인하기</button>
-				<button onClick={() => navigate('/login')}>
+				<button onClick={() => handleLoginClick('AUDIENCE')}>
+					예매자로 로그인하기
+				</button>
+				<button onClick={() => handleLoginClick('PERFORMER')}>
 					공연 등록자로 로그인하기
 				</button>
 			</div>

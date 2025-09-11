@@ -11,7 +11,9 @@ import CarouselWeb from '@/components/CarouselWeb';
 import CarouselMobile from '@/components/CarouselMobile';
 import Hamburger from '@/components/Hamburger';
 import Poster from '@/assets/images/test-poster2.png';
+
 import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
+
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
 const banners = [
 	{
