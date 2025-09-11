@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 
+import useAxios from '@/utils/hooks/useAxios';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
 import useCustomFetch from '@/utils/hooks/useAxios';
@@ -111,6 +112,7 @@ function UploadPic() {
 		setFile(selectedFile);
 	};
 
+	const axiosClient = useAxios();
 	const { fetchData } = useCustomFetch(null, 'POST', null);
 	const handleUpload = async () => {
 		if (!isFormValid) {
@@ -131,7 +133,7 @@ function UploadPic() {
 			console.log('✅ publicUrl:', publicUrl); // 디버깅용
 
 			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
-			await uploadImageToS3(file, extension, url);
+			await uploadImageToS3(axiosClient, extension, url);
 
 			const postBody = {
 				//추후 ID 수정
