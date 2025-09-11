@@ -6,6 +6,7 @@ function TicketContainer({ header, details, isPerformer }) {
 	const {
 		ticketId,
 		showTitle,
+		name,
 		posterImageUrl,
 		detailAddress,
 		performanceDateTime,
@@ -18,6 +19,22 @@ function TicketContainer({ header, details, isPerformer }) {
 
 	const isExpired = reservationStatus === '공연 종료';
 
+	const statusLabel = {
+		CANCELLED: '예매 취소',
+		RESERVED: '예매 완료',
+	};
+
+	const formatDateTime = (isoString) => {
+		const d = new Date(isoString);
+		const week = ['일', '월', '화', '수', '목', '금', '토'];
+
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+			d.getDate(),
+		).padStart(2, '0')} (${week[d.getDay()]}) ${String(d.getHours()).padStart(
+			2,
+			'0',
+		)}:${String(d.getMinutes()).padStart(2, '0')}`;
+	};
 	return (
 		<Wrapper isExpired={isExpired} onClick={() => navigate(`${ticketId}`)}>
 			<div className="only-web">
@@ -25,13 +42,13 @@ function TicketContainer({ header, details, isPerformer }) {
 			</div>
 			<div>
 				<Title>
-					{showTitle} {quantity} {!isPerformer && <>매</>}
+					{showTitle || name} {quantity} {isPerformer === false && <>매</>}
 				</Title>
 				<Table>
 					<tbody>
 						<tr>
 							<th>{header[0]}</th>
-							<td>{reserveDateTime ?? 'null'}</td>
+							<td>{reserveDateTime?.split('T')[0] ?? 'null'}</td>
 						</tr>
 						<tr>
 							<th>{header[1]}</th>
@@ -39,7 +56,11 @@ function TicketContainer({ header, details, isPerformer }) {
 						</tr>
 						<tr>
 							<th>{header[2]}</th>
-							<td>{performanceDateTime ?? 'null'}</td>
+							<td>
+								{performanceDateTime
+									? formatDateTime(performanceDateTime)
+									: 'null'}
+							</td>
 						</tr>
 						{header[4] && (
 							<tr className="only-web">
@@ -50,7 +71,7 @@ function TicketContainer({ header, details, isPerformer }) {
 
 						<tr>
 							<th>{header[3]}</th>
-							<StatusTD>{reservationStatus ?? 'null'}</StatusTD>
+							<StatusTD>{statusLabel[reservationStatus] ?? 'null'}</StatusTD>
 						</tr>
 					</tbody>
 				</Table>

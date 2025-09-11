@@ -8,10 +8,6 @@ export const RegisterWrapper = styled.div`
 
 	@media (min-width: 768px) {
 		/*반응형 관련 설정*/
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-columns: 7fr 2fr;
-		gap: 60px;
 	}
 
 	h1 {
@@ -46,7 +42,7 @@ export const RegisterWrapper = styled.div`
 				font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 				line-height: normal;
 				letter-spacing: -0.42px;
-				margin-bottom: 12px;
+				margin-bottom: 4px;
 				@media (min-width: 768px) {
 					font-size: ${({ theme }) => theme.font.fontSize.headline20};
 				}
@@ -79,7 +75,7 @@ export const RegisterWrapper = styled.div`
 				border-radius: 3px;
 				border: none;
 				background: ${({ theme }) => theme.colors.gray200};
-				margin-bottom: 8px;
+				margin-top: 8px;
 				color: ${({ theme }) => theme.colors.grayMain};
 				font-size: ${({ theme }) => theme.font.fontSize.body13};
 				font-style: normal;

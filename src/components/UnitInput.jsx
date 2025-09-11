@@ -27,7 +27,7 @@ const Input = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	margin-bottom: 8px;
+	margin-top: 8px;
 	img {
 		height: 24px;
 		margin-right: 8px;

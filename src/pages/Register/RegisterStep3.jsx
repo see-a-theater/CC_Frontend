@@ -73,8 +73,10 @@ function RegisterStep3() {
 						<ActorWrapper key={idx}>
 							<div>
 								<ImageUploadBox
-									size="89px"
-									webSize="160px"
+									width="100px"
+									height="100px"
+									webWidth="160px"
+									webHeight="160px"
 									round="true"
 									onUploadSuccess={(fileInfo) =>
 										handleActorImageUpload(idx, fileInfo)

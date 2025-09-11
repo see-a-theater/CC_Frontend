@@ -92,26 +92,36 @@ function RegisteredPerformances() {
 						))}
 					</>
 				)}
-				{selected === '예매 진행' && (
-					<>
-						아직 데이터 없어 확인 불가
-						{dataOngoingTicket?.content.map((detail) => (
+
+				{selected === '예매 진행' &&
+					(dataOngoingTicket?.content &&
+					dataOngoingTicket.content.length > 0 ? (
+						dataOngoingTicket?.content.map((detail) => (
 							<>
-								<TicketContainer details={detail} header={ticketHeaders} />
+								<TicketContainer
+									details={detail}
+									header={ticketHeaders}
+									isPerformer={true}
+								/>
 							</>
-						))}
-					</>
-				)}
-				{selected === '공연 종료' && (
-					<>
-						아직 데이터 없어 확인 불가
-						{dataEndedTicket?.content.map((detail) => (
+						))
+					) : (
+						<p>내역이 없습니다</p>
+					))}
+				{selected === '공연 종료' &&
+					(dataEndedTicket?.content && dataEndedTicket.content.length > 0 ? (
+						dataEndedTicket?.content.map((detail) => (
 							<>
-								<TicketContainer details={detail} header={ticketHeaders} />
+								<TicketContainer
+									details={detail}
+									header={ticketHeaders}
+									isPerformer={true}
+								/>
 							</>
-						))}
-					</>
-				)}
+						))
+					) : (
+						<p>내역이 없습니다</p>
+					))}
 			</Wrapper>
 		</MyTicketsWrapper>
 	);

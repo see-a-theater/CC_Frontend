@@ -16,7 +16,8 @@ function RegisterStep1() {
 
 	// 폼 데이터
 	const { formData, setFormData } = useOutletContext();
-
+	// 에러 상태
+	const [errors, setErrors] = useState({});
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 
@@ -60,7 +61,10 @@ function RegisterStep1() {
 		// fileInfo는 { keyName: "...", imageUrl: "..." } 형태라고 가정
 		setFormData((prev) => ({
 			...prev,
-			posterImageUrl: fileInfo?.publicUrl,
+			posterImageRequestDTO: {
+				keyName: fileInfo?.keyName,
+				imageUrl: fileInfo?.publicUrl,
+			},
 		}));
 		console.log('포스터 등록 확인', formData);
 		setFormDataChanged(true);
@@ -77,6 +81,7 @@ function RegisterStep1() {
 		});
 		setFormDataChanged(true);
 	};
+
 	const handleNextStep = () => {
 		localStorage.setItem('formData', JSON.stringify(formData));
 		nextStep();
@@ -100,6 +105,75 @@ function RegisterStep1() {
 		return () => clearInterval(interval);
 	}, [formDataChanged]);
 
+	// 제출 시 전체 검증
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newErrors = {};
+
+		// 기본 정보
+		if (!formData.name) newErrors.name = '공연 이름은 필수입니다.';
+		if (!formData.performerName)
+			newErrors.performerName = '등록 기관은 필수입니다.';
+		if (!formData.summary) newErrors.summary = '줄거리를 입력해주세요.';
+		if (!formData.hashtag) newErrors.hashtag = '해시태그를 입력해주세요.';
+		if (!formData.roadAddress) newErrors.roadAddress = '주소를 입력해주세요.';
+		if (!formData.detailAddress)
+			newErrors.detailAddress = '상세 주소를 입력해주세요.';
+
+		// 회차
+		formData.rounds?.forEach((r, idx) => {
+			if (
+				!formData.rounds ||
+				formData.rounds.length < roundCount ||
+				formData.rounds.some(
+					(r) =>
+						!r.totalTicket ||
+						!/^\d+$/.test(r.totalTicket) ||
+						!r.performanceDateTime,
+				)
+			) {
+				newErrors.rounds = '공연 일정 & 티켓 수를 모두 입력해주세요.';
+			}
+		});
+
+		// 러닝타임
+		if (!formData.runtime || !/^\d+$/.test(formData.runtime)) {
+			newErrors.runtime = '러닝타임은 숫자로 입력해주세요.';
+		}
+
+		// 일반 예매
+		const generalPrice = formData.tickets?.[0]?.price?.trim() || '';
+
+		if (!generalPrice || !/^\d+$/.test(generalPrice)) {
+			newErrors.generalPrice = '일반 예매 가격은 숫자로 입력해주세요.';
+		}
+
+		// 할인 항목 검증
+		formData.tickets?.slice(1).forEach((t, idx) => {
+			if (!t.discountName) {
+				newErrors[`discountName-${idx}`] = '할인명을 입력해주세요.';
+			}
+			if (!t.price || !/^\d+$/.test(t.price)) {
+				newErrors[`discountPrice-${idx}`] = '할인 가격은 숫자로 입력해주세요.';
+			}
+		});
+		// 계좌 정보
+		if (!formData.bankName) newErrors.bankName = '은행명을 입력해주세요.';
+		if (!formData.account || !/^\d+$/.test(formData.account)) {
+			newErrors.account = '계좌번호는 숫자만 입력 가능합니다.';
+		}
+		if (!formData.depositor) newErrors.depositor = '입금자명을 입력해주세요.';
+
+		// 연락처
+		if (!formData.contact) newErrors.contact = '연락처를 입력해주세요.';
+
+		setErrors(newErrors);
+
+		if (Object.keys(newErrors).length === 0) {
+			console.log(formData);
+			nextStep();
+		}
+	};
 	return (
 		<RegisterWrapper>
 			<form>
@@ -109,14 +183,17 @@ function RegisterStep1() {
 					<p style={{ marginBottom: '12px' }}>한장만 등록 가능합니다.</p>
 					<ImageUploadBox
 						onUploadSuccess={handlePosterUpload}
-						webHeight="320px"
+						width="157px"
+						height="220px"
 						webWidth="228px"
+						webHeight="320px"
 						value={formData.posterImageUrl}
 					/>
 					<p>{formData.posterImageUrl}</p>
 				</div>
 				<div>
 					<label>공연 이름</label>
+
 					<input
 						type="text"
 						name="name"
@@ -125,6 +202,7 @@ function RegisterStep1() {
 						onChange={handleInputChange}
 						className="input-text"
 					/>
+					{errors.name && <Err style={{ color: 'red' }}>{errors.name}</Err>}
 				</div>
 				<div>
 					<label>등록 기관 (api에 관련 변수명x) </label>
@@ -136,6 +214,9 @@ function RegisterStep1() {
 						value={formData.performerName}
 						onChange={handleInputChange}
 					/>
+					{errors.performerName && (
+						<Err style={{ color: 'red' }}>{errors.performerName}</Err>
+					)}
 				</div>
 				<div>
 					<label>줄거리</label>
@@ -146,6 +227,9 @@ function RegisterStep1() {
 						value={formData.summary}
 						onChange={handleInputChange}
 					/>
+					{errors.summary && (
+						<Err style={{ color: 'red' }}>{errors.summary}</Err>
+					)}
 				</div>
 				<div>
 					<label>해시태그</label>
@@ -157,6 +241,9 @@ function RegisterStep1() {
 						value={formData.hashtag}
 						onChange={handleInputChange}
 					/>
+					{errors.hashtag && (
+						<Err style={{ color: 'red' }}>{errors.hashtag}</Err>
+					)}
 				</div>
 				<div>
 					<label>공연장 주소</label>
@@ -168,6 +255,9 @@ function RegisterStep1() {
 						value={formData.roadAddress}
 						onChange={handleInputChange}
 					/>
+					{errors.roadAddress && (
+						<Err style={{ color: 'red' }}>{errors.roadAddress}</Err>
+					)}
 					<input
 						className="input-text"
 						type="text"
@@ -176,6 +266,9 @@ function RegisterStep1() {
 						value={formData.detailAddress}
 						onChange={handleInputChange}
 					/>
+					{errors.detailAddress && (
+						<Err style={{ color: 'red' }}>{errors.detailAddress}</Err>
+					)}
 				</div>
 				<div>
 					<label>공연 회차</label>
@@ -183,7 +276,6 @@ function RegisterStep1() {
 				</div>
 				<div>
 					<label>공연 일정 & 티켓 수</label>
-
 					{Array.from({ length: roundCount }, (_, index) => (
 						<div key={index}>
 							<p>{index + 1}회차</p>
@@ -197,7 +289,12 @@ function RegisterStep1() {
 								}
 								unit="장"
 							/>
-							<div>
+							{errors[`totalTicket-${index}`] && (
+								<Err style={{ color: 'red' }}>
+									{errors[`totalTicket-${index}`]}
+								</Err>
+							)}
+							<div style={{ marginTop: '8px' }}>
 								<DateInput
 									type="text"
 									name={`round-${index}`}
@@ -207,9 +304,15 @@ function RegisterStep1() {
 										handleRoundChange(index, 'performanceDateTime', value)
 									}
 								/>
+								{errors[`performanceDateTime-${index}`] && (
+									<Err style={{ color: 'red' }}>
+										{errors[`performanceDateTime-${index}`]}
+									</Err>
+								)}
 							</div>
 						</div>
-					))}
+					))}{' '}
+					{errors.rounds && <Err style={{ color: 'red' }}>{errors.rounds}</Err>}
 				</div>
 				<div>
 					<label>러닝타임</label>
@@ -221,18 +324,23 @@ function RegisterStep1() {
 						placeholder="공연이 진행되는 시간을 입력해주세요 (분 단위)"
 						unit="분"
 					/>
+					{errors.runtime && (
+						<Err style={{ color: 'red' }}>{errors.runtime}</Err>
+					)}
 				</div>
 				<div>
 					<label>일반 예매</label>
-
 					<UnitInput
 						type="text"
-						name="price"
-						value={formData.tickets.price}
+						name="tickets.0.price" // ✅ 고정
+						value={formData.tickets?.[0]?.price || ''}
 						onChange={handleInputChange}
 						placeholder="가격을 입력해주세요"
 						unit="원"
 					/>
+					{errors.generalPrice && (
+						<Err style={{ color: 'red' }}>{errors.generalPrice}</Err>
+					)}
 				</div>
 				<div>
 					<label>할인</label>
@@ -240,38 +348,51 @@ function RegisterStep1() {
 						<p>할인명</p>
 						<p>가격</p>
 					</InputRow>
+					{formData.tickets?.slice(1).map((ticket, idx) => {
+						const realIndex = idx + 1; // 실제 tickets 배열 인덱스
+						return (
+							<InputRow key={realIndex}>
+								<input
+									className="input-text"
+									type="text"
+									placeholder="할인명을 입력해주세요"
+									name={`tickets.${realIndex}.discountName`}
+									value={ticket.discountName}
+									onChange={handleInputChange}
+								/>
+								<UnitInput
+									placeholder="가격을 입력해주세요"
+									unit="원"
+									name={`tickets.${realIndex}.price`}
+									value={ticket.price}
+									onChange={handleInputChange}
+								/>
+								<button
+									type="button"
+									onClick={() => handleRemoveTicket(realIndex)}
+								>
+									X
+								</button>
+							</InputRow>
+						);
+					})}
 
-					{formData.tickets.map((ticket, idx) => (
-						<InputRow key={idx}>
-							<input
-								className="input-text"
-								type="text"
-								placeholder="할인명을 입력해주세요"
-								name={`tickets.${idx}.discountName`} // key 경로
-								value={ticket.discountName}
-								onChange={handleInputChange}
-							/>
-							<UnitInput
-								placeholder="가격을 입력해주세요"
-								unit="원"
-								name={`tickets.${idx}.price`}
-								value={ticket.price}
-								onChange={handleInputChange}
-							/>
-							<button type="button" onClick={() => handleRemoveTicket(idx)}>
-								X
-							</button>
-						</InputRow>
-					))}
-
-					<button type="button" className="btn-add" onClick={handleAddTicket}>
+					<button
+						type="button"
+						className="btn-add"
+						onClick={handleAddTicket}
+						style={{ marginTop: '12px' }}
+					>
 						+ 추가하기
 					</button>
+					{errors.discounts && (
+						<Err style={{ color: 'red' }}>{errors.discounts}</Err>
+					)}
 				</div>
 
 				<div>
 					<label>계좌번호</label>
-					<p>은행</p>
+
 					<input
 						className="input-text"
 						type="text"
@@ -280,7 +401,10 @@ function RegisterStep1() {
 						value={formData.bankName}
 						onChange={handleInputChange}
 					/>
-					<p>계좌번호</p>
+					{errors.bankName && (
+						<Err style={{ color: 'red' }}>{errors.bankName}</Err>
+					)}
+
 					<input
 						className="input-text"
 						type="text"
@@ -289,7 +413,10 @@ function RegisterStep1() {
 						value={formData.account}
 						onChange={handleInputChange}
 					/>
-					<p>입금자명</p>
+					{errors.account && (
+						<Err style={{ color: 'red' }}>{errors.account}</Err>
+					)}
+
 					<input
 						className="input-text"
 						type="text"
@@ -298,6 +425,9 @@ function RegisterStep1() {
 						value={formData.depositor}
 						onChange={handleInputChange}
 					/>
+					{errors.depositor && (
+						<Err style={{ color: 'red' }}>{errors.depositor}</Err>
+					)}
 				</div>
 				<div>
 					<label>연락처</label>
@@ -309,9 +439,20 @@ function RegisterStep1() {
 						value={formData.contact}
 						onChange={handleInputChange}
 					/>
+					{errors.contact && (
+						<Err style={{ color: 'red' }}>{errors.contact}</Err>
+					)}
 				</div>
 			</form>
-			<ButtonWrapper>
+			<button
+				style={{ marginTop: '44px' }}
+				type="button"
+				className="btn-primary"
+				onClick={handleSubmit}
+			>
+				다음
+			</button>
+			{/*<ButtonWrapper>
 				<button
 					style={{ marginTop: '44px', minWidth: '140px' }}
 					type="submit"
@@ -343,33 +484,16 @@ function RegisterStep1() {
 				>
 					불러오기
 				</button>
-			</ButtonWrapper>
+			</ButtonWrapper> */}
 		</RegisterWrapper>
 	);
 }
 
 export default RegisterStep1;
 
-const InputsWrapper = styled.div`
-	display: flex;
-`;
 const InputRow = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 1fr 0.1fr;
 	gap: 12px;
 `;
-const ButtonWrapper = styled.div`
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	gap: 10px;
-	button {
-		display: flex;
-		width: 100%;
-	}
-	.save {
-		color: red;
-		font-size: 14px;
-		text-decoration: underline;
-	}
-`;
+const Err = styled.p``;
