@@ -4,8 +4,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import styled from 'styled-components';
 import Select from 'react-select';
 
+import { useAuth } from '@/contexts/AuthContext';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
+import useAxios from '@/utils/hooks/useAxios';
 import useCustomFetch from '@/utils/hooks/useAxios';
 
 import ImageUploadBox from '@/components/ImageUploadBox2';
@@ -27,8 +29,6 @@ function UploadPic() {
 	const [showModal, setShowModal] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(false);
 	const [customOptions, setCustomOptions] = useState([]);
-	const [file, setFile] = useState(null);
-	const [imageName, setImageName] = useState(null);
 	const [inputValue, setInputValue] = useState('');
 	const [textContent, setTextContent] = useState('');
 	const isFormValid = Boolean(selected?.title && selected?.date && file);
@@ -114,7 +114,8 @@ function UploadPic() {
 		setFile(selectedFile);
 	};
 
-	const { accessToken } = useAuth();
+	const axiosClient = useAxios();
+	const { fetchData } = useCustomFetch(null, 'POST', null);
 	const handleUpload = async () => {
 		if (!isFormValid) {
 			alert('모든 필수 정보를 입력해 주세요.');
@@ -125,6 +126,7 @@ function UploadPic() {
 			const extension = file.name.split('.').pop().toLowerCase();
 
 			const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
+				axiosClient,
 				extension,
 				'photoAlbum',
 			);
@@ -133,8 +135,7 @@ function UploadPic() {
 			console.log('✅ keyName:', keyName); // 디버깅용
 			console.log('✅ publicUrl:', publicUrl); // 디버깅용
 
-			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`
-
+			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
 			await uploadImageToS3(file, extension, url);
 
 			const postBody = {
@@ -144,16 +145,7 @@ function UploadPic() {
 				imageRequestDTOs: [{ keyName, imageUrl: publicUrl }],
 			};
 
-			const token = localStorage.getItem('accessToken');
-			const res = await fetch('https://api.seeatheater.site/photoAlbums', {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(postBody),
-			});
-
+			const res = await fetchData('/photoAlbums', 'POST', postBody);
 			if (!res.ok) throw new Error(`서버 응답 오류: ${res.status}`);
 			alert('등록 완료!');
 		} catch (err) {

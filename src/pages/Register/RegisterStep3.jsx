@@ -1,7 +1,6 @@
-import ImageUploadBox from '../../components/ImageUploadBox.jsx';
+import ImageUploadBox from '@/components/ImageUploadBox.jsx';
 import styled from 'styled-components';
 import { RegisterWrapper } from './Register.style.js';
-import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 function RegisterStep3() {
@@ -74,8 +73,10 @@ function RegisterStep3() {
 						<ActorWrapper key={idx}>
 							<div>
 								<ImageUploadBox
-									size="89px"
-									webSize="160px"
+									width="100px"
+									height="100px"
+									webWidth="160px"
+									webHeight="160px"
 									round="true"
 									onUploadSuccess={(fileInfo) =>
 										handleActorImageUpload(idx, fileInfo)

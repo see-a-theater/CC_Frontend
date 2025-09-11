@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import PosterInfo from '../components/PosterInfo';
-import ActionButton from '../components/ActionButton';
-import { FormSection, SectionTitle, EventTitle, EventVenue, EventPeriod, EventInfo, EventLink } from '../styles/commonStyles';
+import PosterInfo from '@/pages/ticketingpage/components/PosterInfo';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
+import { FormSection, SectionTitle, EventTitle, EventVenue, EventPeriod, EventInfo, EventLink } from '@/pages/ticketingpage/styles/commonStyles';
 import {
   Input,
   Label,
@@ -13,10 +13,10 @@ import {
   DropdownItem,
   PersonSelectionContainer,
   PersonInput
-} from '../styles/formStyles';
-import SelectorIcon from '../components/icons/SelectorIcon.svg';
-import ShowMore from '../components/icons/ShowMore.svg';
-import useResponsive from '../hooks/useResponsive';
+} from '@/pages/ticketingpage/styles/formStyles';
+import SelectorIcon from '@/pages/ticketingpage/components/icons/SelectorIcon.svg';
+import ShowMore from '@/pages/ticketingpage/components/icons/ShowMore.svg';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const Step1 = ({ 
   ticketing: { 

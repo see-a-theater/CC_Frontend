@@ -8,8 +8,8 @@ import TicketCancelComplete from '@/pages/mypage/ticket/TicketCancelComplete';
 import AccountConnection from '@/pages/mypage/account-connection/AccountConnection';
 import LikedTheater from '@/pages/mypage/liked-theater/LikedTheater';
 import AboutCC from '@/pages/mypage/about-cc/AboutCC';
-import RegisteredPerformances from '@/pages/mypage/ADMIN/resigsterd-performances/RegisteredPerformances';
-import RegisteredDetail from '@/pages/mypage/ADMIN/resigsterd-performances/RegisteredDetail';
+import RegisteredPerformances from '@/pages/mypage/ADMIN/registered-performances/RegisteredPerformances';
+import RegisteredDetail from '@/pages/mypage/ADMIN/registered-performances/RegisteredDetail';
 import BookingHistory from '@/pages/mypage/booking-history/BookingHistory';
 
 function MyPageRoutes() {

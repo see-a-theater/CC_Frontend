@@ -7,29 +7,6 @@ import Search from '@/assets/icons/searchBlack.svg?react';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 function Dashboard() {
-	const mock_req = [
-		{ theatre: '소극장', date: '날짜/시간', num: '인원수' },
-		{ theatre: '여신님이 보고 게셔', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '지킬 앤 하이드', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-	];
-	const mock_res = [
-		{ theatre: '소극장', date: '날짜/시간', num: '현황' },
-		{ theatre: '여신님이 보고 게셔', date: '2025-01-09 / 14:00', num: '25/25' },
-		{ theatre: '지킬 앤 하이드', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-	];
-
 	const {
 		data: MonthVisitsData,
 		error: MonthError,

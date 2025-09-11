@@ -15,8 +15,8 @@ const UserTable = ({
 
 	const allHeaders = Object.keys(data[0]);
 
-	const handleDetailClick = (link, id) => {
-		navigate(link + id);
+	const handleDetailClick = (link) => {
+		navigate(link);
 	};
 
 	//현재 페이지에서 링크, id를 받아오는 형식
@@ -45,7 +45,7 @@ const UserTable = ({
 									return (
 										<td key={key}>
 											<DetailButton
-												onClick={() => handleDetailClick(user.manage, user.id)}
+												onClick={() => handleDetailClick(user.manage)}
 											>
 												상세
 											</DetailButton>

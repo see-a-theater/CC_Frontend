@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 // 아래는 각 페이지를 담당할 컴포넌트들
 import Onboarding from './pages/login/Onboarding.jsx';
 import Login from './pages/login/Login.jsx';
+import KakaoCallback from './pages/login/KakaoCallback.jsx';
 import Logout from './pages/logout/Logout';
 import Withdrawal from './pages/withdrawal/Withdrawal';
 
@@ -18,15 +19,13 @@ import Info from './pages/info/Info';
 import Detail from './pages/Detail/Detail';
 import Playlist from './pages/Detail/Playlist';
 import Notification from './pages/notification/Notification';
-
 import UploadPic from './pages/production/UploadPic';
 import ProdDetail from './pages/production/ProdDetail';
 import Production from './pages/production/Production';
 import MyPageRoutes from './routes/MyPageRoutes.jsx';
 import AdminRoutes from './routes/AdminRoutes.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
-
-import TestUploadPic from './pages/TEST/TestUploadPic.jsx'
+import TestUploadPic from './pages/TEST/TestUploadPic';
 
 function App() {
 	return (
@@ -35,6 +34,7 @@ function App() {
 				<Route path="/" element={<Onboarding />} />
 
 				<Route path="/login" element={<Login />} />
+				<Route path="/auth/kakao/callback" element={<KakaoCallback />} />
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/withdrawal" element={<Withdrawal />} />
 
@@ -62,7 +62,7 @@ function App() {
 				<Route path="/admin/*" element={<AdminRoutes />} />
 
 				<Route path="*" element={<NotFoundPage />} />
-          
+
 				<Route path="test/upload-pic" element={<TestUploadPic />} />
 			</Routes>
 		</AuthProvider>

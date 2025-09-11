@@ -1,7 +1,6 @@
 import Calendar from './Calendar.jsx';
-import CalendarIcon from '../assets/icons/Calendar.svg';
+import CalendarIcon from '@/assets/icons/Calendar.svg';
 import styled from 'styled-components';
-import { useState } from 'react';
 
 function UnitInput({ placeholder, unit, value, onChange, name }) {
 	return (
@@ -28,7 +27,7 @@ const Input = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	margin-bottom: 8px;
+	margin-top: 8px;
 	img {
 		height: 24px;
 		margin-right: 8px;

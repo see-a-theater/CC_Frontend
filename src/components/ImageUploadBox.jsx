@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import Camera from '../assets/icons/Camera.svg';
+import Camera from '@/assets/icons/Camera.svg';
 import styled from 'styled-components';
-import useCustomFetch from '../utils/hooks/useAxios';
 import axios from 'axios';
 
-function ImageUploadBox({ size, webSize, round, onUploadSuccess }) {
+function ImageUploadBox({
+	size,
+	width,
+	height,
+	webWidth,
+	webHeight,
+	round,
+	onUploadSuccess,
+	type,
+}) {
 	const [imageSrc, setImageSrc] = useState(null);
 
 	const handleImageChange = async (e) => {
@@ -54,11 +62,22 @@ function ImageUploadBox({ size, webSize, round, onUploadSuccess }) {
 		}
 	};
 	return (
-		<Box size={size} webSize={webSize} round={round}>
+		<Box
+			width={width}
+			height={height}
+			webWidth={webWidth}
+			webHeight={webHeight}
+			round={round}
+		>
 			{imageSrc ? (
 				<img src={imageSrc} alt="uploaded" />
 			) : (
-				<img src={Camera} alt="camera icon" />
+				<IconWrapper>
+					<img src={Camera} alt="camera icon" />
+				</IconWrapper>
+				<IconWrapper>
+					<img src={Camera} alt="camera icon" />
+				</IconWrapper>
 			)}
 			<input type="file" accept="image/*" onChange={handleImageChange} />
 		</Box>
@@ -69,26 +88,26 @@ export default ImageUploadBox;
 
 const Box = styled.div`
 	position: relative;
-
-	width: ${(props) => (props.size ? props.size : '150px')};
-	height: ${(props) => (props.size ? props.size : '150px')};
+	background: ${({ theme }) => theme.colors.gray200};
+	width: ${(props) => (props.width ? props.width : '150px')};
+	height: ${(props) => (props.height ? props.height : '150px')};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
 	overflow: hidden;
-
+	${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
 	@media (min-width: 768px) {
-		width: ${(props) => props.webSize || props.size || '240px'};
-		height: ${(props) => props.webSize || props.size || '240px'};
+		width: ${(props) => props.webWidth || props.webWidth || '240px'};
+		height: ${(props) => props.webHeight || props.webHeight || '240px'};
+		width: ${(props) => props.webWidth || props.webWidth || '240px'};
+		height: ${(props) => props.webHeight || props.webHeight || '240px'};
 	}
 
 	img {
 		width: 20px;
 		height: 20px;
 		object-fit: cover;
-		${(props) => (props.round ? 'border-radius: 50% 50% 10% 50%;' : '')};
-		background-color: gainsboro;
 	}
 
 	input[type='file'] {
@@ -104,5 +123,12 @@ const Box = styled.div`
 	img {
 		width: 100%;
 		height: 100%;
+	}
+`;
+
+const IconWrapper = styled.div`
+	@media (min-width: 768px) {
+		width: 40px;
+		height: 40px;
 	}
 `;

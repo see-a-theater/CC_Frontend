@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import HeartFull from '@/assets/icons/heart-full.svg?react';
+import HeartEmpty from '@/assets/icons/HeartEmpty.svg?react';
+
 import axios from 'axios';
 function TheaterCard({ onClick, data }) {
 	const [liked, setLiked] = useState(true);
@@ -31,13 +33,7 @@ function TheaterCard({ onClick, data }) {
 			<div>
 				<p>{data.performerName}</p>
 				<button onClick={() => handleClick(data.performerId)}>
-					{liked ? (
-						<HeartFull />
-					) : (
-						<div
-							style={{ width: '40px', height: '40px', backgroundColor: 'gray' }}
-						></div>
-					)}
+					{liked ? <HeartFull /> : <HeartEmpty />}
 				</button>
 			</div>
 		</Card>

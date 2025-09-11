@@ -12,7 +12,7 @@ export const AdminListPage = styled.div`
 			padding: 4px 20px;
 			color: #000;
 			text-align: center;
-			font-family: Pretendard;
+
 			font-size: 14px;
 			font-style: normal;
 			font-weight: 700;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
-import SearchBarBlack from '../SearchBarBlack';
+import SearchBarBlack from '@/components/SearchBarBlack.jsx';
 function SearchOptionBar() {
 	return (
 		<>
@@ -45,5 +45,20 @@ const SearchOptionArea = styled.div`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		gap: 12px;
+		& > label {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 4px;
+
+			input {
+				width: 19px;
+				height: 19px;
+				flex-shrink: 0;
+				border: 1px solid #000;
+				background: black;
+			}
+		}
 	}
 `;

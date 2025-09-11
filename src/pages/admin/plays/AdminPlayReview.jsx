@@ -7,7 +7,7 @@ import location from '@/assets/icons/location.svg?react';
 import time from '@/assets/icons/time.svg?react';
 import price from '@/assets/icons/price.svg?react';
 
-import Gallery from '../..//Detail/InfoArea/Gallery';
+import Gallery from '@/pages/Detail/InfoArea/Gallery';
 
 import Staff from '@/components/Detail/Staff';
 import CastCardCheck from '@/components/Admin/CastCardCheck';

@@ -2,195 +2,51 @@ import styled from 'styled-components';
 import UserTable from '@/components/Admin/UserTable';
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
-import { useState, useMemo } from 'react';
+
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+
+import React, { useState, useMemo } from 'react';
 
 function Users() {
-	const user_data = [
-		{
-			id: '아이디',
-			name: '이름',
-			email: 'E-mail',
-			number: '번호',
-			gender: '성별',
-			manage: '관리',
-		},
-		{
-			id: 'cc1234',
-			name: '김미미',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: '/admin/users/',
-		},
-		{
-			id: 'cc1234',
-			name: '이수연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: '/admin/users/',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: '/admin/users/',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: '/admin/users/',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: '/admin/users/',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-		{
-			id: 'cc1234',
-			name: '전시연',
-			email: 'cc1234@gmail.com',
-			number: '010-1234-5567',
-			gender: '여',
-			manage: ' ',
-		},
-	];
+	const headerRow = {
+		memberId: '아이디',
+		name: '이름',
+		email: '이메일',
+		phone: '번호',
+		gender: '성별',
+		manage: '관리',
+	};
+
+	const {
+		data: userData,
+		error: userError,
+		loading: userLoading,
+	} = useCustomFetch(`/admin/member/list?page=0&size=20`);
+
+	console.log('userData:', userData);
+
+	const apiRows = useMemo(() => {
+		if (!userData || !userData.result) return [];
+		return userData.result.content.map((item) => ({
+			memberId: item.memberId,
+			name: item.name,
+			email: item.email,
+			phone: item.phone,
+			gender: item.gender,
+			manage: `/admin/users/${item.memberId}`,
+		}));
+	}, [userData]);
+
+	const user_data = [headerRow, ...apiRows];
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [visibleColumns, setVisibleColumns] = useState([
-		'id',
+		'memberId',
 		'name',
 		'email',
-		'number',
+		'phone',
 		'gender',
+		'manage',
 	]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 20;
@@ -204,12 +60,12 @@ function Users() {
 	};
 
 	const filteredData = useMemo(() => {
-		const content = user_data.slice(1);
+		const content = user_data.slice(1); // header 제외
 		return content.filter((user) =>
 			Object.entries(user).some(
 				([key, val]) =>
 					visibleColumns.includes(key) &&
-					val.toLowerCase().includes(searchTerm.toLowerCase()),
+					String(val).toLowerCase().includes(searchTerm.toLowerCase()),
 			),
 		);
 	}, [searchTerm, visibleColumns, user_data]);
@@ -220,6 +76,9 @@ function Users() {
 	}, [filteredData, currentPage]);
 
 	const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+	if (userLoading) return <p>로딩 중...</p>;
+	if (userError) return <p>에러 발생: {String(userError)}</p>;
 
 	return (
 		<Container>
@@ -239,15 +98,16 @@ function Users() {
 							/>
 							<Search width={15} />
 						</SearchInput>
+
 						<div className="checkboxArea">
-							{['id', 'name', 'email', 'number', 'gender'].map((key) => (
+							{Object.keys(headerRow).map((key) => (
 								<label key={key}>
 									<input
 										type="checkbox"
 										checked={visibleColumns.includes(key)}
 										onChange={() => handleColumnToggle(key)}
 									/>
-									{user_data[0][key]}
+									{headerRow[key]}
 								</label>
 							))}
 							<SearchBg />
@@ -255,7 +115,7 @@ function Users() {
 					</FilterArea>
 
 					<UserTable
-						data={[user_data[0], ...paginatedData]}
+						data={[headerRow, ...paginatedData]}
 						currentPage={currentPage}
 						setCurrentPage={setCurrentPage}
 						totalPages={totalPages}
