@@ -1,12 +1,10 @@
 //yarn add react-select
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 
-import { useAuth } from '@/contexts/AuthContext';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
-import useAxios from '@/utils/hooks/useAxios';
 import useCustomFetch from '@/utils/hooks/useAxios';
 
 import ImageUploadBox from '@/components/ImageUploadBox2';
@@ -113,7 +111,6 @@ function UploadPic() {
 		setFile(selectedFile);
 	};
 
-	const axiosClient = useAxios();
 	const { fetchData } = useCustomFetch(null, 'POST', null);
 	const handleUpload = async () => {
 		if (!isFormValid) {
@@ -125,7 +122,6 @@ function UploadPic() {
 			const extension = file.name.split('.').pop().toLowerCase();
 
 			const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
-				axiosClient,
 				extension,
 				'photoAlbum',
 			);
