@@ -3,7 +3,7 @@ import {
 	TablePageWrapper,
 	Content,
 	OptionBarWrapper,
-} from '@/pages/admin/STYLE/admin.detail.style';
+} from '@/pages/admin/STYLE/admin-detail.style';
 const requests = [
 	{
 		id: 'diana8843',
