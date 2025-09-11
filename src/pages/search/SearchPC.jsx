@@ -1,10 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { searchShows, getShowRanking } from './api/searchApi';
-import ClosePinkBig from '../../assets/icons/ClosePinkBig.svg';
-import Poster from '../../assets/images/test-poster2.png';
-import SearchIcon from '../../assets/icons/searchGrey.svg?react';
+import { searchShows, getShowIncoming } from '@/pages/search/api/searchApi';
+import ClosePinkBig from '@/assets/icons/ClosePinkBig.svg';
+import SearchIcon from '@/assets/icons/searchGrey.svg?react';
 
 const SearchPC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,12 +22,12 @@ const SearchPC = () => {
     const fetchUpcomingShows = async () => {
       try {
         setIsInitialLoading(true);
-        const response = await getShowRanking();
+        const response = await getShowIncoming();
         if (response.isSuccess) {
           // API 응답을 임박한 공연 형태로 변환 (상위 4개만)
           const formattedShows = response.result.slice(0, 4).map((show, index) => ({
             id: show.amateurShowId,
-            rank: index + 1,
+            rank: index + 1,  // 임시
             title: show.name,
             venue: show.detailAddress,
             date: show.schedule,
@@ -78,7 +77,7 @@ const SearchPC = () => {
           venue: item.hallName,
           date: item.schedule,
           status: getStatusText(item.status),
-          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING',
+          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING' || item.status === '예매 진행 중',
           posterImageUrl: item.posterImageUrl
         }));
         
@@ -122,8 +121,9 @@ const SearchPC = () => {
   // API 상태 텍스트 변환 함수
   const getStatusText = (status) => {
     const statusMap = {
-      'APPROVED_ONGOING': '판매중',
-      'APPROVED_YET': '판매예정',
+      '예매 진행 중': '판매중',
+      '판매중' : '판매중',
+      '예정': '판매예정',
       'APPROVED_ENDED': '공연종료',
       'WAITING_APPROVAL': '승인대기',
       'REJECTED': '반려'
@@ -215,9 +215,8 @@ const SearchPC = () => {
                       <PerformanceCard key={performance.id}>
                         <PerformanceImage>
                           <img 
-                            src={performance.posterImageUrl || Poster} 
+                            src={performance.posterImageUrl} 
                             style={{width: '100%', height: '100%', borderRadius: '3px'}}
-                            onError={(e) => { e.target.src = Poster; }}
                           />
                           <PerformanceNumber>{performance.rank}</PerformanceNumber>
                         </PerformanceImage>
@@ -248,9 +247,8 @@ const SearchPC = () => {
                     <SearchResultItem key={result.id}>
                       <ResultImage>
                         <img 
-                          src={result.posterImageUrl || Poster} 
+                          src={result.posterImageUrl} 
                           style={{width: '100%', height: '100%'}}
-                          onError={(e) => { e.target.src = Poster; }}
                         />
                       </ResultImage>
                       <ResultInfo>

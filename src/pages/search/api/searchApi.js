@@ -47,13 +47,13 @@ export const searchShows = async (keyword, page = 0, size = 20) => {
   }
 };
 
-// 랭킹 기반 공연 목록 (임박한 공연용)
-export const getShowRanking = async () => {
+// 임박한 공연 목록
+export const getShowIncoming = async () => {
   try {
-    const response = await api.get('/amateurs/ranking');
+    const response = await api.get('/amateurs/incoming');
     return response.data;
   } catch (error) {
-    console.error('랭킹 API 에러:', error);
+    console.error('임박한 공연 API 에러:', error);
     throw error;
   }
 };

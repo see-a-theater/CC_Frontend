@@ -2,10 +2,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { searchShows, getShowRanking } from './api/searchApi';
-import ChevronPink from '../../assets/icons/ChevronPink.svg';
-import ClosePink from '../../assets/icons/ClosePink.svg';
-import Poster from '../../assets/images/test-poster2.png';
+import { searchShows, getShowIncoming } from '@/pages/search/api/searchApi';
+import ChevronPink from '@/assets/icons/ChevronPink.svg';
+import ClosePink from '@/assets/icons/ClosePink.svg';
 
 const SearchMobile = () => {
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const SearchMobile = () => {
     const fetchUpcomingShows = async () => {
       try {
         setIsInitialLoading(true);
-        const response = await getShowRanking();
+        const response = await getShowIncoming();
         if (response.isSuccess) {
           // API 응답을 임박한 공연 형태로 변환 (상위 4개만)
           const formattedShows = response.result.slice(0, 4).map((show, index) => ({
@@ -82,7 +81,7 @@ const SearchMobile = () => {
           venue: item.hallName,
           date: item.schedule,
           status: getStatusText(item.status),
-          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING',
+          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING' || item.status === '예매 진행 중',
           posterImageUrl: item.posterImageUrl
         }));
         
@@ -122,8 +121,9 @@ const SearchMobile = () => {
   // API 상태 텍스트 변환 함수
   const getStatusText = (status) => {
     const statusMap = {
-      'APPROVED_ONGOING': '판매중',
-      'APPROVED_YET': '판매예정',
+      '예매 진행 중': '판매중',
+      '판매중' : '판매중',
+      '예정': '판매예정',
       'APPROVED_ENDED': '공연종료',
       'WAITING_APPROVAL': '승인대기',
       'REJECTED': '반려'
@@ -189,9 +189,8 @@ const SearchMobile = () => {
                     <PerformanceCard key={performance.id}>
                       <PerformanceImage>
                         <img 
-                          src={performance.posterImageUrl || Poster} 
+                          src={performance.posterImageUrl} 
                           style={{width: '100%', height: '100%', borderRadius: '3px'}}
-                          onError={(e) => { e.target.src = Poster; }}
                         />
                         <PerformanceNumber>{performance.rank}</PerformanceNumber>
                       </PerformanceImage>
@@ -222,9 +221,8 @@ const SearchMobile = () => {
               <SearchResultItem key={result.id}>
                 <ResultImage>
                   <img 
-                    src={result.posterImageUrl || Poster} 
+                    src={result.posterImageUrl} 
                     style={{width: '100%', height: '100%', borderRadius: '3px'}}
-                    onError={(e) => { e.target.src = Poster; }}
                   />
                 </ResultImage>
                 <ResultInfo>
