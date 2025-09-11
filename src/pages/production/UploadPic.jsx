@@ -28,8 +28,6 @@ function UploadPic() {
 	const [showModal, setShowModal] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(false);
 	const [customOptions, setCustomOptions] = useState([]);
-	const [file, setFile] = useState(null);
-	const [imageName, setImageName] = useState(null);
 	const [inputValue, setInputValue] = useState('');
 	const [textContent, setTextContent] = useState('');
 	const isFormValid = Boolean(selected?.title && selected?.date && file);

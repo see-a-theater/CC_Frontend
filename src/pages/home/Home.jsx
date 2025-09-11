@@ -3,7 +3,6 @@ import HomeIconMenu from '@/components/HomeIconMenu';
 import Hr from '@/components/Hr';
 import Ranking from '@/components/Ranking';
 import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
-import useCustomFetch from '@/utils/hooks/useAxios';
 import BoardPreviewCardList from '@/components/BoardPreviewCardList';
 import BoardPreviewList from '@/components/BoardPreviewList';
 import BoardPreviewCardWeb from '@/components/BoardPreviewCardWeb';
@@ -12,6 +11,8 @@ import CarouselWeb from '@/components/CarouselWeb';
 import CarouselMobile from '@/components/CarouselMobile';
 import Hamburger from '@/components/Hamburger';
 import Poster from '@/assets/images/test-poster2.png';
+
+import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
 
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
 const banners = [
