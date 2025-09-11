@@ -102,6 +102,8 @@ const Box = styled.div`
 	@media (min-width: 768px) {
 		width: ${(props) => props.webWidth || props.webWidth || '240px'};
 		height: ${(props) => props.webHeight || props.webHeight || '240px'};
+		width: ${(props) => props.webWidth || props.webWidth || '240px'};
+		height: ${(props) => props.webHeight || props.webHeight || '240px'};
 	}
 
 	img {
