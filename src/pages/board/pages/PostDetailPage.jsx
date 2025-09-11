@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, SideMenuWrapper } from '../styles/commonStyles';
+import { Container, SideMenuWrapper } from '@/pages/board/styles/commonStyles';
 import {
   ContentArea, PostDetailContainer, PostHeader, PostTitle,
   PostContent, PostMeta, PostAuthor, PostDate,
@@ -12,178 +12,269 @@ import {
   CommentLikeInfo, ReplyIndicator, CommentInput, CommentInputContainer,
   CommentSubmitButton, CommentHeaderActions, CommentActionButton,
   Divider,
-} from '../styles/postDetailStyles';
-import HomeIconMenu from '../../../components/HomeIconMenu';
-import Header from '../components/BoardHeader';
-import ActionSheet from '../components/ActionSheet';
-import Modal from '../components/Modal';
-import useModal from '../hooks/useModal';
-import usePosts from '../hooks/usePosts';
-import LikePink from '../components/Icons/LikePink.svg';
-import Like from '../components/Icons/Like.svg';
-import Comment from '../components/Icons/Comment.svg';
-import Edit from '../components/Icons/Edit.svg';
-import Delete from '../components/Icons/Delete.svg';
-import Tab from '../components/Icons/Tab.svg';
-import Lock from '../components/Icons/Lock.svg';
-import useResponsive from '../hooks/useResponsive'
+} from '@/pages/board/styles/postDetailStyles';
+import HomeIconMenu from '@/components/HomeIconMenu';
+import Header from '@/pages/board/components/BoardHeader';
+import ActionSheet from '@/pages/board/components/ActionSheet';
+import Modal from '@/pages/board/components/Modal';
+import useModal from '@/pages/board/hooks/useModal';
+import usePosts from '@/pages/board/hooks/usePosts';
+import LikePink from '@/pages/board/components/Icons/LikePink.svg';
+import Like from '@/pages/board/components/Icons/Like.svg';
+import Comment from '@/pages/board/components/Icons/Comment.svg';
+import Edit from '@/pages/board/components/Icons/Edit.svg';
+import Delete from '@/pages/board/components/Icons/Delete.svg';
+import Tab from '@/pages/board/components/Icons/Tab.svg';
+import Lock from '@/pages/board/components/Icons/Lock.svg';
+import useResponsive from '@/pages/board/hooks/useResponsive';
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getPost, getComments } = usePosts();
+  const { 
+    getPost, 
+    getComments, 
+    addComment,
+    updateComment, 
+    deletePost, 
+    togglePostLike, 
+    toggleCommentLike,
+    deleteComment,
+    isMyPost,
+    isMyComment,
+    currentUser
+  } = usePosts();
   
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [commentText, setCommentText] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [editingComment, setEditingComment] = useState(null);
+  const [editCommentText, setEditCommentText] = useState('');
   const { isOpen: isActionSheetOpen, openModal: openActionSheet, closeModal: closeActionSheet } = useModal();
   const { isOpen: isDeleteModalOpen, openModal: openDeleteModal, closeModal: closeDeleteModal } = useModal();
+  const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
   const [selectedComment, setSelectedComment] = useState(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
-  const currentUserId = 'currentUser';
+
   const isPC = useResponsive();
   
-  // 게시글 및 댓글 데이터 로드
+  // 데이터 로드
   useEffect(() => {
-    const foundPost = getPost(id);
-    const foundComments = getComments(id);
-    
-    if (foundPost) {
-      setPost({ ...foundPost, isLiked: false });
-      const sortedComments = sortCommentsAsTree(foundComments.map(comment => ({ 
-        ...comment, 
-        isLiked: false 
-      })));   
-      setComments(sortedComments);  // 댓글을 트리 구조로 정렬
-    } else {
-      navigate('/board');
-    }
-  }, [id, getPost, getComments, navigate]);
+    loadPostData();
+  }, [id]);
 
-  // 댓글을 트리 구조로 정렬하는 함수
-  const sortCommentsAsTree = (commentList) => {
-    const result = [];
-    const commentMap = new Map();
-    // 모든 댓글을 Map에 저장
-    commentList.forEach(comment => {
-      commentMap.set(comment.id, { ...comment, children: [] });
-    });
-    // 부모-자식 관계 설정 및 루트 댓글 수집
-    commentList.forEach(comment => {
-      if (comment.parentId === null) {
-        // 루트 댓글 (일반 댓글)
-        result.push(commentMap.get(comment.id));
+  const loadPostData = async () => {
+    setLoading(true);
+    try {
+      const [postData, commentsData] = await Promise.all([
+        getPost(id),
+        getComments(id)
+      ]);
+      
+      if (postData) {
+        setPost(postData);
+        setComments(commentsData);
       } else {
-        // 대댓글인 경우 부모의 children에 추가
-        const parent = commentMap.get(comment.parentId);
-        if (parent) {
-          parent.children.push(commentMap.get(comment.id));
-        }
+        navigate('/board');
       }
-    });
-    // 트리를 평면 배열로 변환 (깊이 우선 탐색)
-    const flattenTree = (nodes, level = 0) => {
-      const flattened = [];
-      nodes.forEach(node => {
-        // 현재 노드 추가
-        flattened.push({ ...node, replyLevel: level });
-        // 자식 노드들 재귀적으로 추가
-        if (node.children && node.children.length > 0) {
-          flattened.push(...flattenTree(node.children, level + 1));
-        }
-      });
-      return flattened;
-    };
-    
-    return flattenTree(result);
+    } catch (error) {
+      console.error('데이터 로드 실패:', error);
+      navigate('/board');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 댓글 추가 시 트리 구조 유지
-  const handleCommentSubmit = () => {
-    if (!commentText.trim()) return;
-    // 깊이 제한 적용 (최대 4단계)
-    const newReplyLevel = replyingTo ? Math.min(replyingTo.replyLevel + 1, 4) : 0;
-    // 깊이 제한 초과 시 경고
-    if (replyingTo && replyingTo.replyLevel >= 4) {
-      alert('대댓글은 최대 4단계까지만 작성할 수 있습니다.');
-      return;
-    }
+   // 스와이프 관련 함수들
+  const minSwipeDistance = 50; // 최소 스와이프 거리
 
-    const newComment = {
-      id: Date.now(),
-      author: '익명',
-      content: commentText,
-      date: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
-      userId: currentUserId,
-      replyLevel: newReplyLevel,
-      parentId: replyingTo ? replyingTo.id : null,
-      likes: 0,
-      isLiked: false
-    };
-    // 새 댓글 추가 후 트리 구조로 재정렬
-    const updatedComments = [...comments.map(c => ({ ...c, replyLevel: undefined })), newComment];
-    const sortedComments = sortCommentsAsTree(updatedComments);
-    setComments(sortedComments);
-    setCommentText('');
-    setReplyingTo(null);
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (Array.isArray(post.image) && post.image.length > 1) {
+      if (isLeftSwipe && currentImageIndex < post.image.length - 1) {
+        // 왼쪽 스와이프: 다음 이미지
+        setCurrentImageIndex(prev => prev + 1);
+      }
+      if (isRightSwipe && currentImageIndex > 0) {
+        // 오른쪽 스와이프: 이전 이미지
+        setCurrentImageIndex(prev => prev - 1);
+      }
+    }
+  };
+
+  // 댓글 정렬 함수 
+  const sortCommentsWithReplies = (commentList) => {
+    const result = [];
+    
+    const parentComments = commentList
+      .filter(comment => comment.parentId === null)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    parentComments.forEach(parentComment => {
+      result.push(parentComment);
+      
+      const getAllRelatedReplies = (rootId) => {
+        const directReplies = commentList.filter(comment => comment.parentId === rootId);
+        let allReplies = [...directReplies];
+        
+        directReplies.forEach(reply => {
+          const subReplies = getAllRelatedReplies(reply.id);
+          allReplies.push(...subReplies);
+        });
+        
+        return allReplies;
+      };
+      
+      const allReplies = getAllRelatedReplies(parentComment.id)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      result.push(...allReplies);
+    });
+    
+    return result;
+  };
+
+  // 댓글 추가
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim()) return;
+
+    try {
+      const newCommentData = {
+        content: commentText,
+        parentId: replyingTo ? replyingTo.id : null,
+        replyLevel: replyingTo ? 1 : 0
+      };
+
+      const newComment = await addComment(post.id, newCommentData);
+      
+      // 댓글 목록 새로고침
+      const updatedComments = await getComments(post.id);
+      setComments(updatedComments);
+      
+      setCommentText('');
+      setReplyingTo(null);
+    } catch (error) {
+      console.error('댓글 작성 실패:', error);
+      alert('댓글 작성에 실패했습니다.');
+    }
   };
 
   // 게시글 좋아요 토글
-  const handlePostLike = () => {
-    setPost(prev => ({
-      ...prev,
-      isLiked: !prev.isLiked,
-      likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1
-    }));
+  const handlePostLike = async () => {
+    try {
+      await togglePostLike(post.id);
+      setPost(prev => ({
+        ...prev,
+        isLiked: !prev.isLiked,
+        likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1
+      }));
+    } catch (error) {
+      console.error('좋아요 실패:', error);
+    }
   };
 
   // 댓글 좋아요 토글
-  const handleCommentLike = (commentId) => {
-    setComments(prev => prev.map(comment => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          isLiked: !comment.isLiked,
-          likes: comment.isLiked ? comment.likes - 1 : comment.likes + 1
-        };
-      }
-      return comment;
-    }));
-  };
-
-  // 댓글 삭제 - 대댓글 유무에 따른 처리 분기
-  const handleCommentDelete = (commentId) => {
-    // 삭제할 댓글의 대댓글 존재 여부 확인
-    const hasReplies = comments.some(comment => comment.parentId === commentId);
-    
-    if (hasReplies) {
-      // 대댓글이 있는 경우: 삭제 표시만 하고 댓글 유지
-      const updatedComments = comments.map(comment => {
+  const handleCommentLike = async (commentId) => {
+    try {
+      const result = await toggleCommentLike(post.id, commentId);
+      setComments(prev => prev.map(comment => {
         if (comment.id === commentId) {
           return {
             ...comment,
-            isDeleted: true,
-            content: '', // 내용 제거
-            author: '', // 작성자 제거
+            isLiked: result.liked,
+            likes: comment.likes + result.likeChange
           };
         }
         return comment;
-      }).map(c => ({ ...c, replyLevel: undefined }));
-      
-      const sortedComments = sortCommentsAsTree(updatedComments);
-      setComments(sortedComments);
-    } else {
-      // 대댓글이 없는 경우: 완전 삭제
-      const updatedComments = comments
-        .filter(comment => comment.id !== commentId)
-        .map(c => ({ ...c, replyLevel: undefined }));
-      const sortedComments = sortCommentsAsTree(updatedComments);
-      setComments(sortedComments);
+      }));
+    } catch (error) {
+      console.error('댓글 좋아요 실패:', error);
     }
-    
-    closeDeleteModal();
+  };
+
+  // 댓글 수정 시작
+  const handleEditComment = (comment) => {
+    setSelectedComment(comment);
+    openEditModal();
+  };
+
+  // 댓글 수정 모드 진입
+  const startEditingComment = (comment) => {
+    setEditingComment(comment);
+    setEditCommentText(comment.content);
+    closeEditModal();
+  };
+
+  // 댓글 수정 취소
+  const cancelEditingComment = () => {
+    setEditingComment(null);
+    setEditCommentText('');
+  };
+
+  // 댓글 수정 완료
+  const handleCommentUpdate = async (commentId) => {
+    if (!editCommentText.trim()) return;
+
+    try {
+      await updateComment(post.id, commentId, { content: editCommentText });
+      
+      // 댓글 목록 새로고침
+      const updatedComments = await getComments(post.id);
+      setComments(updatedComments);
+      
+      setEditingComment(null);
+      setEditCommentText('');
+    } catch (error) {
+      console.error('댓글 수정 실패:', error);
+      alert('댓글 수정에 실패했습니다.');
+    }
+  };
+
+  // 댓글 삭제
+  const handleCommentDelete = async (commentId) => {
+    try {
+      // 대댓글이 있는 경우는 서버에서 처리
+      await deleteComment(post.id, commentId);
+      
+      // 댓글 목록 새로고침
+      const updatedComments = await getComments(post.id);
+      setComments(updatedComments);
+      
+      closeDeleteModal();
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+      alert('댓글 삭제에 실패했습니다.');
+    }
+  };
+
+  // 게시글 삭제
+  const handlePostDelete = async () => {
+    try {
+      await deletePost(post.id);
+      navigate('/board');
+    } catch (error) {
+      console.error('게시글 삭제 실패:', error);
+      alert('게시글 삭제에 실패했습니다.');
+    }
   };
 
   // 대댓글 시작
@@ -191,8 +282,24 @@ const PostDetailPage = () => {
     setReplyingTo(comment);
   };
 
+  if (loading) {
+    return (
+      <Container>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' 
+        }}>
+          로딩 중...
+        </div>
+      </Container>
+    );
+  }
+
   if (!post) return null;
-  const isMyPost = post.userId === currentUserId;
+
+  const isPostOwner = isMyPost(post);
 
   // 게시글 옵션 액션시트
   const postActions = [
@@ -227,12 +334,30 @@ const PostDetailPage = () => {
         if (selectedComment) {
           handleCommentDelete(selectedComment.id);
         } else {
-          // 게시글 삭제 로직
-          navigate('/board');
+          handlePostDelete();
         }
       }
     }
   ];
+
+  const editModalActions = [
+    {
+      label: '취소',
+      type: 'cancel',
+      onClick: closeEditModal
+    },
+    {
+      label: '수정',
+      type: 'confirm',
+      onClick: () => {
+        if (selectedComment) {
+          startEditingComment(selectedComment);
+        }
+      }
+    }
+  ];
+
+  const sortedComments = sortCommentsWithReplies(comments);
 
   return (
     <Container>
@@ -240,12 +365,12 @@ const PostDetailPage = () => {
         <Header
           title={post.category}
           showBack={true}
-          myPost={isMyPost ? openActionSheet : undefined}
+          myPost={isPostOwner ? openActionSheet : undefined}
         />
       )}
 
       <SideMenuWrapper>
-        <HomeIconMenu isWeb={true} />
+        <HomeIconMenu isWeb={true} selectedMenu="board" />
       </SideMenuWrapper>
 
       <ContentArea>
@@ -273,20 +398,57 @@ const PostDetailPage = () => {
           {/* 게시글 이미지 */}
           {post.image && post.image.length > 0 && (
             <ImageContainer>
-              <PostImage 
-                src={Array.isArray(post.image) ? post.image[currentImageIndex] : post.image} 
-                alt="게시글 이미지" 
-              />
-              {Array.isArray(post.image) && post.image.length > 1 && !isPC && (
-                <ImagePagination>
-                  {post.image.map((_, index) => (
-                    <PaginationDot
-                      key={index}
-                      active={index === currentImageIndex}
-                      onClick={() => setCurrentImageIndex(index)}
+              {/* 모바일: 페이지네이션 + 스와이프 */}
+              {!isPC && (
+                <>
+                  <div
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                    style={{ position: 'relative' }}
+                  >
+                    <PostImage 
+                      src={Array.isArray(post.image) ? post.image[currentImageIndex] : post.image} 
+                      alt="게시글 이미지"
+                      style={{ 
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none',
+                        touchAction: 'pan-y' // 가로 스와이프만 감지
+                      }}
                     />
-                  ))}
-                </ImagePagination>
+                    
+
+                  </div>
+                  
+                  {Array.isArray(post.image) && post.image.length > 1 && (
+                    <ImagePagination>
+                      {post.image.map((_, index) => (
+                        <PaginationDot
+                          key={index}
+                          active={index === currentImageIndex}
+                          onClick={() => setCurrentImageIndex(index)}
+                        />
+                      ))}
+                    </ImagePagination>
+                  )}
+                </>
+              )}
+              
+              {/* PC: 모든 이미지 한번에 렌더링 */}
+              {isPC && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {Array.isArray(post.image) ? (
+                    post.image.map((imageUrl, index) => (
+                      <PostImage 
+                        key={index}
+                        src={imageUrl} 
+                        alt={`게시글 이미지 ${index + 1}`} 
+                      />
+                    ))
+                  ) : (
+                    <PostImage src={post.image} alt="게시글 이미지" />
+                  )}
+                </div>
               )}
             </ImageContainer>
           )}
@@ -316,7 +478,9 @@ const PostDetailPage = () => {
                     padding: '20px 16px 8px 16px', gap: '10px', borderBottom: '1px solid #DDDDDD'
                   }}>
                     <div style={{ display: 'flex', gap: '12px' }}>
-                      <div style={{ fontSize: '16px', fontWeight: '500', padding: '4px 0px' }}>하지희</div>
+                      <div style={{ fontSize: '16px', fontWeight: '500', padding: '4px 0px' }}>
+                        {currentUser?.name || '익명'}
+                      </div>
                       {replyingTo && (
                         <div style={{ 
                           fontSize: '13px', 
@@ -370,25 +534,17 @@ const PostDetailPage = () => {
             )}
             
             {/* 개별 댓글 */}
-            {comments.map((comment) => (
-              <CommentItem key={comment.id} replyLevel={comment.replyLevel}>
-                {comment.replyLevel > 0 && (
+            {sortedComments.map((comment) => (
+              <CommentItem key={comment.id} replyLevel={comment.parentId ? 1 : 0}>
+                {comment.parentId && (
                   <ReplyIndicator>
-                    {Array.from({ length: comment.replyLevel - 1 }).map((_, index) => (
-                      <>
-                      <>{!isPC && ( <div key={index} style={{ width: '20px', height: '20px' }} /> )}</>
-                      <>{isPC && ( <div key={index} style={{ width: '24px', height: '24px' }} /> )}</>
-                      </>
-                    ))}
-                    {/* 마지막 단계만 Tab 아이콘 */}
                     {!isPC && ( <img src={Tab} alt="대댓글" width="20" height="20" /> )}
                     {isPC && ( <img src={Tab} alt="대댓글" width="24" height="24" /> )}
                   </ReplyIndicator>
                 )}
-                <div >
+                <div>
                   {/* 삭제된 댓글 표시 처리 */}
                   {comment.isDeleted ? (
-                    // 삭제된 댓글 표시
                     <div style={{
                       padding: '12px 0',
                       color: '#999',
@@ -402,13 +558,13 @@ const PostDetailPage = () => {
                       <CommentHeader>
                         <div>
                           <CommentAuthor>
-                            {comment.userId === post.userId ? '작성자' : comment.author}
+                            {isMyPost(post) && comment.userId === post.userId ? '작성자' : comment.author}
                           </CommentAuthor>
                           <CommentDate>{comment.date}</CommentDate>
                         </div>
                         
                         <CommentHeaderActions>
-                          {comment.userId !== currentUserId && (
+                          {!isMyComment(comment) && (
                             <CommentButton onClick={() => handleCommentLike(comment.id)}>
                               <CommentIcon 
                                 src={comment.isLiked ? LikePink : Like} 
@@ -417,16 +573,14 @@ const PostDetailPage = () => {
                             </CommentButton>
                           )}
                           
-                          {/* 깊이 제한 - 4단계 미만일 때만 대댓글 버튼 표시 */}
-                          {comment.replyLevel < 4 && (
-                            <CommentButton onClick={() => handleReply(comment)}>
-                              <CommentIcon src={Comment} alt="대댓글" />
-                            </CommentButton>
-                          )}
+                          {/* 대댓글 버튼 - 모든 댓글에 표시 */}
+                          <CommentButton onClick={() => handleReply(comment)}>
+                            <CommentIcon src={Comment} alt="대댓글" />
+                          </CommentButton>
 
-                          {comment.userId === currentUserId && (
+                          {isMyComment(comment) && (
                             <>
-                              <CommentActionButton onClick={() => console.log('수정')}>
+                              <CommentActionButton onClick={() => handleEditComment(comment)}>
                                 수정
                               </CommentActionButton>
                               <CommentActionButton 
@@ -443,7 +597,39 @@ const PostDetailPage = () => {
                         </CommentHeaderActions>
                       </CommentHeader>
                       
-                      <CommentContent>{comment.content}</CommentContent>
+                      {/* 수정 중인 댓글은 입력창으로, 아니면 일반 텍스트로 표시 */}
+                      {editingComment && editingComment.id === comment.id ? (
+                        <div style={{ marginTop: '12px', marginBottom: '12px' }}>
+                          <CommentInput
+                            value={editCommentText}
+                            onChange={(e) => setEditCommentText(e.target.value)}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleCommentUpdate(comment.id);
+                              }
+                            }}
+                            style={{ 
+                              height: isPC ? '80px' : '60px',
+                              marginBottom: '8px',
+                              width: '90%'
+                            }}
+                          />
+                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                            <CommentActionButton onClick={cancelEditingComment}>
+                              취소
+                            </CommentActionButton>
+                            <CommentActionButton 
+                              onClick={() => handleCommentUpdate(comment.id)}
+                              style={{ color: '#F67676' }}
+                            >
+                              완료
+                            </CommentActionButton>
+                          </div>
+                        </div>
+                      ) : (
+                        <CommentContent>{comment.content}</CommentContent>
+                      )}
                       
                       {comment.likes > 0 && (
                         <CommentLikeInfo>
@@ -520,6 +706,14 @@ const PostDetailPage = () => {
         onClose={closeDeleteModal}
         title={selectedComment ? "댓글을 삭제하시겠어요?" : "게시글을 삭제하시겠어요?"}
         actions={deleteModalActions}
+      />
+
+      {/* 수정 확인 모달 */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={closeEditModal}
+        title="댓글을 수정하시겠어요?"
+        actions={editModalActions}
       />
     </Container>
   );

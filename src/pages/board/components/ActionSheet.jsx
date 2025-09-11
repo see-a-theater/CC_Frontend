@@ -8,7 +8,7 @@ import {
   ActionSheetBody,
   ActionSheetButton,
   ActionSheetIcon
-} from '../styles/modalStyles';
+} from '@/pages/board/styles/modalStyles';
 
 const ActionSheet = ({ isOpen, onClose, title, actions }) => {
   useEffect(() => {

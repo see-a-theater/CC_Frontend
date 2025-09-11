@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import PostListPage from './pages/PostListPage';
-import PostDetailPage from './pages/PostDetailPage';
-import PostCreatePage from './pages/PostCreatePage';
-import SuccessPage from './pages/SuccessPage';
+import PostListPage from '@/pages/board/pages/PostListPage';
+import PostDetailPage from '@/pages/board/pages/PostDetailPage';
+import PostCreatePage from '@/pages/board/pages/PostCreatePage';
+import SuccessPage from '@/pages/board/pages/SuccessPage';
 //import PostEditPage from './pages/PostEditPage';
 
 const BoardPage = () => {
@@ -14,7 +14,7 @@ const BoardPage = () => {
       <Route path="/post/:id" element={<PostDetailPage />} />
       <Route path="/create" element={<PostCreatePage />} />
       <Route path="/create/success" element={<SuccessPage />} />
-      {/*<Route path="/edit/:id" element={<PostEditPage />} />*/}
+      <Route path="/edit/:id" element={<PostCreatePage />} />
     </Routes>
   );
 };

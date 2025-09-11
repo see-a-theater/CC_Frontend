@@ -1,10 +1,10 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Container } from '../styles/commonStyles';
-import { SuccessMessage } from '../../ticketingpage/styles/commonStyles';
-import ActionButton from '../../ticketingpage/components/ActionButton';
-import useResponsive from '../hooks/useResponsive';
+import { Container } from '@/pages/board/styles/commonStyles';
+import { SuccessMessage } from '@/pages/ticketingpage/styles/commonStyles';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
+import useResponsive from '@/pages/board/hooks/useResponsive';
 
 const SuccessPage = () => {
   const navigate = useNavigate();

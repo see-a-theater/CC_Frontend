@@ -11,10 +11,10 @@ import {
   PostStats,
   PostStat,
   PostImage
-} from '../styles/postStyles';
-import Like from './Icons/Like.svg';
-import Comment from './Icons/Comment.svg';
-import useResponsive from '../hooks/useResponsive'
+} from '@/pages/board/styles/postStyles';
+import Like from '@/pages/board/components/Icons/Like.svg';
+import Comment from '@/pages/board/components/Icons/Comment.svg';
+import useResponsive from '@/pages/board/hooks/useResponsive'
 
 const PostItem = ({ post, isLast, lastElementRef }) => {
   const navigate = useNavigate();

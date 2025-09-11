@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalActions,
   ModalButton
-} from '../styles/modalStyles';
+} from '@/pages/board/styles/modalStyles';
 
 const Modal = ({ isOpen, onClose, title, children, actions }) => {
   useEffect(() => {

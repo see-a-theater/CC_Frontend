@@ -5,10 +5,10 @@ import {
   Tab,
   HotIcon,
   CreateBtnContainer,
-} from '../styles/commonStyles';
-import SearchBarTop from './SearchBarTop'
-import FloatingButton from './FloatingButton';
-import useResponsive from '../hooks/useResponsive'
+} from '@/pages/board/styles/commonStyles';
+import SearchBarTop from '@/pages/board/components/SearchBarTop'
+import FloatingButton from '@/pages/board/components/FloatingButton';
+import useResponsive from '@/pages/board/hooks/useResponsive'
 
 const TabBar = ({ activeTab, onTabChange, showFloatingButton }) => {
   const tabs = [

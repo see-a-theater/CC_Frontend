@@ -6,9 +6,9 @@ import {
   SearchInput,
   SearchIcon,
   SearchNotice
-} from '../styles/commonStyles';
-import SearchBlack from './Icons/SearchBlack.svg';
-import useResponsive from '../hooks/useResponsive'
+} from '@/pages/board/styles/commonStyles';
+import SearchBlack from '@/pages/board/components/Icons/SearchBlack.svg';
+import useResponsive from '@/pages/board/hooks/useResponsive'
 
 const SearchBar = ({ onSearch, showNotice = true }) => {
   const [searchTerm, setSearchTerm] = useState('');

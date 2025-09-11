@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Container } from '../styles/commonStyles';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Container } from '@/pages/board/styles/commonStyles';
 import {
   ContentArea,
   FormContainer,
@@ -18,50 +18,115 @@ import {
   ImageDeleteButton,
   RegisterBtnContainer,
   RegisterButton,
-} from '../styles/formStyles';
-import Header from '../components/BoardHeader';
-import Modal from '../components/Modal';
-import useModal from '../hooks/useModal';
-import usePosts from '../hooks/usePosts';
-import Camera from '../components/Icons/Camera.svg';
-import useResponsive from '../hooks/useResponsive'
+} from '@/pages/board/styles/formStyles';
+import Header from '@/pages/board/components/BoardHeader';
+import Modal from '@/pages/board/components/Modal';
+import useModal from '@/pages/board/hooks/useModal';
+import usePosts from '@/pages/board/hooks/usePosts';
+import { validateImageFiles } from '@/pages/board/api/imageApi';
+import Camera from '@/pages/board/components/Icons/Camera.svg';
+import useResponsive from '@/pages/board/hooks/useResponsive';
 
 const PostCreatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addPost } = usePosts();
+  const { id } = useParams();
+  const { addPost, getPost, updatePost } = usePosts();
   const isPC = useResponsive();
 
-  // URL에서 카테고리 정보 가져오기 (플로팅 버튼에서 전달받음)
+  const isEditMode = Boolean(id);
   const searchParams = new URLSearchParams(location.search);
-  const category = searchParams.get('category') || 'general';
+  const categoryFromUrl = searchParams.get('category') || 'general';
   
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: category,
+    category: categoryFromUrl,
     images: []
   });
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [historyPushed, setHistoryPushed] = useState(false);  //히스토리 엔트리 추가 여부를 추적
+  const [historyPushed, setHistoryPushed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [originalData, setOriginalData] = useState(null);
   const { isOpen: isExitModalOpen, openModal: openExitModal, closeModal: closeExitModal } = useModal();
 
-  // hasUnsavedChanges 계산을 별도 useEffect로
+  // 수정 모드일 때 기존 게시글 데이터 로드
   useEffect(() => {
-    const hasContent = formData.title.trim() || formData.content.trim() || formData.images.length > 0;
-    setHasUnsavedChanges(hasContent);
-  }, [formData]);
+    if (isEditMode && id) {
+      loadExistingPost();
+    }
+  }, [isEditMode, id]);
+
+  const loadExistingPost = async () => {
+    setIsLoading(true);
+    try {
+      const existingPost = await getPost(id);
+      
+      if (existingPost) {
+        // 기존 이미지를 formData.images 형식으로 변환
+        const existingImages = existingPost.image 
+          ? (Array.isArray(existingPost.image) 
+              ? existingPost.image.map((url, index) => ({
+                  id: `existing_${index}`,
+                  url: url,
+                  file: null,
+                  // URL에서 keyName 추출 시도 (board/filename.jpg 형식)
+                  keyName: url.split('/').slice(-2).join('/')
+                }))
+              : [{
+                  id: 'existing_0',
+                  url: existingPost.image,
+                  file: null,
+                  keyName: existingPost.image.split('/').slice(-2).join('/')
+                }])
+          : [];
+
+        const initialData = {
+          title: existingPost.title,
+          content: existingPost.content,
+          category: existingPost.category,
+          images: existingImages
+        };
+
+        setFormData(initialData);
+        setOriginalData(initialData);
+      } else {
+        navigate('/board');
+      }
+    } catch (error) {
+      console.error('게시글 로드 실패:', error);
+      navigate('/board');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // hasUnsavedChanges 계산
+  useEffect(() => {
+    if (isEditMode && originalData) {
+      const hasChanges = 
+        formData.title !== originalData.title ||
+        formData.content !== originalData.content ||
+        formData.images.length !== originalData.images.length ||
+        formData.images.some((img, index) => {
+          const originalImg = originalData.images[index];
+          return !originalImg || img.url !== originalImg.url;
+        });
+      setHasUnsavedChanges(hasChanges);
+    } else {
+      const hasContent = formData.title.trim() || formData.content.trim() || formData.images.length > 0;
+      setHasUnsavedChanges(hasContent);
+    }
+  }, [formData, originalData, isEditMode]);
 
   // 브라우저 이벤트 처리
   useEffect(() => {
-    // 페이지 진입 시 히스토리 엔트리를 한 번만 추가
     if (!historyPushed) {
       window.history.pushState(null, '', window.location.href);
       setHistoryPushed(true);
     }
 
-    // 브라우저 새로고침/탭 닫기 방지
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
@@ -69,39 +134,34 @@ const PostCreatePage = () => {
       }
     };
 
-    // 브라우저 뒤로가기 방지
     const handlePopState = (e) => {
-      e.preventDefault(); // 항상 뒤로가기 방지
+      e.preventDefault();
       
       if (hasUnsavedChanges) {
-        openExitModal(); // 작성 중이면 확인 모달
+        openExitModal();
       } else {
-        navigate('/board'); // 빈 상태면 바로 이동
+        navigate('/board');
       }
     };
 
-    // 이벤트 리스너 등록
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
 
-    // 클린업 함수
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [hasUnsavedChanges, openExitModal, navigate, historyPushed]); // 필요한 의존성만 포함
+  }, [hasUnsavedChanges, openExitModal, navigate, historyPushed]);
 
-  // 카테고리 표시 텍스트
   const getCategoryDisplayName = (cat) => {
     switch(cat) {
       case 'general': return '일반 게시판';
       case 'promotion': return '홍보 게시판';
-      case 'hot': return '일반 게시판'; // Hot탭에서 온 경우도 일반으로
+      case 'hot': return '일반 게시판';
       default: return '일반 게시판';
     }
   };
 
-  // 입력값 변경 핸들러
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -109,29 +169,49 @@ const PostCreatePage = () => {
     }));
   };
 
-  // 이미지 추가 핸들러
-  const handleImageAdd = (event) => {
+  // 이미지 추가
+  const handleImageAdd = async (event) => {
     const files = Array.from(event.target.files);
     const remainingSlots = 5 - formData.images.length;
     const filesToAdd = files.slice(0, remainingSlots);
     
-    filesToAdd.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, {
-            id: Date.now() + Math.random(),
-            file: file,
-            url: e.target.result
-          }]
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+    if (filesToAdd.length === 0) return;
+
+    try {
+      // 유효성 검사
+      validateImageFiles(filesToAdd);
+
+      // 파일을 formData.images에 추가 (실제 업로드는 submit 시에 실행)
+      const newImages = await Promise.all(
+        filesToAdd.map(file => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              resolve({
+                id: Date.now() + Math.random(),
+                file: file, // File 객체 저장
+                url: e.target.result // 미리보기용 DataURL
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        })
+      );
+      
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...newImages]
+      }));
+
+    } catch (error) {
+      alert(error.message);
+      console.error('이미지 추가 실패:', error);
+    }
+
+    // 파일 input 초기화
+    event.target.value = '';
   };
 
-  // 이미지 삭제 핸들러
   const handleImageDelete = (imageId) => {
     setFormData(prev => ({
       ...prev,
@@ -139,52 +219,60 @@ const PostCreatePage = () => {
     }));
   };
 
-  // 완료 버튼 활성화 조건
   const isFormValid = formData.title.trim() && formData.content.trim();
 
-  // 게시글 작성 완료
+  // 게시글 작성/수정 완료
   const handleSubmit = async () => {
     if (!isFormValid) return;
 
     try {
-      // 새 게시글 생성
-      const newPost = {
-        title: formData.title.trim(),
-        content: formData.content.trim(),
-        category: formData.category === 'hot' ? 'general' : formData.category,
-        images: formData.images.map(img => img.url), // 실제로는 서버에 업로드 후 URL을 받아야 함
-        author: '익명',
-        date: new Date().toLocaleDateString('ko-KR', { 
-          year: 'numeric', 
-          month: '2-digit', 
-          day: '2-digit' 
-        }).replace(/\. /g, '.').replace('.', ''),
-        likes: 0,
-        comments: 0,
-        isHot: false,
-        userId: 'currentUser' // 실제로는 로그인한 사용자 ID
-      };
+      setIsLoading(true);
+      console.log('게시글 제출 시작:', formData);
 
-      const createdPost = await addPost(newPost);
-      
-      // 작성한 게시글 상세 페이지로 이동
-      navigate(`/board/create/success?postId=${createdPost.id}`);
+      if (isEditMode) {
+        // 수정 모드
+        const updateData = {
+          title: formData.title.trim(),
+          content: formData.content.trim(),
+          category: formData.category,
+          images: formData.images // usePosts에서 이미지 처리
+        };
+
+        await updatePost(id, updateData);
+        navigate(`/board/post/${id}`);
+        
+      } else {
+        // 작성 모드
+        const newPost = {
+          title: formData.title.trim(),
+          content: formData.content.trim(),
+          category: formData.category === 'hot' ? 'general' : formData.category,
+          images: formData.images // usePosts에서 이미지 처리
+        };
+
+        const createdPost = await addPost(newPost);
+        navigate(`/board/create/success?postId=${createdPost.id}`);
+      }
     } catch (error) {
-      console.error('게시글 작성 실패:', error);
-      // 에러 처리 (토스트 메시지 등)
+      console.error(`게시글 ${isEditMode ? '수정' : '작성'} 실패:`, error);
+      alert(`게시글 ${isEditMode ? '수정' : '작성'}에 실패했습니다. ${error.message || ''}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // 뒤로가기 핸들러
   const handleBack = () => {
     if (hasUnsavedChanges) {
-      openExitModal(); // 작성 중이면 확인 모달
+      openExitModal();
     } else {
-      navigate('/board'); // 빈 상태면 바로 이동
+      if (isEditMode) {
+        navigate(`/board/post/${id}`);
+      } else {
+        navigate('/board');
+      }
     }
   };
 
-  // 나가기 확인 모달 액션 
   const exitModalActions = [
     {
       label: '취소',
@@ -196,20 +284,39 @@ const PostCreatePage = () => {
       type: 'confirm',
       onClick: () => {
         closeExitModal();
-        navigate('/board');
+        if (isEditMode) {
+          navigate(`/board/post/${id}`);
+        } else {
+          navigate('/board');
+        }
       }
     }
   ];
+
+  if (isEditMode && isLoading) {
+    return (
+      <Container>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' 
+        }}>
+          로딩 중...
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container>
       {!isPC && (
         <Header
-          title="create"
+          title={isEditMode ? "edit" : "create"}
           showBack={true}
           onBack={handleBack}
           onComplete={handleSubmit}
-          completeDisabled={!isFormValid}
+          completeDisabled={!isFormValid || isLoading}
         />
       )}
 
@@ -222,33 +329,42 @@ const PostCreatePage = () => {
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="제목을 입력하세요"
                 maxLength={100}
+                disabled={isLoading}
               />
-              {isPC && ( <RegisterButton disabled={!isFormValid} onClick={isFormValid ? handleSubmit : undefined} >등록</RegisterButton> )}
+              {isPC && (
+                <RegisterButton 
+                  disabled={!isFormValid || isLoading} 
+                  onClick={isFormValid && !isLoading ? handleSubmit : undefined}
+                >
+                  {isLoading ? '처리중...' : (isEditMode ? '수정' : '등록')}
+                </RegisterButton>
+              )}
             </RegisterBtnContainer>
           </FormField>
 
           <CategoryLabel>{getCategoryDisplayName(formData.category)}</CategoryLabel>
+          
           {isPC && (
             <div style={{display: 'flex', justifyContent: 'end'}}>
-              <ImageAddButton disabled={formData.images.length >= 5}>
+              <ImageAddButton disabled={formData.images.length >= 5 || isLoading}>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png"
                   multiple
                   onChange={handleImageAdd}
                   style={{ display: 'none' }}
                   id="image-upload"
-                  disabled={formData.images.length >= 5}
+                  disabled={formData.images.length >= 5 || isLoading}
                 />
                 <label htmlFor="image-upload" style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   gap: '8px', 
-                  cursor: formData.images.length >= 5 ? 'not-allowed' : 'pointer',
-                  opacity: formData.images.length >= 5 ? 0.5 : 1
+                  cursor: (formData.images.length >= 5 || isLoading) ? 'not-allowed' : 'pointer',
+                  opacity: (formData.images.length >= 5 || isLoading) ? 0.5 : 1
                 }}>
                   <ImageAddIcon src={Camera} alt="사진 추가" />
-                  <ImageAddText>사진</ImageAddText>
+                  <ImageAddText>사진 ({formData.images.length}/5)</ImageAddText>
                 </label>
               </ImageAddButton>
             </div>
@@ -260,30 +376,31 @@ const PostCreatePage = () => {
               onChange={(e) => handleInputChange('content', e.target.value)}
               placeholder="다양한 사람들과 공연에 관해 이야기를 나눠봐요!"
               rows={8}
+              disabled={isLoading}
             />
           </FormField>
 
           <ImageSection>
             {!isPC && ( 
-              <ImageAddButton disabled={formData.images.length >= 5}>
+              <ImageAddButton disabled={formData.images.length >= 5 || isLoading}>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png"
                   multiple
                   onChange={handleImageAdd}
                   style={{ display: 'none' }}
-                  id="image-upload"
-                  disabled={formData.images.length >= 5}
+                  id="image-upload-mobile"
+                  disabled={formData.images.length >= 5 || isLoading}
                 />
-                <label htmlFor="image-upload" style={{ 
+                <label htmlFor="image-upload-mobile" style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   gap: '8px', 
-                  cursor: formData.images.length >= 5 ? 'not-allowed' : 'pointer',
-                  opacity: formData.images.length >= 5 ? 0.5 : 1
+                  cursor: (formData.images.length >= 5 || isLoading) ? 'not-allowed' : 'pointer',
+                  opacity: (formData.images.length >= 5 || isLoading) ? 0.5 : 1
                 }}>
                   <ImageAddIcon src={Camera} alt="사진 추가" />
-                  <ImageAddText>사진</ImageAddText>
+                  <ImageAddText>사진 ({formData.images.length}/5)</ImageAddText>
                 </label>
               </ImageAddButton>
             )}
@@ -293,7 +410,10 @@ const PostCreatePage = () => {
                 {formData.images.map((image) => (
                   <ImagePreview key={image.id}>
                     <img src={image.url} alt="미리보기" />
-                    <ImageDeleteButton onClick={() => handleImageDelete(image.id)}>
+                    <ImageDeleteButton 
+                      onClick={() => handleImageDelete(image.id)}
+                      disabled={isLoading}
+                    >
                       ✕
                     </ImageDeleteButton>
                   </ImagePreview>
@@ -304,11 +424,10 @@ const PostCreatePage = () => {
         </FormContainer>
       </ContentArea>
 
-      {/* 나가기 확인 모달 */}
       <Modal
         isOpen={isExitModalOpen}
         onClose={closeExitModal}
-        title="작성을 취소하시겠어요?"
+        title={isEditMode ? "수정을 취소하시겠어요?" : "작성을 취소하시겠어요?"}
         actions={exitModalActions}
       />
     </Container>
