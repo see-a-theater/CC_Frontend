@@ -49,5 +49,17 @@ export default [
 			],
 			'import/no-unresolved': ['error', { commonjs: true, amd: true }],
 		},
+		settings: {
+			react: { version: 'detect' },
+			'import/resolver': {
+				alias: {
+					map: [['@', './src']],
+					extensions: ['.js', '.jsx', '.json'],
+				},
+				node: {
+					extensions: ['.js', '.jsx', '.json'],
+				},
+			},
+		},
 	},
 ];
