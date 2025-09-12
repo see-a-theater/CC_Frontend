@@ -36,7 +36,11 @@ function TicketContainer({ header, details, isPerformer }) {
 		)}:${String(d.getMinutes()).padStart(2, '0')}`;
 	};
 	return (
-		<Wrapper isExpired={isExpired} onClick={() => navigate(`${ticketId}`)}>
+		<Wrapper
+			id={ticketId}
+			isExpired={isExpired}
+			onClick={() => navigate(`${ticketId}`)}
+		>
 			<div className="only-web">
 				<img src={posterImageUrl} style={{ width: '140px', height: '200px' }} />
 			</div>

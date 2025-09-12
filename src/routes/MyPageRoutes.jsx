@@ -18,7 +18,7 @@ function MyPageRoutes() {
 			<Route path="/" element={<MyPage />}>
 				<Route index element={<MyPageMenu />} />
 				<Route path="tickets" element={<MyTickets />} />
-				<Route path="tickets/1" element={<TicketDetail />} />
+				<Route path="tickets/:ticketId" element={<TicketDetail />} />
 				<Route path="tickets/1/cancel" element={<TicketCancel />} />
 				<Route
 					path="tickets/1/cancel/complete"
