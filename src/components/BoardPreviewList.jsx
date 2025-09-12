@@ -1,32 +1,15 @@
 import styled from 'styled-components';
 function BoardPreviewList({ data }) {
+	/*
 	const mockData = [
 		{
 			tag: '일반',
 			title: '아이폰 16 찾아요',
 			text: '알라딘 공연에서 아이폰 16pro를 두고 온거 같은데 혹시 발견하시면 연락주세요',
 		},
-		{
-			tag: '일반',
-			title: '아이폰 16 찾아요',
-			text: '알라딘 공연에서 아이폰 16pro를 두고 온거 같은데 혹시 발견하시면 연락주세요',
-		},
-		{
-			tag: '일반',
-			title: '아이폰 16 찾아요',
-			text: '알라딘 공연에서 아이폰 16pro를 두고 온거 같은데 혹시 발견하시면 연락주세요',
-		},
-		{
-			tag: '일반',
-			title: '아이폰 16 찾아요',
-			text: '알라딘 공연에서 아이폰 16pro를 두고 온거 같은데 혹시 발견하시면 연락주세요',
-		},
-		{
-			tag: '일반',
-			title: '아이폰 16 찾아요',
-			text: '알라딘 공연에서 아이폰 16pro를 두고 온거 같은데 혹시 발견하시면 연락주세요',
-		},
+
 	];
+	*/
 	console.log('게시판 미리보기', data);
 
 	const boardTypeLabel = {
@@ -37,7 +20,7 @@ function BoardPreviewList({ data }) {
 		<Wrapper>
 			<List>
 				{data &&
-					data.map((item, index) => (
+					data.map((item) => (
 						<Li key={item.boardId}>
 							<div>{boardTypeLabel[item.boardType] || item.boardType}</div>
 							<h3>{item.title}</h3>
