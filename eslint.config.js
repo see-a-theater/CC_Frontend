@@ -47,17 +47,20 @@ export default [
 				'warn',
 				{ allowConstantExport: true },
 			],
-			'import/no-unresolved': ['error', { commonjs: true, amd: true }],
+			'import/no-unresolved': [
+				'error',
+				{ commonjs: true, amd: true, ignore: ['\\?react$'] },
+			],
 		},
 		settings: {
 			react: { version: 'detect' },
 			'import/resolver': {
 				alias: {
 					map: [['@', './src']],
-					extensions: ['.js', '.jsx', '.json'],
+					extensions: ['.js', '.jsx', '.json', '.svg'],
 				},
 				node: {
-					extensions: ['.js', '.jsx', '.json'],
+					extensions: ['.js', '.jsx', '.json', '.svg'],
 				},
 			},
 		},
