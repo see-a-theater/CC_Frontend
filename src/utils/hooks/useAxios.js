@@ -14,10 +14,6 @@ const useAxios = () => {
 	}, []);
 
 	const responseInterceptor = useCallback(
-		(response) => {
-			return response;
-		},
-
 		async (error) => {
 			const originalRequest = error.config;
 
