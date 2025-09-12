@@ -39,7 +39,6 @@ function TicketDetail() {
 
 	console.log('ticket detail', data);
 	// 모달창 관련 함수
-
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [isChecked, setIsChecked] = useState(false);
@@ -130,7 +129,7 @@ function TicketDetail() {
 					</div>
 					{/*웹 포스터*/}
 					<WebPoster className="only-web">
-						<img src={basicUrl + posterImageUrl ?? 'null'} />
+						<img />
 						<p>{basicUrl + posterImageUrl}</p>
 					</WebPoster>
 					{/*티켓 정보 */}
