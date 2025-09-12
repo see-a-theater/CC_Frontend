@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import TopBar from '@/components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
-import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
 import TopBarWeb from '@/components/TopBarWeb';
 import Select from 'react-select';
 import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
