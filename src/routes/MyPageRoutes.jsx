@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import MyPage from '@/pages/mypage/MyPage';
-import MyPageMenu from '@/pages/mypage/MypageMenu';
+import MyPageMenu from '@/pages/mypage/MyPageMenu';
 import MyTickets from '@/pages/mypage/ticket/MyTickets';
 import TicketDetail from '@/pages/mypage/ticket/TicketDetail';
 import TicketCancel from '@/pages/mypage/ticket/TicketCancel';
