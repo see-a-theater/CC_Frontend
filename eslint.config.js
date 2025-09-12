@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import lintImport from 'eslint-plugin-no-relative-import-paths';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
+import importPlugin from 'eslint-plugin-import';
 
 export default [
 	{ ignores: ['dist'] },
@@ -26,6 +27,7 @@ export default [
 			react: reactPlugin,
 			'react-hooks': reactHooks,
 			'react-refresh': reactRefresh,
+			import: importPlugin,
 		},
 		rules: {
 			...js.configs.recommended.rules,
@@ -45,6 +47,7 @@ export default [
 				'warn',
 				{ allowConstantExport: true },
 			],
+			'import/no-unresolved': ['error', { commonjs: true, amd: true }],
 		},
 	},
 ];
