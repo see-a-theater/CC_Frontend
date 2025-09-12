@@ -5,9 +5,9 @@ import TicketContainer from '@/components/TicketContainer';
 import TopBar from '@/components/TopBar';
 import { useNavigate } from 'react-router-dom';
 import Poster from '@/assets/images/test-poster2.png';
-import TopBarWeb from '../../../../components/TopBarWeb';
-import PillToggleGroup from '../../../../components/PillToggleGroup';
-import useCustomFetch from '../../../../utils/hooks/useAxios';
+import TopBarWeb from '@/components/TopBarWeb';
+import PillToggleGroup from '@/components/PillToggleGroup';
+import useCustomFetch from '@/utils/hooks/useAxios';
 function RegisteredPerformances() {
 	const [selected, setSelected] = useState('전체');
 	const navigate = useNavigate();
@@ -16,52 +16,52 @@ function RegisteredPerformances() {
 		navigate(-1);
 	}
 	const ticketHeaders = ['예매일', '장소', '관람일시', '상태'];
-	const details = [
-		{
-			title: '실종',
-			count: 2,
-			imgSrc: Poster,
-			bookingDate: '2025-01-15',
-			place: '홍익대학교 학생회관 3층 소극장',
-			performanceDate: '2025-03-21 (금) 14:30 1회',
-			cancelDeadline: '2025-03-20 (목) 17:00 까지',
-			status: '예매 진행중',
-			navLink: '1',
-		},
-		{
-			title: '실종',
-			count: 2,
-			imgSrc: Poster,
-			bookingDate: '2025-01-15',
-			place: '홍익대학교 학생회관 3층 소극장',
-			performanceDate: '2025-03-21 (금) 14:30 1회',
-			cancelDeadline: '2025-03-20 (목) 17:00 까지',
-			status: '공연 종료',
-			navLink: '1',
-		},
-	];
+	// const details = [
+	// 	{
+	// 		title: '실종',
+	// 		count: 2,
+	// 		imgSrc: Poster,
+	// 		bookingDate: '2025-01-15',
+	// 		place: '홍익대학교 학생회관 3층 소극장',
+	// 		performanceDate: '2025-03-21 (금) 14:30 1회',
+	// 		cancelDeadline: '2025-03-20 (목) 17:00 까지',
+	// 		status: '예매 진행중',
+	// 		navLink: '1',
+	// 	},
+	// 	{
+	// 		title: '실종',
+	// 		count: 2,
+	// 		imgSrc: Poster,
+	// 		bookingDate: '2025-01-15',
+	// 		place: '홍익대학교 학생회관 3층 소극장',
+	// 		performanceDate: '2025-03-21 (금) 14:30 1회',
+	// 		cancelDeadline: '2025-03-20 (목) 17:00 까지',
+	// 		status: '공연 종료',
+	// 		navLink: '1',
+	// 	},
+	// ];
 
 	const page = 0;
 	const size = 5;
 
 	const {
 		data: dataAllTicket,
-		loading: loadingAllTicket,
-		error: errorAllTicket,
+		// loading: loadingAllTicket,
+		// error: errorAllTicket,
 	} = useCustomFetch(`member/myPage/reserveList?page=${page}&size=${size}`);
 
 	const {
 		data: dataOngoingTicket,
-		loading: loadingOngoingTicket,
-		error: errorOngoingTicket,
+		// loading: loadingOngoingTicket,
+		// error: errorOngoingTicket,
 	} = useCustomFetch(
 		`member/myPage/reserveList?page=${page}&size=${size}&status=APPROVED_ONGOING`,
 	);
 
 	const {
 		data: dataEndedTicket,
-		loading: loadingEndedTicket,
-		error: errorEndedTicket,
+		// loading: loadingEndedTicket,
+		// error: errorEndedTicket,
 	} = useCustomFetch(
 		`member/myPage/reserveList?page=${page}&size=${size}&status=APPROVED_ENDED`,
 	);

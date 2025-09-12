@@ -1,14 +1,11 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import TicketContainer from '../../../components/TicketContainer';
-import TopBar from '../../../components/TopBar';
+import { useState } from 'react';
+import TicketContainer from '@/components/TicketContainer';
+import TopBar from '@/components/TopBar';
 import { useNavigate } from 'react-router-dom';
-import ChevronLeftGray from '@/assets/icons/chevronLeftGray.svg?react';
-import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
-import Poster from '@/assets/images/test-poster2.png';
-import TopBarWeb from '../../../components/TopBarWeb';
-import PillToggleGroup from '../../../components/PillToggleGroup';
-import useCustomFetch from '../../../utils/hooks/useCustomFetch.js';
+import TopBarWeb from '@/components/TopBarWeb';
+import PillToggleGroup from '@/components/PillToggleGroup';
+import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
 function MyTickets() {
 	const role = localStorage.getItem('role');
 
@@ -20,33 +17,33 @@ function MyTickets() {
 	}
 	const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소일시'];
 
-	const details = [
-		{
-			name: '실종',
-			count: 2,
-			imgSrc: Poster,
-			bookingDate: '2025-01-15',
-			place: '홍익대학교 학생회관 3층 소극장',
-			performanceDate: '2025-03-21 (금) 14:30 1회',
-			cancelDeadline: '2025-03-20 (목) 17:00 까지',
-			status: '예매 진행중',
-			navLink: '1',
-		},
-		{
-			name: '실종',
-			count: 2,
-			imgSrc: Poster,
-			bookingDate: '2025-01-15',
-			place: '홍익대학교 학생회관 3층 소극장',
-			performanceDate: '2025-03-21 (금) 14:30 1회',
-			cancelDeadline: '2025-03-20 (목) 17:00 까지',
-			status: '공연 종료',
-			navLink: '1',
-		},
-	];
+	// const details = [
+	// 	{
+	// 		name: '실종',
+	// 		count: 2,
+	// 		imgSrc: Poster,
+	// 		bookingDate: '2025-01-15',
+	// 		place: '홍익대학교 학생회관 3층 소극장',
+	// 		performanceDate: '2025-03-21 (금) 14:30 1회',
+	// 		cancelDeadline: '2025-03-20 (목) 17:00 까지',
+	// 		status: '예매 진행중',
+	// 		navLink: '1',
+	// 	},
+	// 	{
+	// 		name: '실종',
+	// 		count: 2,
+	// 		imgSrc: Poster,
+	// 		bookingDate: '2025-01-15',
+	// 		place: '홍익대학교 학생회관 3층 소극장',
+	// 		performanceDate: '2025-03-21 (금) 14:30 1회',
+	// 		cancelDeadline: '2025-03-20 (목) 17:00 까지',
+	// 		status: '공연 종료',
+	// 		navLink: '1',
+	// 	},
+	// ];
 
-	const page = 0;
-	const size = 5;
+	// const page = 0;
+	// const size = 5;
 	const {
 		data: dataAllTicket,
 		loading: loadingAllTicket,
@@ -107,62 +104,99 @@ function MyTickets() {
 				<div style={{ marginBottom: '28px' }} />
 				{selected === '전체' && (
 					<>
-						{dataAllTicket?.result &&
-							dataAllTicket?.result.map((detail) => (
-								<>
-									<TicketContainer details={detail} header={ticketHeaders} />
-								</>
-							))}
-					</>
-				)}
-				{selected === '예매 완료' && (
-					<>
-						{dataReservedTicket?.result &&
-							dataReservedTicket?.result.map((detail) => (
-								<>
-									<TicketContainer details={detail} header={ticketHeaders} />
-								</>
-							))}
-					</>
-				)}
-				{selected === '예매 취소' && (
-					<>
-						{dataCancelledTicket?.result &&
-							dataCancelledTicket?.result.map((detail) => (
-								<>
-									<TicketContainer details={detail} header={ticketHeaders} />
-								</>
-							))}
-					</>
-				)}
-				{selected === '예매 진행' && (
-					<>
-						{dataOngoingTicket?.content ? (
-							dataOngoingTicket?.content.map((detail) => (
-								<>
-									<TicketContainer
-										details={detail}
-										header={ticketHeaders}
-										isPerformer={true}
-									/>
-								</>
+						{loadingAllTicket ? (
+							<p>로딩 중...</p>
+						) : errorAllTicket ? (
+							<p>데이터를 불러오지 못했습니다.</p>
+						) : dataAllTicket?.result?.length > 0 ? (
+							dataAllTicket.result.map((detail, idx) => (
+								<TicketContainer
+									key={idx}
+									details={detail}
+									header={ticketHeaders}
+								/>
 							))
 						) : (
 							<p>내역이 없습니다</p>
 						)}
 					</>
 				)}
+
+				{selected === '예매 완료' && (
+					<>
+						{loadingReservedTicket ? (
+							<p>로딩 중...</p>
+						) : errorReservedTicket ? (
+							<p>데이터를 불러오지 못했습니다.</p>
+						) : dataReservedTicket?.result?.length > 0 ? (
+							dataReservedTicket.result.map((detail, idx) => (
+								<TicketContainer
+									key={idx}
+									details={detail}
+									header={ticketHeaders}
+								/>
+							))
+						) : (
+							<p>내역이 없습니다</p>
+						)}
+					</>
+				)}
+
+				{selected === '예매 취소' && (
+					<>
+						{loadingCancelledTicket ? (
+							<p>로딩 중...</p>
+						) : errorCancelledTicket ? (
+							<p>데이터를 불러오지 못했습니다.</p>
+						) : dataCancelledTicket?.result?.length > 0 ? (
+							dataCancelledTicket.result.map((detail, idx) => (
+								<TicketContainer
+									key={idx}
+									details={detail}
+									header={ticketHeaders}
+								/>
+							))
+						) : (
+							<p>내역이 없습니다</p>
+						)}
+					</>
+				)}
+
+				{selected === '예매 진행' && (
+					<>
+						{loadingOngoingTicket ? (
+							<p>로딩 중...</p>
+						) : errorOngoingTicket ? (
+							<p>데이터를 불러오지 못했습니다.</p>
+						) : dataOngoingTicket?.content?.length > 0 ? (
+							dataOngoingTicket.content.map((detail, idx) => (
+								<TicketContainer
+									key={idx}
+									details={detail}
+									header={ticketHeaders}
+									isPerformer={true}
+								/>
+							))
+						) : (
+							<p>내역이 없습니다</p>
+						)}
+					</>
+				)}
+
 				{selected === '공연 종료' && (
 					<>
-						{dataEndedTicket?.content && dataEndedTicket.content.length > 0 ? (
-							dataEndedTicket?.content.map((detail) => (
-								<>
-									<TicketContainer
-										details={detail}
-										header={ticketHeaders}
-										isPerformer={true}
-									/>
-								</>
+						{loadingEndedTicket ? (
+							<p>로딩 중...</p>
+						) : errorEndedTicket ? (
+							<p>데이터를 불러오지 못했습니다.</p>
+						) : dataEndedTicket?.content?.length > 0 ? (
+							dataEndedTicket.content.map((detail, idx) => (
+								<TicketContainer
+									key={idx}
+									details={detail}
+									header={ticketHeaders}
+									isPerformer={true}
+								/>
 							))
 						) : (
 							<p>내역이 없습니다</p>

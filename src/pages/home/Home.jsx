@@ -56,26 +56,28 @@ const banners = [
 function Home() {
 	const {
 		data: dataClosing,
+		/*
 		loading: loadingClosing,
 		error: errorClosing,
+		*/
 	} = useCustomFetch('/amateurs/closing');
 
-	const {
-		data: dataRanking,
-		loading: loadingRanking,
-		error: errorRanking,
-	} = useCustomFetch('/amateurs/ranking');
+	// const {
+	// 	data: dataRanking,
+	// 	loading: loadingRanking,
+	// 	error: errorRanking,
+	// } = useCustomFetch('/amateurs/ranking');
 
 	const {
 		data: dataHotBoard,
-		loading: loadingHotBoard,
-		error: errorHotBoard,
+		// loading: loadingHotBoard,
+		// error: errorHotBoard,
 	} = useCustomFetch('/boards/hot');
 
 	const {
 		data: dataBoard,
-		loading: loadingBoard,
-		error: errorBoard,
+		// loading: loadingBoard,
+		// error: errorBoard,
 	} = useCustomFetch('/boards?boardType=NORMAL&page=0&size=5');
 
 	console.log(dataClosing?.result);

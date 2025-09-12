@@ -81,11 +81,12 @@ function RegisterStep1() {
 		});
 		setFormDataChanged(true);
 	};
-
-	const handleNextStep = () => {
+	/*	const handleNextStep = () => {
 		localStorage.setItem('formData', JSON.stringify(formData));
 		nextStep();
 	};
+ */
+
 	const changedRef = useRef(false);
 	const formDataRef = useRef(formData);
 
@@ -121,7 +122,7 @@ function RegisterStep1() {
 			newErrors.detailAddress = '상세 주소를 입력해주세요.';
 
 		// 회차
-		formData.rounds?.forEach((r, idx) => {
+		formData.rounds?.forEach(() => {
 			if (
 				!formData.rounds ||
 				formData.rounds.length < roundCount ||
