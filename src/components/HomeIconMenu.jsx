@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Movie from '@/assets/icons/Movie.svg?react';
-import Board from '@/assets/icons/Board.svg?react';
+import Board from '@/assets/icons/board.svg?react';
 import Photo from '@/assets/icons/Photo.svg?react';
 import Profile from '@/assets/icons/Profile.svg?react';
 import Information from '@/assets/icons/information.svg?react';
