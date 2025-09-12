@@ -4,7 +4,6 @@ import HomeIconMenu from '@/components/HomeIconMenu';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ChevronUp from '@/assets/icons/ChevronUpWhite.svg?react';
-import ChevronDown from '@/assets/icons/ChevronDown.svg?react';
 import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
