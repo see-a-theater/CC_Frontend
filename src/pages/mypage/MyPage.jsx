@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import HomeIconMenu from '@/components/HomeIconMenu';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import useCustomFetch from '../../utils/hooks/useAxios';
+
 function MyPage() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');

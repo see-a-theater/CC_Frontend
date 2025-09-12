@@ -2,12 +2,15 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Hamburger from '../../components/Hamburger';
 import HomeIconMenu from '../../components/HomeIconMenu';
-import useCustomFetch from '../../utils/hooks/useAxios';
+import useCustomFetch from '../../utils/hooks/useCustomFetch';
 function MyPageMenu() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
-
-	const { data, loading, error } = useCustomFetch('/member/myPage');
+	localStorage.setItem(
+		'accessToken',
+		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
+	);
+	const { data, loading, error } = useCustomFetch('/member/myPage', 'GET');
 
 	const {
 		data: image,
