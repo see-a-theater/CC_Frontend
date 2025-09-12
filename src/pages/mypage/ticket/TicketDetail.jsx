@@ -2,13 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import TopBar from '@/components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
-import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
+
 import TopBarWeb from '@/components/TopBarWeb';
-import Alert from './TicketCancel';
-import React, { useState, useEffect } from 'react';
-import useCustomFetch from '../../../utils/hooks/useCustomFetch.js';
+
+import { useState } from 'react';
+import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
 import { useParams } from 'react-router-dom';
-const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
+// const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
+/*
 const details = {
 	title: '실종',
 	imgSrc: Poster,
@@ -28,7 +29,7 @@ const details = {
 		],
 	},
 };
-
+*/
 function TicketDetail() {
 	const navigate = useNavigate();
 	const { ticketId } = useParams();
@@ -39,7 +40,7 @@ function TicketDetail() {
 
 	console.log('ticket detail', data);
 	// 모달창 관련 함수
-	const [showAlert, setShowAlert] = useState(false);
+	// const [showAlert, setShowAlert] = useState(false);
 
 	const [isChecked, setIsChecked] = useState(false);
 	const handleCancelClick = () => {
@@ -56,21 +57,30 @@ function TicketDetail() {
 	if (error) return <div>에러 발생: {error.message}</div>;
 	if (!data?.result) return <div>데이터가 없습니다.</div>;
 
-	const {
-		showTitle,
+	let showTitle,
 		quantity,
 		posterImageUrl,
 		reserveDateTime,
 		performanceDateTime,
 		cancelAvailableUntil,
 		detailAddress,
-		reservationStatus,
-	} = data?.result;
-
+		reservationStatus;
+	if (data?.result) {
+		({
+			showTitle,
+			quantity,
+			posterImageUrl,
+			reserveDateTime,
+			performanceDateTime,
+			cancelAvailableUntil,
+			detailAddress,
+			reservationStatus,
+		} = data.result);
+	}
 	const basicUrl = import.meta.env.VITE_REACT_APP_BASIC_URL;
 
-	const detail = data?.result;
-	const header = ticketHeaders;
+	// const detail = data?.result;
+	// const header = ticketHeaders;
 
 	const formatDateTime = (isoString) => {
 		const d = new Date(isoString);
