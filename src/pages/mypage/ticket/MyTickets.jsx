@@ -8,7 +8,7 @@ import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
 import Poster from '@/assets/images/test-poster2.png';
 import TopBarWeb from '../../../components/TopBarWeb';
 import PillToggleGroup from '../../../components/PillToggleGroup';
-import useCustomFetch from '../../../utils/hooks/useAxios';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch.js';
 function MyTickets() {
 	const role = localStorage.getItem('role');
 
@@ -85,7 +85,6 @@ function MyTickets() {
 		<MyTicketsWrapper>
 			<div className="only-mobile">
 				<TopBar onPrev={onPrev}>
-					{' '}
 					{role === 'admin' ? '등록한 공연' : '내 티켓'}
 				</TopBar>
 			</div>
