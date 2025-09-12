@@ -1,5 +1,5 @@
-import Summary from './summary';
-import Info from './Info';
+import Summary from '@/pages/Detail/Summary';
+import Info from '@/pages/Detail/Info';
 import { useParams } from 'react-router-dom';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
@@ -19,7 +19,7 @@ function Detail() {
 	console.log('SummData:', playData);
 
 	if (loading || !playData?.result) {
-		return <EyeRollingSVG/>;
+		return <EyeRollingSVG />;
 	}
 
 	return (
