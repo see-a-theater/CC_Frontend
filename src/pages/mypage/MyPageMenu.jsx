@@ -6,10 +6,7 @@ import useCustomFetch from '../../utils/hooks/useCustomFetch';
 function MyPageMenu() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
-	localStorage.setItem(
-		'accessToken',
-		import.meta.env.VITE_REACT_APP_ACCESS_TOKEN,
-	);
+
 	const { data, loading, error } = useCustomFetch('/member/myPage', 'GET');
 
 	const {
