@@ -1,25 +1,39 @@
 import styled from 'styled-components';
 
 function MasonryWeb({ imageData }) {
-	console.log('masonry', imageData);
+	const hasImages = imageData?.photoAlbumDTOs?.length > 0;
+
 	return (
-		<ImageArea>
-			{imageData?.result.singlePhotoAlbumDTOs.map((data, idx) => (
-				<Item key={idx}>
-					<img src={data?.imageUrl} alt="공연사진" className="pic" />
-					<Text>
-						<p className="title">{data?.amateurShowName}</p>
-						{data.detailAddress && (
-							<p className="theatre">{data?.detailAddress}</p>
-						)}
-					</Text>
-				</Item>
-			))}
-		</ImageArea>
+		<>
+			{hasImages ? (
+				<ImageArea>
+					{imageData?.photoAlbumDTOs.map((data, idx) => (
+						<Item key={idx}>
+							<img src={data?.imageUrl} alt="공연사진" className="pic" />
+							<Text>
+								<p className="title">{data?.amateurShowName}</p>
+								{data.detailAddress && (
+									<p className="theatre">{data?.detailAddress}</p>
+								)}
+							</Text>
+						</Item>
+					))}
+				</ImageArea>
+			) : (
+				<EmptyMessage>사진이 없습니다.</EmptyMessage>
+			)}
+		</>
 	);
 }
 
 export default MasonryWeb;
+
+const EmptyMessage = styled.div`
+	text-align: center;
+	padding: 50px;
+	color: ${({ theme }) => theme.colors.grayMain};
+	font-size: ${({ theme }) => theme.font.fontSize.body10};
+`;
 
 const ImageArea = styled.div`
 	column-count: 4;

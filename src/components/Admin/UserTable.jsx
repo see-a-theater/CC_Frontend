@@ -15,12 +15,9 @@ const UserTable = ({
 
 	const allHeaders = Object.keys(data[0]);
 
-	const handleDetailClick = (link, id) => {
-		navigate(link + id);
+	const handleDetailClick = (link) => {
+		navigate(link);
 	};
-
-	//현재 페이지에서 링크, id를 받아오는 형식
-	//나중에 데이터 확인 후 사용자/사진첩 관리에 따라서 내부에서 링크 설정 가능하게 할 듯
 
 	return (
 		<Wrapper>
@@ -43,36 +40,40 @@ const UserTable = ({
 
 								if (key === 'manage') {
 									return (
-										<td key={key}>
+										<StyledTd key={key}>
 											<DetailButton
-												onClick={() => handleDetailClick(user.manage, user.id)}
+												onClick={() => handleDetailClick(user.manage)}
 											>
 												상세
 											</DetailButton>
-										</td>
+										</StyledTd>
 									);
 								}
 
 								if (key === 'situation') {
 									const situation = user[key];
-									let className = '';
+									let text = '';
+									let color = '';
 
-									if (situation === '확인 전' || situation === '미완료') {
-										className = 'situation-pink';
-									} else if (situation === '등록') {
-										className = 'situation-gray400';
+									if (situation === 'WAITING_APPROVAL') {
+										text = '확인전';
+										color = 'pink600';
+									} else if (situation === 'REJECTED') {
+										text = '반려';
+										color = 'gray400';
 									} else {
-										className = 'situation-default';
+										text = '등록';
+										color = 'grayMain';
 									}
 
 									return (
-										<td key={key} className={className}>
-											{situation}
-										</td>
+										<StyledTd key={key} $color={color}>
+											{text}
+										</StyledTd>
 									);
 								}
 
-								return <td key={key}>{user[key]}</td>;
+								return <StyledTd key={key}>{user[key]}</StyledTd>;
 							})}
 						</tr>
 					))}
@@ -137,13 +138,18 @@ const StyledTable = styled.table`
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
-	.situation-pink {
+`;
+
+const StyledTd = styled.td`
+	color: ${({ theme, $color }) =>
+		theme.colors[$color] || theme.colors.grayMain};
+	&.situation-pink {
 		color: ${({ theme }) => theme.colors.pink600};
 	}
-	.situation-gray400 {
+	&.situation-gray400 {
 		color: ${({ theme }) => theme.colors.gray400};
 	}
-	.situation-default {
+	&.situation-default {
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
 `;

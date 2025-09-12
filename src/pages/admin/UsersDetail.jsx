@@ -1,42 +1,78 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+
 import styled from 'styled-components';
 import Search from '@/assets/icons/searchBlack.svg?react';
 import SearchBg from '@/assets/icons/searchBlackBg.svg?react';
 
 function UsersDetail() {
-	const user_data = {
-		id: 'diana8443',
-		name: '전시연',
-		phone: '010-1234-5678',
-		email: 'cc1234@gmail.com',
-		birth: '2004-10-26',
-		gender: '여',
-		address: '서울특별시 와우산로 홍익대학교 홍문관 1층 102호',
-	};
+	const { userId } = useParams();
+
+	const {
+		data: userData,
+		error: userError,
+		loading: userLoading,
+	} = useCustomFetch(`/admin/member/${userId}`);
+
+	const safeValue = (val) =>
+		val === null || val === undefined || val === '' ? ' ' : val;
+
+	const [isEditing, setIsEditing] = useState(false);
+
+	const [editValues, setEditValues] = useState({
+		memberId: userId,
+		username: '',
+		name: '',
+		phone: '',
+		email: '',
+		birth_date: '',
+		gender: '',
+		address: '',
+	});
+
+	useEffect(() => {
+		if (userData?.result) {
+			setEditValues({
+				memberId: userData.result.memberId ?? userId,
+				username: userData.result.username ?? '',
+				name: userData.result.name ?? '',
+				phone: userData.result.phone ?? '',
+				email: userData.result.email ?? '',
+				birth_date: userData.result.birth_date ?? '',
+				gender: userData.result.gender ?? '',
+				address: userData.result.address ?? '',
+			});
+		}
+	}, [userData]);
 
 	const rows = [
-		{ label: '아이디', value: user_data.id },
-		{ label: '이름', value: user_data.name },
-		{ label: '번호', value: user_data.phone },
-		{ label: 'E-mail', value: user_data.email },
-		{ label: '생년월일', value: user_data.birth },
-		{ label: '성별', value: user_data.gender },
-		{ label: '주소', value: user_data.address },
+		{ key: 'username', label: '아이디', value: safeValue(editValues.username) },
+		{ key: 'name', label: '이름', value: safeValue(editValues.name) },
+		{ key: 'phone', label: '번호', value: safeValue(editValues.phone) },
+		{ key: 'email', label: 'E-mail', value: safeValue(editValues.email) },
+		{ key: 'birth_date', label: '생년월일', value: safeValue(editValues.birth_date) },
+		{ key: 'gender', label: '성별', value: safeValue(editValues.gender) },
+		{ key: 'address', label: '주소', value: safeValue(editValues.address) },
 	];
+
 	const labelMap = {
-		id: '아이디',
+		username: '아이디',
 		name: '이름',
-		email: 'E-mail',
 		phone: '번호',
+		email: 'E-mail',
+		birth_date: '생년월일',
 		gender: '성별',
+		address: '주소',
 	};
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [visibleColumns, setVisibleColumns] = useState([
-		'id',
+		'username',
 		'name',
-		'email',
 		'phone',
+		'email',
+		'birth_date',
 		'gender',
 		'address',
 	]);
@@ -45,42 +81,56 @@ function UsersDetail() {
 		setVisibleColumns((prev) =>
 			prev.includes(column)
 				? prev.filter((c) => c !== column)
-				: [...prev, column],
+				: [...prev, column]
 		);
 	};
 
 	const filteredRows = useMemo(() => {
 		return rows.filter(
 			(row) =>
-				visibleColumns.includes(getKeyByLabel(row.label)) &&
-				row.value.toLowerCase().includes(searchTerm.toLowerCase()),
+				visibleColumns.includes(row.key) &&
+				row.value.toString().toLowerCase().includes(searchTerm.toLowerCase())
 		);
-	}, [searchTerm, visibleColumns]);
+	}, [searchTerm, visibleColumns, editValues]);
 
-	function getKeyByLabel(label) {
-		const map = {
-			아이디: 'id',
-			이름: 'name',
-			번호: 'phone',
-			'E-mail': 'email',
-			생년월일: 'birth',
-			성별: 'gender',
-			주소: 'address',
-		};
-		return map[label];
-	}
+
+	const handleInputChange = (key, value) => {
+		setEditValues((prev) => ({ ...prev, [key]: value }));
+	};
+
+	const handleSave = async () => {
+		try {
+			const response = await fetch(
+				`https://api.seeatheater.site/admin/member/${userId}`,
+				{
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(editValues),
+				}
+			);
+			if (!response.ok) {
+				throw new Error('수정 실패');
+			}
+			setIsEditing(false);
+		} catch (error) {
+			console.error(error);
+			alert('수정 중 오류가 발생했습니다.');
+		}
+	};
 
 	return (
 		<Container>
 			<Content>
 				<SectionTitle>사용자 관리</SectionTitle>
+
 				<FilterArea>
 					<SearchInput>
 						<input
 							type="text"
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							placeholder="검색어를 입력하세요"
 						/>
 						<Search width={15} />
 					</SearchInput>
@@ -98,24 +148,41 @@ function UsersDetail() {
 						<SearchBg />
 					</div>
 				</FilterArea>
+
 				<Table>
 					<Title>{'<'} 기본 정보</Title>
 					<tbody>
 						{filteredRows.map((row, index) => (
 							<tr key={index}>
 								<th>{row.label}</th>
-								<td>{row.value}</td>
+								<td>
+									{isEditing ? (
+										<input
+											type="text"
+											value={editValues[row.key] ?? ''}
+											onChange={(e) =>
+												handleInputChange(row.key, e.target.value)
+											}
+										/>
+									) : (
+										row.value
+									)}
+								</td>
 							</tr>
 						))}
 					</tbody>
 				</Table>
-				<Button>수정하기</Button>
+
+				<Button onClick={() => (isEditing ? handleSave() : setIsEditing(true))}>
+					{isEditing ? '수정완료' : '수정하기'}
+				</Button>
 			</Content>
 		</Container>
 	);
 }
 
 export default UsersDetail;
+
 
 const Container = styled.div`
 	width: 100vw;

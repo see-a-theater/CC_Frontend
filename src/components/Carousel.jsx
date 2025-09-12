@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-function Carousel(props) {
+function Carousel({ CarouselData }) {
 	const [currentIndex, setCurrentIndex] = useState(0);
+
+	if (!CarouselData || CarouselData.length === 0) {
+		return <p>이미지가 없습니다.</p>;
+	}
 
 	return (
 		<Container>
 			<ImageArea>
-				<img src={props?.data.result[currentIndex].imageUrl} />
+				<img src={CarouselData[currentIndex].imageUrl} />
 			</ImageArea>
 
 			<DotWrapper>
-				{props?.data.result.map((_, index) => (
+				{CarouselData.map((_, index) => (
 					<Dot
 						key={index}
 						$isActive={index === currentIndex}

@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Hamburger from '@/components/Hamburger';
-import Masonry from '@/components/Masonry';
-import MasonryWeb from '@/components/MasonryWeb';
+import ProdGall from '@/components/Production/ProdGall';
 import ProdPlayCard from '@/components/ProdPlayCard';
+import LikedButton from '@/components/LikedButton';
 
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Heart from '@/assets/icons/Heart.svg?react';
+import HeartFull from '@/assets/icons/heart-full.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import Gallery from '@/assets/icons/Gallery.svg?react';
 import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
@@ -22,7 +23,6 @@ function Production() {
 		error: playError,
 		loading: playLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}/shows?page=0&size=20`);
-	console.log(playData);
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
@@ -32,6 +32,7 @@ function Production() {
 		error: picError,
 		loading: picLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
+	console.log(picData);
 
 	const [activeTab, setActiveTab] = useState('plays');
 	const navigate = useNavigate();
@@ -47,7 +48,7 @@ function Production() {
 	const goBack = () => {
 		navigate(-1);
 		window.scrollTo(0, 0);
-	}
+	};
 
 	return (
 		<>
@@ -58,7 +59,7 @@ function Production() {
 					<h3 className="production" onClick={navigateToDetail}>
 						{picData?.result.performerName}
 					</h3>
-					<Heart />
+					<LikedButton performerId={prodId}/>
 				</Theatre>
 				<TabBar>
 					<TabItem
@@ -113,7 +114,7 @@ function Production() {
 									</ProdButton>
 								</FixedProdButton>
 							)}
-							<Masonry imageData={picData} />
+							<ProdGall imageData={picData} />
 						</>
 					)}
 				</ContentArea>
@@ -124,10 +125,8 @@ function Production() {
 				<Container>
 					<Theatre>
 						<div className="theatreName">
-							<ChevronLeft  onClick={goBack}/>
-							<h3 className="production">
-								{picData?.result.performerName}
-							</h3>
+							<ChevronLeft onClick={goBack} />
+							<h3 className="production">{picData?.result.performerName}</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
 						{token && activeTab === 'gallery' && (
@@ -171,7 +170,7 @@ function Production() {
 								<SubText>
 									{picData.result.singlePhotoAlbumDTOs.length}개의 사진첩
 								</SubText>
-								<MasonryWeb imageData={picData} />
+								<ProdGall imageData={picData} />
 							</>
 						)}
 					</ContentArea>

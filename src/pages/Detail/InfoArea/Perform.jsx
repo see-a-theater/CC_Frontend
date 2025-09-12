@@ -24,13 +24,15 @@ function Perform(props) {
 							<p>{props?.data.result.roadAddress}</p>
 							<p className="copy">복사</p>
 						</div>
-						<div className="map">
-						</div>
+						<div className="map"></div>
 					</Location>
 					<WebLocation>
 						<p>{props?.data.result.roadAddress}</p>
 						<div className="map" id="map">
-							{/*<KakaoMap location={props?.data.result.roadAddress} />*/}
+							<KakaoMap
+								location={props?.data.result.roadAddress}
+								hallName={props?.data.result.hallName}
+							/>
 						</div>
 					</WebLocation>
 				</>
@@ -127,7 +129,7 @@ const Location = styled.div`
 	.map {
 		width: 100%;
 		height: 148px;
-		background: ${({ theme }) => theme.colors.gray300};
+		//background: ${({ theme }) => theme.colors.gray300};
 	}
 	font-size: ${({ theme }) => theme.font.fontSize.body13};
 	font-weight: ${({ theme }) => theme.font.fontWeight.bold};

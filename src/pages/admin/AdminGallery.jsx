@@ -3,7 +3,7 @@ import UserTable from '@/components/Admin/UserTable';
 import Search from '@/assets/icons/searchBlack.svg?react';
 import { useMemo, useState } from 'react';
 
-import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 function AdminGallery() {
 	function formatDateTime(isoString) {
@@ -50,7 +50,7 @@ function AdminGallery() {
 			date: formatDateTime(item.updatedAt),
 			id: item.id,
 			//id: item.uploaderId? 아이디가 사진 아이디인지, 등록자 아이디인지....
-			manage: `/admin/gallery/`,
+			manage: `/admin/gallery/${item.id}`,
 		}));
 	}, [gallData]);
 

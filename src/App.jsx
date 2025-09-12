@@ -24,8 +24,8 @@ import Production from './pages/production/Production';
 import MyPageRoutes from './routes/MyPageRoutes.jsx';
 import AdminRoutes from './routes/AdminRoutes.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
-
 import TestUploadPic from './pages/TEST/TestUploadPic';
+
 function App() {
 	return (
 		<Routes>
@@ -50,10 +50,10 @@ function App() {
 			<Route path="/plays/detail/:playId" element={<Detail />} />
 
 			<Route path="/notification" element={<Notification />} />
+				<Route path="/production/:prodId" element={<Production />} />
+				<Route path="/production/:prodId/:AlbumId" element={<ProdDetail />} />
+				<Route path="/production/upload_photo" element={<UploadPic />} />
 
-			<Route path="/production/:prodId" element={<Production />} />
-			<Route path="/production/:prodId/detail" element={<ProdDetail />} />
-			<Route path="/production/upload_photo" element={<UploadPic />} />
 
 			<Route path="/mypage/*" element={<MyPageRoutes />} />
 

@@ -72,6 +72,7 @@ function ImageUploadBox({
 			{imageSrc ? (
 				<img src={imageSrc} alt="uploaded" />
 			) : (
+
 				<>
 					<IconWrapper>
 						<img src={Camera} alt="camera icon" />

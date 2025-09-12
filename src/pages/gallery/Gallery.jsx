@@ -13,10 +13,8 @@ function Gallery() {
 	localStorage.setItem('token', token);
 
 	const { data: picData, error, loading } = useCustomFetch(`/photoAlbums`);
+	console.log("picData", picData);
 
-	console.log('error:', error);
-	console.log('loading:', loading);
-	console.log('data:', picData);
 
 	if (loading || !picData?.result) {
 		return <div>로딩 중...</div>;

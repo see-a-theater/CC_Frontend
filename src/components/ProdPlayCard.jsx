@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import useCustomFetch from '@/utils/hooks/useAxios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function ProdPlayCard({
 	detailAddress,
@@ -15,8 +16,12 @@ function ProdPlayCard({
 		loading,
 	} = useCustomFetch(showId ? `/amateurs/${showId}` : null);
 
-	const isEnded = true; //수정 필요
+	const [isEnded, setIsEnded] = useState();
 
+	if (status === 'APPROVED_ENDED') {
+		setIsEnded(true);
+	}
+	
 	const navigate = useNavigate();
 	const navigateToPlay = () => {
 		navigate(`/plays/detail/${showId}`);

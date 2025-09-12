@@ -1,26 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Table = ({ data }) => {
+const Table = ({ data, header }) => {
 	if (!data || data.length === 0) return <p>데이터가 없습니다.</p>;
-
-	const headers = Object.keys(data[0]);
 
 	return (
 		<TableWrapper>
 			<StyledTable>
 				<thead>
 					<tr>
-						{headers.map((key) => (
-							<th key={key}>{data[0][key]}</th>
+						{header.map((col, idx) => (
+							<th key={idx}>{col.label}</th>
 						))}
 					</tr>
 				</thead>
 				<tbody>
-					{data.slice(1).map((row, idx) => (
+					{data.map((row, idx) => (
 						<tr key={idx}>
-							{headers.map((key) => (
-								<td key={key}>{row[key]}</td>
+							{header.map((col, cIdx) => (
+								<td key={cIdx}>{row[col.key]}</td>
 							))}
 						</tr>
 					))}
