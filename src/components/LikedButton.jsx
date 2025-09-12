@@ -6,7 +6,7 @@ import HeartFull from '@/assets/icons/heart-full.svg?react';
 import styled from 'styled-components';
 
 function LikedButton({ performerId }) {
-	const { fetchData, loading, error } = useCustomFetch();
+	const { fetchData, loading } = useCustomFetch();
 
 	const [liked, setLiked] = useState(false);
 

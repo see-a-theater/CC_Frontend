@@ -1,24 +1,25 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Hamburger from '../../components/Hamburger';
-import HomeIconMenu from '../../components/HomeIconMenu';
-import useCustomFetch from '../../utils/hooks/useCustomFetch';
+import Hamburger from '@/components/Hamburger';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 function MyPageMenu() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
 
-	const { data, loading, error } = useCustomFetch('/member/myPage', 'GET');
+	const {
+		data,
+		// loading, error
+	} = useCustomFetch('/member/myPage', 'GET');
 
 	const {
 		data: image,
-		loading: imgloading,
-		error: imgerror,
+		// loading: imgloading,
+		// error: imgerror,
 	} = useCustomFetch('/images/2');
 
 	console.log('image', image?.result?.imageUrl);
 
-	const { id, name, username, email, phone, address, status } =
-		data?.result || {};
+	const { name } = data?.result || {};
 	if (data) {
 		console.log(data?.result);
 	}

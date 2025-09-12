@@ -4,7 +4,7 @@ import HeartFull from '@/assets/icons/heart-full.svg?react';
 import HeartEmpty from '@/assets/icons/HeartEmpty.svg?react';
 
 import axios from 'axios';
-function TheaterCard({ onClick, data }) {
+function TheaterCard({ data }) {
 	const [liked, setLiked] = useState(true);
 	const handleClick = async (performerId) => {
 		try {

@@ -11,7 +11,6 @@ function TicketContainer({ header, details, isPerformer }) {
 		detailAddress,
 		performanceDateTime,
 		quantity,
-		totalPrice,
 		reserveDateTime,
 		reservationStatus,
 		cancelDeadline,

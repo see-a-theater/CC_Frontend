@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useRef, useState } from 'react';
-function BoardPreviewCardList({ data }) {
+function BoardPreviewCardList() {
 	const mockData = [
 		{
 			title: '상상도 못한 게시판..ㄴ(°0°)ㄱ',
@@ -53,7 +53,7 @@ function BoardPreviewCardList({ data }) {
 				onMouseMove={handleMouseMove}
 			>
 				{mockData &&
-					mockData.map((item, index) => (
+					mockData.map((item) => (
 						<Card key={item.boardId}>
 							<h3>{item.title}</h3>
 							<p>{item.content}</p>

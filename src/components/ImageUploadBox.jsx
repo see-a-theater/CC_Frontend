@@ -4,14 +4,12 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 function ImageUploadBox({
-	size,
 	width,
 	height,
 	webWidth,
 	webHeight,
 	round,
 	onUploadSuccess,
-	type,
 }) {
 	const [imageSrc, setImageSrc] = useState(null);
 
@@ -72,7 +70,6 @@ function ImageUploadBox({
 			{imageSrc ? (
 				<img src={imageSrc} alt="uploaded" />
 			) : (
-
 				<>
 					<IconWrapper>
 						<img src={Camera} alt="camera icon" />
