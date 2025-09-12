@@ -1,13 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext';
 import EyeRollingSVG from '@/components/EyeRollingSVG';
+import { axiosInstance } from '@/utils/apis/axiosInstance';
 
 function KakaoCallback() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { login } = useAuth();
 
 	const initialized = useRef(false);
 
@@ -15,7 +13,6 @@ function KakaoCallback() {
 		if (initialized.current) {
 			return;
 		}
-
 		initialized.current = true;
 
 		const getCode = async () => {
@@ -38,13 +35,14 @@ function KakaoCallback() {
 			}
 
 			try {
-				const response = await axios.post(
+				const response = await axiosInstance.post(
 					`${import.meta.env.VITE_APP_API_URL}/auth/kakao/callback`,
 					{ code, role },
 				);
-				const { accessToken } = response.data;
+				const { accessToken, refreshToken } = response.data;
+				localStorage.setItem('accessToken', accessToken);
+				localStorage.setItem('refreshToken', refreshToken);
 
-				login(accessToken);
 				sessionStorage.removeItem('selectedRole');
 
 				navigate('/home');
@@ -56,7 +54,7 @@ function KakaoCallback() {
 		};
 
 		getCode();
-	}, [location, navigate, login]);
+	}, [location, navigate]);
 
 	return (
 		<div>

@@ -3,11 +3,12 @@ export async function getPresignedUrl(axiosClient, imageExtension, filePath) {
 
 	const res = await axiosClient.get(url); // GET 요청
 
-	if (!res.ok) {
-		throw new Error(`Presigned URL 요청 실패: ${res.status}`);
-	}
+	// if (!res.ok) {
+	// 	throw new Error(`Presigned URL 요청 실패: ${res.status}`);
+	// }
+	// const data = res.json();
 
-	const data = res.json();
+	const data = res.data;
 
 	return {
 		uploadUrl: data.uploadUrl,
