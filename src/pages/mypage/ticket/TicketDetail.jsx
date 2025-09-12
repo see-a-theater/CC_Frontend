@@ -6,7 +6,7 @@ import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
 import TopBarWeb from '@/components/TopBarWeb';
 import Alert from './TicketCancel';
 import React, { useState, useEffect } from 'react';
-import useCustomFetch from '../../../utils/hooks/useAxios';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch.js';
 import { useParams } from 'react-router-dom';
 const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
 const details = {
@@ -32,7 +32,7 @@ const details = {
 function TicketDetail() {
 	const navigate = useNavigate();
 	const { ticketId } = useParams();
-	console.log(ticketId); // URL이 /tickets/1이면 "1"
+
 	const { data, loading, error } = useCustomFetch(
 		`/myTickets/${ticketId}/getMyTicket`,
 	);
