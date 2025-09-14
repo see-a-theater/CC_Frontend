@@ -118,7 +118,7 @@ function RefundDetail() {
 						))}
 					</tbody>
 				</Table>
-				<Button>수정하기</Button>
+				{/**<Button>수정하기</Button> */}
 			</Content>
 		</Container>
 	);

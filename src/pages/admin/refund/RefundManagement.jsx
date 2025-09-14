@@ -4,11 +4,16 @@ import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
 import SearchBarBlack from '@/components/SearchBarBlack';
 import SearchOptionBar from '@/components/Admin/SearchOptionBar';
 import SubNav from '@/components/Admin/SubNav';
+
+
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AdminListPage } from '@/pages/admin/STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 function RefundManagement() {
+	const navigate = useNavigate();
 	const requests = [
 		{
 			userId: 'diana8443',
@@ -18,58 +23,75 @@ function RefundManagement() {
 			requestDate: '2024.01.24 / 17:59',
 			id: 1,
 		},
-		{
-			userId: 'diana8443',
-			name: '전시연',
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			requestDate: '2024.01.24 / 17:59',
-			id: 2,
-		},
-		{
-			userId: 'diana8443',
-			name: '전시연',
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			requestDate: '2024.01.24 / 17:59 ',
-			id: 3,
-		},
-		{
-			userId: 'diana8443',
-			name: '전시연',
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			requestDate: '2024.01.24 / 17:59 ',
-			id: 4,
-		},
-		{
-			userId: 'diana8443',
-			name: '전시연',
-			title: '실종',
-			date: '2025-01-09 / 14:50',
-			requestDate: '2024.01.24 / 17:59 ',
-			id: 5,
-		},
 	];
-	const [stockList, _setStockList] = useState(requests);
-	const [page, setPage] = useState(1);
-	const itemsPerPage = 3;
+	const { data, loading, error } = useCustomFetch(
+		'/admin/ticket/refund/history?page=0&size=20',
+	);
+
+	];
+	const { data, loading, error } = useCustomFetch(
+		'/admin/ticket/refund/history?page=0&size=20',
+	);
+
 	const changePageHandler = (page) => {
 		setPage(page);
 	};
-	const [currentList, setCurrentList] = useState(stockList);
+	const [stockList, setStockList] = useState([]);
+	const [currentList, setCurrentList] = useState([]);
 
+	useEffect(() => {
+		if (data) {
+			setStockList(data?.result?.content || data); // data 구조 맞게
+		}
+	}, [data]);
+
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
+	const [stockList, setStockList] = useState([]);
+	const [currentList, setCurrentList] = useState([]);
+
+	useEffect(() => {
+		if (data) {
+			setStockList(data?.result?.content || data); // data 구조 맞게
+		}
+	}, [data]);
+
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
 	const indexOfLastItem = page * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
 	useEffect(() => {
-		setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		if (Array.isArray(stockList)) {
+			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		}
+		if (Array.isArray(stockList)) {
+			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		}
 	}, [page, stockList]);
 
-	const navigate = useNavigate();
-	const goDetail = (id) => {
-		navigate(`${id}`);
-	};
+	function formatDateTime(isoString) {
+		const d = new Date(isoString);
+
+		const year = d.getFullYear();
+		const month = String(d.getMonth() + 1).padStart(2, '0');
+		const day = String(d.getDate()).padStart(2, '0');
+		const hours = String(d.getHours()).padStart(2, '0');
+		const minutes = String(d.getMinutes()).padStart(2, '0');
+
+		return `${year}.${month}.${day} / ${hours}:${minutes}`;
+	}
+	function formatDateTime(isoString) {
+		const d = new Date(isoString);
+
+		const year = d.getFullYear();
+		const month = String(d.getMonth() + 1).padStart(2, '0');
+		const day = String(d.getDate()).padStart(2, '0');
+		const hours = String(d.getHours()).padStart(2, '0');
+		const minutes = String(d.getMinutes()).padStart(2, '0');
+
+		return `${year}.${month}.${day} / ${hours}:${minutes}`;
+	}
 
 	return (
 		<>
@@ -90,15 +112,26 @@ function RefundManagement() {
 					</thead>
 					<tbody>
 						{currentList.map((request) => (
-							<tr key={request.id}>
+							<tr key={request.realTicketId}>
+							<tr key={request.realTicketId}>
 								{console.log(request)}
-								<td>{request.userId}</td>
-								<td>{request.name}</td>
-								<td>{request.title}</td>
-								<td>{request.date}</td>
-								<td>{request.requestDate}</td>
+								<td>{request.username}</td>
+								<td>{request.memberName}</td>
+								<td>{request.showTitle}</td>
+								<td>{formatDateTime(request.performanceDateTime)}</td>
+								<td>{formatDateTime(request.canceledAt)}</td>
+								<td>{request.username}</td>
+								<td>{request.memberName}</td>
+								<td>{request.showTitle}</td>
+								<td>{formatDateTime(request.performanceDateTime)}</td>
+								<td>{formatDateTime(request.canceledAt)}</td>
 								<td>
-									<button onClick={() => goDetail(request.id)}>상세</button>
+									<button onClick={() => navigate(`${request.showId}`)}>
+										상세
+									</button>
+									<button onClick={() => navigate(`${request.showId}`)}>
+										상세
+									</button>
 								</td>
 							</tr>
 						))}

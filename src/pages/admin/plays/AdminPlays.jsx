@@ -21,7 +21,9 @@ function AdminPlays() {
 		data: playData,
 		error: playError,
 		loading: playLoading,
-	} = useCustomFetch(`/admin/amateurShow/showList?page=${currentPage}&size=${itemsPerPage}`);
+	} = useCustomFetch(
+		`/admin/amateurShow/showList?page=${currentPage}&size=${itemsPerPage}`,
+	);
 
 	const apiRows = useMemo(() => {
 		if (!playData || !playData.result) return [];
