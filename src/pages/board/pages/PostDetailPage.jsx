@@ -27,10 +27,13 @@ import Delete from '@/pages/board/components/Icons/Delete.svg';
 import Tab from '@/pages/board/components/Icons/Tab.svg';
 import Lock from '@/pages/board/components/Icons/Lock.svg';
 import useResponsive from '@/pages/board/hooks/useResponsive';
+import useAxios from '@/utils/hooks/useAxios';
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  // useAxios 훅으로 토큰 관리 추가
+  useAxios();
   const { 
     getPost, 
     getComments, 

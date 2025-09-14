@@ -26,6 +26,7 @@ import usePosts from '@/pages/board/hooks/usePosts';
 import { validateImageFiles } from '@/pages/board/api/imageApi';
 import Camera from '@/pages/board/components/Icons/Camera.svg';
 import useResponsive from '@/pages/board/hooks/useResponsive';
+import useAxios from '@/utils/hooks/useAxios';
 
 const PostCreatePage = () => {
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ const PostCreatePage = () => {
   const { id } = useParams();
   const { addPost, getPost, updatePost } = usePosts();
   const isPC = useResponsive();
+
+  // useAxios 훅으로 토큰 관리
+  useAxios();
 
   const isEditMode = Boolean(id);
   const searchParams = new URLSearchParams(location.search);

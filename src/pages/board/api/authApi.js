@@ -1,11 +1,14 @@
 
-import apiClient from '@/pages/board/api/apiConfig.js';
+import { API_ENDPOINTS } from './apiConfig.js';
 
 // 현재 사용자 정보 조회
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (fetchData) => {
   try {
-    const response = await apiClient.get('/member/myPage');
-    return response.result;
+    const response = await fetchData(API_ENDPOINTS.MY_PAGE, 'GET');
+    if (response.isSuccess) {
+      return response.result;
+    }
+    return null;
   } catch (error) {
     console.error('사용자 정보 조회 실패:', error);
     return null;

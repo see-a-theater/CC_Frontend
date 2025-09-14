@@ -1,4 +1,5 @@
-import apiClient from '@/pages/board/api/apiConfig.js';
+
+import { API_ENDPOINTS } from './apiConfig.js';
 import axios from 'axios';
 
 // 유틸리티 함수들
@@ -39,19 +40,21 @@ const validateImageFiles = (files) => {
 };
 
 // Presigned URL 관련 함수들
-const getSinglePresignedUrl = async (file) => {
+const getSinglePresignedUrl = async (fetchData, file) => {
   const extension = getFileExtension(file);
-  const response = await apiClient.get('/upload/s3/presignedUrl', {
-    params: { imageExtension: extension, filePath: 'board' }
-  });
-  return response.result;
+  const response = await fetchData(
+    `${API_ENDPOINTS.PRESIGNED_URL}?imageExtension=${extension}&filePath=board`,
+    'GET'
+  );
+  return response.result || response;
 };
 
-const getMultiplePresignedUrls = async (files) => {
+const getMultiplePresignedUrls = async (fetchData, files) => {
   if (!files || files.length === 0) return [];
   const extensions = files.map(getFileExtension);
-  const response = await apiClient.post(
-    '/upload/s3/presignedUrls?filePath=board',
+  const response = await fetchData(
+    `${API_ENDPOINTS.PRESIGNED_URLS}?filePath=board`,
+    'POST',
     extensions
   );
   const urlsData = Array.isArray(response) ? response : response?.result;
@@ -80,10 +83,10 @@ const uploadFileToS3 = async (uploadUrl, file) => {
 };
 
 // 단일 이미지 업로드 (presigned URL + S3 업로드만)
-export const uploadSingleImage = async (file) => {
+export const uploadSingleImage = async (fetchData, file) => {
   try {
     validateImageFile(file);
-    const urlData = await getSinglePresignedUrl(file);
+    const urlData = await getSinglePresignedUrl(fetchData, file);
 
     await uploadFileToS3(urlData.uploadUrl, file);
 
@@ -99,12 +102,12 @@ export const uploadSingleImage = async (file) => {
 };
 
 // 다중 이미지 업로드 (presigned URL + S3 업로드만)
-export const uploadMultipleImages = async (files) => {
+export const uploadMultipleImages = async (fetchData, files) => {
   try {
     if (!files || files.length === 0) return [];
     validateImageFiles(files);
 
-    const urlsData = await getMultiplePresignedUrls(files);
+    const urlsData = await getMultiplePresignedUrls(fetchData, files);
     if (urlsData.length !== files.length) {
       throw new Error('Presigned URL 수와 파일 수가 일치하지 않습니다.');
     }
@@ -129,10 +132,10 @@ export const uploadMultipleImages = async (files) => {
 };
 
 // 게시글 작성용 - S3 업로드 후 keyName과 imageUrl만 반환
-export const processImagesForCreate = async (files) => {
+export const processImagesForCreate = async (fetchData, files) => {
   try {
     if (!files || files.length === 0) return [];
-    const uploadResults = await uploadMultipleImages(files);
+    const uploadResults = await uploadMultipleImages(fetchData, files);
     return uploadResults.map((result) => ({
       keyName: result.keyName,
       imageUrl: result.imageUrl,
@@ -144,7 +147,7 @@ export const processImagesForCreate = async (files) => {
 };
 
 // 게시글 수정용 - 기존 이미지와 새 이미지 처리
-export const processImagesForUpdate = async (existingImages = [], newFiles = []) => {
+export const processImagesForUpdate = async (fetchData, existingImages = [], newFiles = []) => {
   try {
     const imageRequestDTOs = [];
     
@@ -162,7 +165,7 @@ export const processImagesForUpdate = async (existingImages = [], newFiles = [])
 
     // 새로운 파일들 S3에 업로드
     if (newFiles && newFiles.length > 0) {
-      const newUploadResults = await uploadMultipleImages(newFiles);
+      const newUploadResults = await uploadMultipleImages(fetchData, newFiles);
       newUploadResults.forEach((result) => {
         imageRequestDTOs.push({ keyName: result.keyName, imageUrl: result.imageUrl });
       });
@@ -176,9 +179,9 @@ export const processImagesForUpdate = async (existingImages = [], newFiles = [])
 };
 
 // S3에서 이미지 삭제 
-export const deleteImageFromS3 = async (keyName) => {
+export const deleteImageFromS3 = async (fetchData, keyName) => {
   try {
-    await apiClient.delete(`/upload/s3/${encodeURIComponent(keyName)}`);
+    await fetchData(API_ENDPOINTS.IMAGE_DELETE(keyName), 'DELETE');
   } catch (error) {
     console.error('S3 이미지 삭제 실패:', error);
     throw error;
@@ -186,12 +189,10 @@ export const deleteImageFromS3 = async (keyName) => {
 };
 
 // S3 객체 존재 확인
-export const checkImageExists = async (keyName) => {
+export const checkImageExists = async (fetchData, keyName) => {
   try {
-    const response = await apiClient.get('/upload/s3', {
-      params: { keyName }
-    });
-    return response.result;
+    const response = await fetchData(`${API_ENDPOINTS.IMAGE_EXISTS}?keyName=${keyName}`, 'GET');
+    return response.result || response;
   } catch (error) {
     console.error('S3 객체 존재 확인 실패:', error);
     return false;

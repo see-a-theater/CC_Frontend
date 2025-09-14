@@ -1,6 +1,7 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import useResponsive from '@/pages/board/hooks/useResponsive';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import * as boardApi from '@/pages/board/api/boardApi.js';
 import * as imageApi from '@/pages/board/api/imageApi.js';
 import * as authApi from '@/pages/board/api/authApi.js';
@@ -11,27 +12,33 @@ const usePosts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
-  const [userType, setUserType] = useState('normalUser'); // normalUser / registerUser
+  const [userType, setUserType] = useState('normalUser');
   const isPC = useResponsive();
-
-  // 컴포넌트 마운트 시 사용자 정보 로드
-  useEffect(() => {
-    loadCurrentUser();
-  }, []);
+  
+  // useCustomFetch 훅 사용
+  const { fetchData } = useCustomFetch();
+  
+  // fetchData가 매번 새로 생성되는 것을 방지
+  const fetchDataRef = useRef(fetchData);
+  fetchDataRef.current = fetchData;
 
   // 현재 사용자 정보 로드
   const loadCurrentUser = useCallback(async () => {
     try {
-      const userInfo = await authApi.getCurrentUser();
+      const userInfo = await authApi.getCurrentUser(fetchDataRef.current);
       if (userInfo) {
         setCurrentUser(userInfo);
-        // 홍보게시판 권한이 있는지 확인 (임시로 모든 로그인 유저에게 권한 부여)
         setUserType('registerUser');
       }
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
     }
-  }, []);
+  }, []); 
+
+  // 컴포넌트 마운트 시 사용자 정보 로드
+  useEffect(() => {
+    loadCurrentUser();
+  }, [loadCurrentUser]);
 
   // API 응답 데이터 변환
   const transformBoardData = useCallback((apiBoard) => {
@@ -82,7 +89,6 @@ const usePosts = () => {
       children: []
     };
 
-    // 대댓글이 있는 경우 재귀적으로 변환
     if (apiComment.children && apiComment.children.length > 0) {
       transformed.children = apiComment.children.map(child => 
         transformCommentData(child, boardId, depth + 1)
@@ -92,7 +98,7 @@ const usePosts = () => {
     return transformed;
   }, []);
 
-  // 댓글을 평면 배열로 변환 (트리 구조 유지)
+  // 댓글을 평면 배열로 변환
   const flattenComments = useCallback((comments, boardId) => {
     const result = [];
     
@@ -119,38 +125,41 @@ const usePosts = () => {
 
   // 게시글 목록 로드
   const loadPosts = useCallback(async (category = 'general', pageNum = 0, reset = false) => {
-  setLoading(true);
-  try {
-    const pageSize = isPC ? 6 : 20;
-    let incomingPosts = [];
+    if (loading) return;
+    
+    setLoading(true);
+    try {
+      const pageSize = isPC ? 6 : 20;
+      let incomingPosts = [];
 
-    if (category === 'hot') {
-      const res = await boardApi.getHotBoards();
-      incomingPosts = res.map(transformBoardData);
-      setHasMore(false); // 핫게시판은 고정
-    } else {
-      const res = await boardApi.getBoardList(category, pageNum, pageSize);
-      incomingPosts = res.content.map(transformBoardData);
-      setHasMore(!res.last);
+      if (category === 'hot') {
+        const res = await boardApi.getHotBoards(fetchDataRef.current);
+        const hotBoardsData = res.isSuccess ? res.result : res;
+        incomingPosts = hotBoardsData.map(transformBoardData);
+        setHasMore(false);
+      } else {
+        const res = await boardApi.getBoardList(fetchDataRef.current, category, pageNum, pageSize);
+        const boardData = res.isSuccess ? res.result : res;
+        incomingPosts = boardData.content.map(transformBoardData);
+        setHasMore(!boardData.last);
+      }
+
+      if (reset) {
+        setPosts(incomingPosts);
+      } else {
+        setPosts(prev => {
+          const merged = [...prev, ...incomingPosts];
+          return merged.filter((post, idx, self) => idx === self.findIndex(p => p.id === post.id));
+        });
+      }
+    } catch (error) {
+      console.error('게시글 로드 실패:', error);
+    } finally {
+      setLoading(false);
     }
+  }, [isPC, transformBoardData, loading]); 
 
-    if (reset) {
-      setPosts(incomingPosts);
-    } else {
-      setPosts(prev => {
-        const merged = [...prev, ...incomingPosts];
-        // id 기준 중복 제거
-        return merged.filter((post, idx, self) => idx === self.findIndex(p => p.id === post.id));
-      });
-    }
-  } catch (error) {
-    console.error('게시글 로드 실패:', error);
-  } finally {
-    setLoading(false);
-  }
-}, [isPC, transformBoardData]);
-
-  // 더보기 (추가로드)
+  // 더보기 
   const loadMore = useCallback((category) => {
     if (!loading && hasMore) {
       const nextPage = page + 1;
@@ -162,8 +171,9 @@ const usePosts = () => {
   // 게시글 상세 조회
   const getPost = useCallback(async (id) => {
     try {
-      const response = await boardApi.getBoardDetail(id);
-      return transformBoardData(response);
+      const response = await boardApi.getBoardDetail(fetchDataRef.current, id);
+      const postData = response.isSuccess ? response.result : response;
+      return transformBoardData(postData);
     } catch (error) {
       console.error('게시글 상세 조회 실패:', error);
       return null;
@@ -173,9 +183,9 @@ const usePosts = () => {
   // 댓글 목록 조회
   const getComments = useCallback(async (postId) => {
     try {
-      const response = await boardApi.getComments(postId);
-      // API가 트리 구조로 반환하므로 평면 배열로 변환
-      const transformedComments = response.map(comment => transformCommentData(comment, postId));
+      const response = await boardApi.getComments(fetchDataRef.current, postId);
+      const commentsData = response.isSuccess ? response.result : response;
+      const transformedComments = commentsData.map(comment => transformCommentData(comment, postId));
       return flattenComments(transformedComments, postId);
     } catch (error) {
       console.error('댓글 조회 실패:', error);
@@ -193,18 +203,16 @@ const usePosts = () => {
       if (postData.images && postData.images.length > 0) {
         console.log('이미지 처리 시작, 파일 수:', postData.images.length);
         
-        // File 객체들만 필터링
         const files = postData.images
           .filter(img => img.file instanceof File)
           .map(img => img.file);
         
         if (files.length > 0) {
-          imageRequestDTOs = await imageApi.processImagesForCreate(files);
+          imageRequestDTOs = await imageApi.processImagesForCreate(fetchDataRef.current, files);
           console.log('이미지 처리 완료:', imageRequestDTOs);
         }
       }
 
-      // 게시글 데이터 준비
       const boardData = {
         title: postData.title,
         content: postData.content,
@@ -213,10 +221,11 @@ const usePosts = () => {
       };
 
       console.log('게시글 API 호출:', boardData);
-      const response = await boardApi.createBoard(boardData);
+      const response = await boardApi.createBoard(fetchDataRef.current, boardData);
       console.log('게시글 작성 완료:', response);
       
-      return transformBoardData(response);
+      const createdPostData = response.isSuccess ? response.result : response;
+      return transformBoardData(createdPostData);
     } catch (error) {
       console.error('게시글 작성 실패:', error);
       throw error;
@@ -228,13 +237,12 @@ const usePosts = () => {
     try {
       console.log('게시글 수정 시작:', { postId, updates });
       
-      // 기존 이미지와 새로운 파일 분리
       const existingImages = updates.images?.filter(img => !img.file && img.url) || [];
       const newFiles = updates.images?.filter(img => img.file instanceof File).map(img => img.file) || [];
       
       console.log('기존 이미지:', existingImages.length, '새 파일:', newFiles.length);
       
-      const imageRequestDTOs = await imageApi.processImagesForUpdate(existingImages, newFiles);
+      const imageRequestDTOs = await imageApi.processImagesForUpdate(fetchDataRef.current, existingImages, newFiles);
       console.log('수정용 이미지 처리 완료:', imageRequestDTOs);
       
       const boardData = {
@@ -245,10 +253,11 @@ const usePosts = () => {
       };
       
       console.log('게시글 수정 API 호출:', boardData);
-      const response = await boardApi.updateBoard(postId, boardData);
+      const response = await boardApi.updateBoard(fetchDataRef.current, postId, boardData);
       console.log('게시글 수정 완료:', response);
       
-      return transformBoardData(response);
+      const updatedPostData = response.isSuccess ? response.result : response;
+      return transformBoardData(updatedPostData);
     } catch (error) {
       console.error('게시글 수정 실패:', error);
       throw error;
@@ -258,7 +267,7 @@ const usePosts = () => {
   // 게시글 삭제
   const deletePost = useCallback(async (postId) => {
     try {
-      await boardApi.deleteBoard(postId);
+      await boardApi.deleteBoard(fetchDataRef.current, postId);
       return { success: true };
     } catch (error) {
       console.error('게시글 삭제 실패:', error);
@@ -269,7 +278,7 @@ const usePosts = () => {
   // 게시글 좋아요 토글
   const togglePostLike = useCallback(async (postId) => {
     try {
-      await boardApi.toggleBoardLike(postId);
+      await boardApi.toggleBoardLike(fetchDataRef.current, postId);
       return { success: true };
     } catch (error) {
       console.error('게시글 좋아요 실패:', error);
@@ -280,20 +289,21 @@ const usePosts = () => {
   // 댓글 추가
   const addComment = useCallback(async (postId, commentData) => {
     try {
-      const response = await boardApi.createComment(postId, {
+      const response = await boardApi.createComment(fetchDataRef.current, postId, {
         content: commentData.content,
         parentCommentId: commentData.parentId || null
       });
       
+      const commentResult = response.isSuccess ? response.result : response;
       return {
-        id: response.commentId,
-        boardId: response.boardId,
-        author: response.writer,
-        content: response.content,
+        id: commentResult.commentId,
+        boardId: commentResult.boardId,
+        author: commentResult.writer,
+        content: commentResult.content,
         date: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
         userId: currentUser?.id || 'currentUser',
         replyLevel: commentData.replyLevel || 0,
-        parentId: response.parentId,
+        parentId: commentResult.parentId,
         likes: 0,
         isLiked: false
       };
@@ -306,11 +316,12 @@ const usePosts = () => {
   // 댓글 수정
   const updateComment = useCallback(async (postId, commentId, updates) => {
     try {
-      const response = await boardApi.updateComment(postId, commentId, updates.content);
+      const response = await boardApi.updateComment(fetchDataRef.current, postId, commentId, updates.content);
+      const commentResult = response.isSuccess ? response.result : response;
       return {
-        id: response.commentId,
-        content: response.content,
-        writer: response.writer
+        id: commentResult.commentId,
+        content: commentResult.content,
+        writer: commentResult.writer
       };
     } catch (error) {
       console.error('댓글 수정 실패:', error);
@@ -321,7 +332,7 @@ const usePosts = () => {
   // 댓글 삭제
   const deleteComment = useCallback(async (postId, commentId) => {
     try {
-      await boardApi.deleteComment(postId, commentId);
+      await boardApi.deleteComment(fetchDataRef.current, postId, commentId);
       return { success: true };
     } catch (error) {
       console.error('댓글 삭제 실패:', error);
@@ -332,11 +343,12 @@ const usePosts = () => {
   // 댓글 좋아요 토글
   const toggleCommentLike = useCallback(async (postId, commentId) => {
     try {
-      const result = await boardApi.toggleCommentLike(postId, commentId);
+      const result = await boardApi.toggleCommentLike(fetchDataRef.current, postId, commentId);
+      const likeResult = result.isSuccess ? result.result : result;
       return { 
         success: true, 
-        liked: result === 1, // 1: 좋아요, -1: 취소
-        likeChange: result 
+        liked: likeResult === 1,
+        likeChange: likeResult 
       };
     } catch (error) {
       console.error('댓글 좋아요 실패:', error);
@@ -349,11 +361,12 @@ const usePosts = () => {
     try {
       setLoading(true);
       const searchSize = size || (isPC ? 6 : 20);
-      const response = await boardApi.searchBoards(keyword, category, page, searchSize);
-      const searchResults = response.content.map(transformBoardData);
+      const response = await boardApi.searchBoards(fetchDataRef.current, keyword, category, page, searchSize);
+      const searchData = response.isSuccess ? response.result : response;
+      const searchResults = searchData.content.map(transformBoardData);
       
       setPosts(searchResults);
-      setHasMore(!response.last);
+      setHasMore(!searchData.last);
       return searchResults;
     } catch (error) {
       console.error('게시글 검색 실패:', error);
@@ -407,4 +420,3 @@ const usePosts = () => {
 };
 
 export default usePosts;
-    

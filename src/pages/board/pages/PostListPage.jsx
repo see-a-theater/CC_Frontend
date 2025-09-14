@@ -18,6 +18,7 @@ import FloatingButton from '@/pages/board/components/FloatingButton';
 import usePosts from '@/pages/board/hooks/usePosts';
 import useInfiniteScroll from '@/pages/board/hooks/useInfiniteScroll';
 import useResponsive from '@/pages/board/hooks/useResponsive';
+import useAxios from '@/utils/hooks/useAxios';
 
 const PostListPage = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -27,6 +28,9 @@ const PostListPage = () => {
   const [searchLoading, setSearchLoading] = useState(false);
   const isPC = useResponsive();
   const contentAreaRef = useRef(null);
+
+  // useAxios 훅으로 토큰 관리
+  useAxios();
 
   const {
     posts, 
@@ -47,34 +51,47 @@ const PostListPage = () => {
     !isPC && !isSearchMode // 모바일만 무한스크롤
   );
 
-  // 탭 변경 시 데이터 로드 + 스크롤 초기화
+  // 초기 로드용 ref - 중복 로드 방지
+  const initialLoadRef = useRef(false);
+
+  // 컴포넌트 마운트 시 초기 데이터 로드 - 한 번만 실행
   useEffect(() => {
-    // 검색 모드가 아닐 때만 탭 데이터 로드
-    if (!isSearchMode) {
+    if (!initialLoadRef.current) {
+      initialLoadRef.current = true;
       setPage(0);
       loadPosts(activeTab, 0, true);
     }
-    // 스크롤 초기화
-    if (contentAreaRef.current) {
-      contentAreaRef.current.scrollTop = 0;
-    }
-  }, [activeTab, loadPosts, setPage, isSearchMode]);
+  }, []); // 빈 의존성 배열로 한 번만 실행
 
-  // 탭 변경 핸들러
+  // 탭 변경 시에만 데이터 로드
   const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setIsSearchMode(false); // 탭 변경 시 검색 모드 해제
-    setSearchKeyword('');
-    setSearchResults([]);
+    if (tab !== activeTab) { // 같은 탭 클릭 시 중복 로드 방지
+      setActiveTab(tab);
+      setIsSearchMode(false);
+      setSearchKeyword('');
+      setSearchResults([]);
+      
+      // 스크롤 초기화
+      if (contentAreaRef.current) {
+        contentAreaRef.current.scrollTop = 0;
+      }
+      
+      // 탭 변경 시에만 새로운 데이터 로드
+      setPage(0);
+      loadPosts(tab, 0, true);
+    }
   };
 
   // 검색 핸들러
   const handleSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
-      // 검색어가 비어있으면 검색 모드 해제
+      // 검색어가 비어있으면 검색 모드 해제하고 원래 목록 로드
       setIsSearchMode(false);
       setSearchKeyword('');
       setSearchResults([]);
+      // 원래 게시글 목록 다시 로드
+      setPage(0);
+      loadPosts(activeTab, 0, true);
       return;
     }
 
@@ -96,7 +113,7 @@ const PostListPage = () => {
 
   // PC용 더보기 버튼 핸들러
   const handleLoadMore = () => {
-    if (!isSearchMode) {
+    if (!isSearchMode && !loading) { // 로딩 중이 아닐 때만 실행
       loadMore(activeTab);
     }
   };
@@ -131,7 +148,7 @@ const PostListPage = () => {
         
         <SearchBar 
           onSearch={handleSearch} 
-          showNotice={!isSearchMode} // 검색 모드가 아닐 때만 알림 표시
+          showNotice={!isSearchMode}
         />
 
         {/* 검색 결과 표시 */}
@@ -152,6 +169,8 @@ const PostListPage = () => {
                 setIsSearchMode(false);
                 setSearchKeyword('');
                 setSearchResults([]);
+                setPage(0);
+                loadPosts(activeTab, 0, true);
               }}
               style={{
                 marginLeft: '10px',

@@ -1,46 +1,35 @@
 
-import axios from 'axios';
+// 공통 상수
+export const API_ENDPOINTS = {
+  // 게시판
+  BOARDS: '/boards',
+  HOT_BOARDS: '/boards/hot',
+  BOARD_SEARCH: '/boards/search',
+  BOARD_LIKE: (boardId) => `/boards/${boardId}/like`,
+  
+  // 댓글
+  COMMENTS: (boardId) => `/boards/${boardId}/comments`,
+  COMMENT_UPDATE: (boardId, commentId) => `/boards/${boardId}/comments/${commentId}`,
+  COMMENT_DELETE: (boardId, commentId) => `/boards/${boardId}/comments/${commentId}`,
+  COMMENT_LIKE: (boardId, commentId) => `/boards/${boardId}/comments/${commentId}/like`,
+  
+  // 이미지
+  PRESIGNED_URL: '/upload/s3/presignedUrl',
+  PRESIGNED_URLS: '/upload/s3/presignedUrls',
+  IMAGE_SAVE: '/images',
+  IMAGE_SAVE_MULTIPLE: '/images/multipleImages',
+  IMAGE_DELETE: (keyName) => `/upload/s3/${encodeURIComponent(keyName)}`,
+  IMAGE_EXISTS: '/upload/s3',
+  
+  // 사용자
+  MY_PAGE: '/member/myPage',
+  
+  // 신고
+  REPORTS: '/boards/reports'
+};
 
-const API_BASE_URL = import.meta.env.VITE_APP_SERVER_URL;
-const ACCESS_TOKEN = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
-// Axios 인스턴스 생성
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// 요청 인터셉터 - 토큰 자동 추가
-apiClient.interceptors.request.use(
-  (config) => {
-    if (ACCESS_TOKEN) {
-      config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// 응답 인터셉터 - 에러 처리
-apiClient.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    
-    if (error.response?.status === 401) {
-      // 토큰 만료 처리
-      console.error('토큰이 만료되었습니다.');
-    }
-    
-    return Promise.reject(error);
-  }
-);
-
-export default apiClient;
+export const BOARD_TYPE = {
+  general: 'NORMAL',
+  promotion: 'PROMOTION',
+  hot: 'NORMAL' // HOT은 일반 게시판에서 좋아요 10개 이상인 것들
+};
