@@ -50,10 +50,9 @@ function App() {
 			<Route path="/plays/detail/:playId" element={<Detail />} />
 
 			<Route path="/notification" element={<Notification />} />
-				<Route path="/production/:prodId" element={<Production />} />
-				<Route path="/production/:prodId/:AlbumId" element={<ProdDetail />} />
-				<Route path="/production/upload_photo" element={<UploadPic />} />
-
+			<Route path="/production/:prodId" element={<Production />} />
+			<Route path="/production/:prodId/:AlbumId" element={<ProdDetail />} />
+			<Route path="/production/upload_photo" element={<UploadPic />} />
 
 			<Route path="/mypage/*" element={<MyPageRoutes />} />
 
