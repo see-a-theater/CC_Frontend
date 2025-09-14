@@ -1,7 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { searchShows, getShowIncoming } from '@/pages/search/api/searchApi';
+import { searchAPI } from '@/pages/search/api/searchApi';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+import useAxios from '@/utils/hooks/useAxios';
 import ClosePinkBig from '@/assets/icons/ClosePinkBig.svg';
 import SearchIcon from '@/assets/icons/searchGrey.svg?react';
 
@@ -17,15 +19,23 @@ const SearchPC = () => {
   const searchRef = useRef(null);
   const inputRef = useRef(null);
 
+  // useCustomFetch 훅 사용
+  const { fetchData } = useCustomFetch();
+  
+  // useAxios 훅으로 토큰 관리
+  useAxios();
+
   // 컴포넌트 마운트 시 임박한 공연 데이터 로드
   useEffect(() => {
     const fetchUpcomingShows = async () => {
       try {
         setIsInitialLoading(true);
-        const response = await getShowIncoming();
-        if (response.isSuccess) {
+        const response = await searchAPI.getShowIncoming(fetchData);
+        const showData = response.isSuccess ? response.result : response;
+        
+        if (showData && Array.isArray(showData)) {
           // API 응답을 임박한 공연 형태로 변환 (상위 4개만)
-          const formattedShows = response.result.slice(0, 4).map((show, index) => ({
+          const formattedShows = showData.slice(0, 4).map((show, index) => ({
             id: show.amateurShowId,
             rank: index + 1,  // 임시
             title: show.name,
@@ -66,11 +76,12 @@ const SearchPC = () => {
 
     try {
       setIsLoading(true);
-      const response = await searchShows(keyword.trim());
+      const response = await searchAPI.searchShows(fetchData, keyword.trim());
+      const searchData = response.isSuccess ? response.result : response;
       
-      if (response.isSuccess) {
+      if (searchData && searchData.content && Array.isArray(searchData.content)) {
         // API 응답을 기존 형태로 변환
-        const formattedResults = response.result.content.map(item => ({
+        const formattedResults = searchData.content.map(item => ({
           id: item.showId,
           title: item.title,
           company: item.performerName,
@@ -82,8 +93,10 @@ const SearchPC = () => {
         }));
         
         setSearchResults(formattedResults);
-        setHasSearched(true);
+      } else {
+        setSearchResults([]);
       }
+      setHasSearched(true);
     } catch (error) {
       console.error('검색 실패:', error);
       setSearchResults([]);

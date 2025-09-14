@@ -1,77 +1,30 @@
 
-import axios from 'axios';
+export const searchAPI = {
+  // 검색 API
+  searchShows: async (fetchData, keyword, page = 0, size = 20) => {
+  const queryParams = new URLSearchParams({
+    keyword,
+    page: page.toString(),
+    size: size.toString()
+  }).toString();
+  const response = await fetchData(`/search?${queryParams}`, 'GET');
+  return response;
+},
 
-// Axios 인스턴스 생성
-const api = axios.create({
-  baseURL: import.meta.env.VITE_APP_SERVER_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  }
-});
+  // 임박한 공연 목록
+  getShowIncoming: async (fetchData) => {
+    const response = await fetchData('/amateurs/incoming', 'GET');
+    return response;
+  },
 
-// 요청 인터셉터 - 토큰 자동 추가
-api.interceptors.request.use((config) => {
-  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
-// 응답 인터셉터 - 에러 처리
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// 검색 API
-export const searchShows = async (keyword, page = 0, size = 20) => {
-  try {
-    const response = await api.get('/search', {
-      params: {
-        keyword,
-        page,
-        size
-      }
+  // 현재 진행중인 공연 목록
+  getOngoingShows: async (fetchData, page = 0, size = 20) => {
+    const response = await fetchData('/amateurs/ongoing', 'GET', null, {
+      page,
+      size
     });
-    return response.data;
-  } catch (error) {
-    console.error('검색 API 에러:', error);
-    throw error;
+    return response;
   }
 };
 
-// 임박한 공연 목록
-export const getShowIncoming = async () => {
-  try {
-    const response = await api.get('/amateurs/incoming');
-    return response.data;
-  } catch (error) {
-    console.error('임박한 공연 API 에러:', error);
-    throw error;
-  }
-};
-
-// 현재 진행중인 공연 목록
-export const getOngoingShows = async (page = 0, size = 20) => {
-  try {
-    const response = await api.get('/amateurs/ongoing', {
-      params: {
-        page,
-        size
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error('진행중 공연 API 에러:', error);
-    throw error;
-  }
-};
-
-export default api;
+export default searchAPI;
