@@ -238,7 +238,7 @@ function Info({ playData }) {
 export default Info;
 
 const ChevronLeftPink = styled(ChevronLeft)`
-	fill: ${({ theme }) => theme.colors.pink600};
+	color: ${({ theme }) => theme.colors.pink600};
 	height: 15px;
 	position: absolute;
 	left: 0;

@@ -276,7 +276,7 @@ function UploadPic() {
 
 export default UploadPic;
 const ChevronDownGray = styled(ChevronDown)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 `;
 const Mobile = styled.div`
 	width: 100vw;

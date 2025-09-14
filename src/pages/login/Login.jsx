@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import KakaoLoginButton from '@/components/Login/KakaoLoginButton';
 import LogoWeb from '@/assets/icons/login/LogoWeb.svg?react';
 import LogoMobile from '@/assets/icons/login/LogoMobile.svg?react';
-import chevron from '@/assets/icons/chevronLeftPink.svg?react';
+import chevron from '@/assets/icons/chevronLeft.svg?react';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';

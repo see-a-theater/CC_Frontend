@@ -140,10 +140,10 @@ function ProdDetail() {
 export default ProdDetail;
 
 const ChevronLeftGray = styled(ChevronLeft)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 `;
 const ChevronRightGray = styled(ChevronRight)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 `;
 
 const Mobile = styled.div`

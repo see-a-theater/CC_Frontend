@@ -183,7 +183,7 @@ function Production() {
 export default Production;
 
 const ChevronLeftGray = styled(ChevronLeft)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 `;
 const Mobile = styled.div`
 	padding: 0 20px;
