@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import ChevronLeft from '@/assets/icons/ChevronLeft.svg?react';
+
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+
 function TopBar({ onPrev, onNext, children }) {
 	return (
 		<div style={{ height: '120px' }}>
