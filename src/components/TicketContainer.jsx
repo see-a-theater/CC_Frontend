@@ -97,9 +97,11 @@ function TicketContainer({ header, details, isPerformer }) {
 export default TicketContainer;
 
 const ChevronRightGray = styled(ChevronRight)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 	height: 28px;
+	width: auto;
 `;
+
 const Wrapper = styled.div`
 	margin: 20px 0;
 	padding: 10px 22px;

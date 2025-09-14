@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+
 function TopBar({ onPrev, onNext, children }) {
 	return (
 		<div style={{ height: '120px' }}>
@@ -14,7 +16,7 @@ function TopBar({ onPrev, onNext, children }) {
 
 export default TopBar;
 const ChevronLeftPink = styled(ChevronLeft)`
-	fill: ${({ theme }) => theme.colors.pink600};
+	color: ${({ theme }) => theme.colors.pink600};
 	height: 16px;
 `;
 const Top = styled.div`
