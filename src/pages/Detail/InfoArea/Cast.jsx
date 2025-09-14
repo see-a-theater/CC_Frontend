@@ -48,7 +48,7 @@ function Cast(props) {
 
 export default Cast;
 const ChevronRightGray = styled(ChevronRight)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 	height: 15px;
 `;
 const Container = styled.div`
