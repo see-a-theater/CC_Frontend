@@ -1,6 +1,7 @@
-
-import { useState, useEffect } from 'react';
+// src/pages/ticketingpage/hooks/useTicketing.jsx
+import { useState, useEffect, useRef } from 'react';
 import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import { ticketingAPI } from '@/pages/ticketingpage/api/ticketApi.js';
 
 const useTicketing = (amateurShowId) => {
@@ -10,6 +11,13 @@ const useTicketing = (amateurShowId) => {
   const [error, setError] = useState(null);
   const [nextActive, setNextActive] = useState(false);
   const isPC = useResponsive();
+
+  // useCustomFetch 훅 사용
+  const { fetchData } = useCustomFetch();
+  
+  // fetchData가 매번 새로 생성되는 것을 방지
+  const fetchDataRef = useRef(fetchData);
+  fetchDataRef.current = fetchData;
 
   // 공연 정보
   const [eventInfo, setEventInfo] = useState({
@@ -40,8 +48,8 @@ const useTicketing = (amateurShowId) => {
     
     setLoading(true);
     try {
-      const response = await ticketingAPI.getShowSimple(amateurShowId);
-      const showData = response.result || response;
+      const response = await ticketingAPI.getShowSimple(fetchDataRef.current, amateurShowId);
+      const showData = response.isSuccess ? response.result : response;
       
       setEventInfo({
         title: showData.name || '',
@@ -63,9 +71,9 @@ const useTicketing = (amateurShowId) => {
 
     setLoading(true);
     try {
-      const response = await ticketingAPI.getShowRounds(amateurShowId);
+      const response = await ticketingAPI.getShowRounds(fetchDataRef.current, amateurShowId);
       // API 응답에서 result 추출
-      const rounds = response.result || response;
+      const rounds = response.isSuccess ? response.result : response;
       
       // 배열인지 확인
       if (!Array.isArray(rounds)) {
@@ -92,8 +100,8 @@ const useTicketing = (amateurShowId) => {
 
     setLoading(true);
     try {
-      const response = await ticketingAPI.getTicketTypes(amateurShowId);
-      const tickets = response.result || response;
+      const response = await ticketingAPI.getTicketTypes(fetchDataRef.current, amateurShowId);
+      const tickets = response.isSuccess ? response.result : response;
       
       // 배열인지 확인
       if (!Array.isArray(tickets)) {
@@ -242,6 +250,7 @@ const useTicketing = (amateurShowId) => {
       };
 
       const reserveResponse = await ticketingAPI.reserveTicket(
+        fetchDataRef.current,
         amateurShowId,
         selectedRound.roundId,
         selectedTicket.amateurTicketId,
@@ -249,7 +258,7 @@ const useTicketing = (amateurShowId) => {
       );
 
       // API 응답에서 memberTicketId 추출
-      const ticketData = reserveResponse.result || reserveResponse;
+      const ticketData = reserveResponse.isSuccess ? reserveResponse.result : reserveResponse;
       const memberTicketId = ticketData.memberTicketId;
 
       if (!memberTicketId) {
@@ -257,8 +266,8 @@ const useTicketing = (amateurShowId) => {
       }
 
       // 2단계: 카카오페이 결제 준비
-      const paymentResponse = await ticketingAPI.prepareKakaoPayment(memberTicketId);
-      const paymentData = paymentResponse.result || paymentResponse;
+      const paymentResponse = await ticketingAPI.prepareKakaoPayment(fetchDataRef.current, memberTicketId);
+      const paymentData = paymentResponse.isSuccess ? paymentResponse.result : paymentResponse;
 
       // 결제 데이터 저장 (결제 완료 후 사용)
       setReservationData({

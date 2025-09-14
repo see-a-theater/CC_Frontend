@@ -10,12 +10,16 @@ import LoadingSpinner from '@/pages/ticketingpage/components/LoadingSpinner';
 import ErrorMessage from '@/pages/ticketingpage/components/ErrorMessage';
 import useTicketing from '@/pages/ticketingpage/hooks/useTicketing';
 import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
+import useAxios from '@/utils/hooks/useAxios';
 
 const TicketingPage = ({ amateurShowId }) => {
   const ticketing = useTicketing(amateurShowId);
   const { step, goToPreviousStep, getCurrentStepContent, loading, error } = ticketing;
   const isPC = useResponsive();
   const currentContent = getCurrentStepContent();
+
+  // useAxios 훅으로 토큰 관리
+  useAxios();
 
   // 반응형 헤더 렌더링
   const renderHeader = () => {
