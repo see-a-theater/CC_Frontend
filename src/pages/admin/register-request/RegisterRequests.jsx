@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import SearchBar from '@/components/SearchBar';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
-import SearchBarBlack from '@/components/SearchBarBlack';
-import SearchOptionBar from '@/components/Admin/SearchOptionBar';
+import SearchBarBlack from '../../../components/SearchBarBlack';
+import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -10,8 +10,6 @@ import { AdminListPage } from '@/pages/admin/STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
 function RegisterRequests() {
 	const navigate = useNavigate();
-
-	const testRequests = [
 
 	const testRequests = [
 		{
@@ -23,11 +21,6 @@ function RegisterRequests() {
 			status: '등록',
 		},
 	];
-
-	const { data, loading, error } = useCustomFetch(
-		'/admin/approval/showList?page=0&size=20',
-	);
-
 
 	const { data, loading, error } = useCustomFetch(
 		'/admin/approval/showList?page=0&size=20',
@@ -47,24 +40,10 @@ function RegisterRequests() {
 
 	const [page, setPage] = useState(1);
 	const itemsPerPage = 10;
-	const [stockList, setStockList] = useState([]);
-	const [currentList, setCurrentList] = useState([]);
-
-	useEffect(() => {
-		if (data) {
-			setStockList(data?.result?.content || data); // data 구조 맞게
-		}
-	}, [data]);
-
-	const [page, setPage] = useState(1);
-	const itemsPerPage = 10;
 	const indexOfLastItem = page * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
 	useEffect(() => {
-		if (Array.isArray(stockList)) {
-			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
-		}
 		if (Array.isArray(stockList)) {
 			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
 		}
@@ -89,11 +68,7 @@ function RegisterRequests() {
 					</thead>
 					<tbody>
 						{console.log(currentList)}
-						{console.log(currentList)}
 						{currentList.map((request, index) => (
-							<tr key={request.showId || index}>
-								<td>{request.showId}</td>
-								<td>{request.username}</td>
 							<tr key={request.showId || index}>
 								<td>{request.showId}</td>
 								<td>{request.username}</td>
@@ -101,17 +76,7 @@ function RegisterRequests() {
 								<td>{request.phone}</td>
 								<td>{request.showName}</td>
 								<td>{request.amateurStatus}</td>
-								<td>{request.showName}</td>
-								<td>{request.amateurStatus}</td>
 								<td>
-									<button
-										onClick={() => {
-											localStorage.setItem('detail', JSON.stringify(request));
-											navigate(`${request.showId}`);
-										}}
-									>
-										상세
-									</button>
 									<button
 										onClick={() => {
 											localStorage.setItem('detail', JSON.stringify(request));
