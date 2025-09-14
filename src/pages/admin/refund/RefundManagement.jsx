@@ -5,16 +5,14 @@ import SearchBarBlack from '@/components/SearchBarBlack';
 import SearchOptionBar from '@/components/Admin/SearchOptionBar';
 import SubNav from '@/components/Admin/SubNav';
 
+
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AdminListPage } from '@/pages/admin/STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 function RefundManagement() {
-	localStorage.setItem(
-		'accessToken',
-		'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkB0ZXN0LmNvbSIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3ODYwMzY2fQ.HzCmsQ0S5LmIEFrSb65ty3sO2yvd3J5czU7nGor85w2vqkJLsIDISYTiINDaYMTlszNwWeJ0TYUrqk11VUvigQ',
-	);
 	const navigate = useNavigate();
 	const requests = [
 		{
@@ -25,6 +23,11 @@ function RefundManagement() {
 			requestDate: '2024.01.24 / 17:59',
 			id: 1,
 		},
+	];
+	const { data, loading, error } = useCustomFetch(
+		'/admin/ticket/refund/history?page=0&size=20',
+	);
+
 	];
 	const { data, loading, error } = useCustomFetch(
 		'/admin/ticket/refund/history?page=0&size=20',
@@ -44,6 +47,17 @@ function RefundManagement() {
 
 	const [page, setPage] = useState(1);
 	const itemsPerPage = 10;
+	const [stockList, setStockList] = useState([]);
+	const [currentList, setCurrentList] = useState([]);
+
+	useEffect(() => {
+		if (data) {
+			setStockList(data?.result?.content || data); // data 구조 맞게
+		}
+	}, [data]);
+
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
 	const indexOfLastItem = page * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
@@ -51,8 +65,22 @@ function RefundManagement() {
 		if (Array.isArray(stockList)) {
 			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
 		}
+		if (Array.isArray(stockList)) {
+			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		}
 	}, [page, stockList]);
 
+	function formatDateTime(isoString) {
+		const d = new Date(isoString);
+
+		const year = d.getFullYear();
+		const month = String(d.getMonth() + 1).padStart(2, '0');
+		const day = String(d.getDate()).padStart(2, '0');
+		const hours = String(d.getHours()).padStart(2, '0');
+		const minutes = String(d.getMinutes()).padStart(2, '0');
+
+		return `${year}.${month}.${day} / ${hours}:${minutes}`;
+	}
 	function formatDateTime(isoString) {
 		const d = new Date(isoString);
 
@@ -85,13 +113,22 @@ function RefundManagement() {
 					<tbody>
 						{currentList.map((request) => (
 							<tr key={request.realTicketId}>
+							<tr key={request.realTicketId}>
 								{console.log(request)}
 								<td>{request.username}</td>
 								<td>{request.memberName}</td>
 								<td>{request.showTitle}</td>
 								<td>{formatDateTime(request.performanceDateTime)}</td>
 								<td>{formatDateTime(request.canceledAt)}</td>
+								<td>{request.username}</td>
+								<td>{request.memberName}</td>
+								<td>{request.showTitle}</td>
+								<td>{formatDateTime(request.performanceDateTime)}</td>
+								<td>{formatDateTime(request.canceledAt)}</td>
 								<td>
+									<button onClick={() => navigate(`${request.showId}`)}>
+										상세
+									</button>
 									<button onClick={() => navigate(`${request.showId}`)}>
 										상세
 									</button>
