@@ -39,14 +39,17 @@ function AdminRoutes() {
 				<Route path="plays/:playId/review" element={<AdminPlayReview />} />
 
 				<Route path="register-requests" element={<RegisterRequests />} />
-				<Route path="register-requests/1" element={<RegisterRequestDetail />} />
+				<Route
+					path="register-requests/:registerId"
+					element={<RegisterRequestDetail />}
+				/>
 
 				<Route path="tickets" element={<TicketManagement />} />
-				<Route path="tickets/1" element={<TicketManagementDetail />} />
+				<Route path="tickets/:ticketId" element={<TicketManagementDetail />} />
 
 				<Route path="reservations" element={<ReservationManagement />} />
 				<Route
-					path="reservations/1"
+					path="reservations/:id"
 					element={<ReservationManagementDetail />}
 				/>
 

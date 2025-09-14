@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useRef } from 'react';
 import { useEffect } from 'react';
-
+import PostCodeInput from '../../components/PostCodeInput.jsx';
 function RegisterStep1() {
 	const [formDataChanged, setFormDataChanged] = useState(false);
 	const [roundCount, setRoundCount] = useState(1);
@@ -248,29 +248,21 @@ function RegisterStep1() {
 				</div>
 				<div>
 					<label>공연장 주소</label>
-					<input
-						className="input-text"
-						type="text"
-						name="roadAddress"
-						placeholder="지번, 도로명, 건물명으로 검색해주세요"
+					<PostCodeInput
 						value={formData.roadAddress}
-						onChange={handleInputChange}
+						detailValue={formData.detailAddress}
+						onChange={({ name, value }) =>
+							setFormData((prev) => ({ ...prev, [name]: value }))
+						}
 					/>
 					{errors.roadAddress && (
 						<Err style={{ color: 'red' }}>{errors.roadAddress}</Err>
 					)}
-					<input
-						className="input-text"
-						type="text"
-						name="detailAddress"
-						placeholder="상세주소를 입력해주세요 (상세주소 입력폼은 주소api 연결 후 처리 예정)"
-						value={formData.detailAddress}
-						onChange={handleInputChange}
-					/>
 					{errors.detailAddress && (
 						<Err style={{ color: 'red' }}>{errors.detailAddress}</Err>
 					)}
 				</div>
+
 				<div>
 					<label>공연 회차</label>
 					<Counter count={roundCount} setCount={setRoundCount} />
