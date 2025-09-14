@@ -13,7 +13,7 @@ import Heart from '@/assets/icons/Heart.svg?react';
 import HeartFull from '@/assets/icons/heart-full.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import Gallery from '@/assets/icons/Gallery.svg?react';
-import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 
 function Production() {
 	const { prodId } = useParams();
@@ -59,7 +59,7 @@ function Production() {
 					<h3 className="production" onClick={navigateToDetail}>
 						{picData?.result.performerName}
 					</h3>
-					<LikedButton performerId={prodId}/>
+					<LikedButton performerId={prodId} />
 				</Theatre>
 				<TabBar>
 					<TabItem
@@ -125,7 +125,7 @@ function Production() {
 				<Container>
 					<Theatre>
 						<div className="theatreName">
-							<ChevronLeft onClick={goBack} />
+							<ChevronLeftGray onClick={goBack} />
 							<h3 className="production">{picData?.result.performerName}</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
@@ -182,6 +182,9 @@ function Production() {
 
 export default Production;
 
+const ChevronLeftGray = styled(ChevronLeft)`
+	fill: ${({ theme }) => theme.colors.gray400};
+`;
 const Mobile = styled.div`
 	padding: 0 20px;
 
