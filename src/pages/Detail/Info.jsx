@@ -5,7 +5,7 @@ import Location from '@/assets/icons/location.svg?react';
 import Time from '@/assets/icons/time.svg?react';
 import Price from '@/assets/icons/price.svg?react';
 
-import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 
 import Cast from './InfoArea/Cast';
 import Perform from './InfoArea/Perform';
@@ -44,7 +44,7 @@ function Info({ playData }) {
 		<Container>
 			<Mobile>
 				<Top>
-					<ChevronLeftPink height={15} alt="이전" className="back" />
+					<ChevronLeftPink alt="이전" />
 					<p className="title">{playData?.result.name}</p>
 				</Top>
 				<img
@@ -237,6 +237,12 @@ function Info({ playData }) {
 
 export default Info;
 
+const ChevronLeftPink = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.pink600};
+	height: 15px;
+	position: absolute;
+	left: 0;
+`;
 const Container = styled.div`
 	background: ${({ theme }) => theme.colors.ivoryBg};
 `;
@@ -267,10 +273,6 @@ const Top = styled.div`
 	align-items: center;
 	justify-content: center;
 
-	.back {
-		position: absolute;
-		left: 0;
-	}
 	.title {
 		font-size: ${({ theme }) => theme.font.fontSize.body16};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};

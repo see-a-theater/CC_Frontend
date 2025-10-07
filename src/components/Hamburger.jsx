@@ -5,7 +5,7 @@ import { useState } from 'react';
 import HamburgerIcon from '@/assets/icons/hamburger.svg?react';
 import Alrert from '@/assets/icons/alrert.svg?react';
 import Search from '@/assets/icons/search.svg?react';
-import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import Logo from '@/assets/icons/logo.svg?react';
 import FullScreenMenu from './FullScreenMenu';
 
@@ -60,7 +60,10 @@ function Hamburger({ hasLogo, title, back, noIcon }) {
 
 export default Hamburger;
 
-// style
+const ChevronLeftPink = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.pink600};
+	height: 15px;
+`;
 const Container = styled.div`
 	height: 120px;
 	background: ${({ theme }) => theme.colors.ivoryBg};

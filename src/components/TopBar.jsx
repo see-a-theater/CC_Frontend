@@ -1,14 +1,12 @@
 import styled from 'styled-components';
-import ChevronPink from '@/assets/icons/ChevronPink.svg';
+
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+
 function TopBar({ onPrev, onNext, children }) {
 	return (
 		<div style={{ height: '120px' }}>
 			<Top>
-				<img
-					src={ChevronPink}
-					onClick={onPrev}
-					style={{ height: '16px', width: '16px' }}
-				/>
+				<ChevronLeftPink />
 				<p>{children}</p>
 				<button onClick={onNext}></button>
 			</Top>
@@ -17,7 +15,10 @@ function TopBar({ onPrev, onNext, children }) {
 }
 
 export default TopBar;
-
+const ChevronLeftPink = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.pink600};
+	height: 16px;
+`;
 const Top = styled.div`
 	display: flex;
 	flex: 1;

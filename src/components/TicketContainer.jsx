@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
+import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
 function TicketContainer({ header, details, isPerformer }) {
 	const navigate = useNavigate();
 	const {
@@ -95,6 +95,13 @@ function TicketContainer({ header, details, isPerformer }) {
 }
 
 export default TicketContainer;
+
+const ChevronRightGray = styled(ChevronRight)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 28px;
+	width: auto;
+`;
+
 const Wrapper = styled.div`
 	margin: 20px 0;
 	padding: 10px 22px;
