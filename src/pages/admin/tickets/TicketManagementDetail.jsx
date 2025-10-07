@@ -4,6 +4,8 @@ import {
 	Content,
 	OptionBarWrapper,
 } from '@/pages/admin/STYLE/admin-detail.style';
+import { useParams } from 'react-router-dom';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 const details = [
 	{
 		id: '1',
@@ -14,7 +16,26 @@ const details = [
 ];
 const detail = details[0];
 
+function formatDateTime(isoString) {
+	const d = new Date(isoString);
+
+	const year = d.getFullYear();
+	const month = String(d.getMonth() + 1).padStart(2, '0');
+	const day = String(d.getDate()).padStart(2, '0');
+	const hours = String(d.getHours()).padStart(2, '0');
+	const minutes = String(d.getMinutes()).padStart(2, '0');
+
+	return `${year}.${month}.${day} / ${hours}:${minutes}`;
+}
+
 function TicketManagementDetail() {
+	const { ticketId } = useParams();
+	const {
+		data: fullData,
+		loading,
+		error,
+	} = useCustomFetch(`/admin/ticket/${ticketId}`);
+	const data = fullData?.result || null;
 	return (
 		<>
 			<TablePageWrapper>
@@ -32,21 +53,21 @@ function TicketManagementDetail() {
 							marginBottom: '26px',
 						}}
 					>
-						<h1>{detail.title}</h1>
+						<h1>{data?.showTitle}</h1>
 					</div>
 					<table>
 						<tbody>
 							<tr>
 								<th>소극장 공연 이름</th>
-								<td>{detail.title}</td>
+								<td>{data?.showTitle}</td>
 							</tr>
 							<tr>
 								<th>날짜</th>
-								<td>{detail.date}</td>
+								<td>{formatDateTime(data?.performanceDateTime)}</td>
 							</tr>
 							<tr>
 								<th>예약 현황</th>
-								<td>{detail.bookingCount}</td>
+								<td>{data?.quantity}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -58,7 +79,9 @@ function TicketManagementDetail() {
 							marginTop: '80px',
 						}}
 					>
-						<button className="light">수정하기</button>
+						{/**
+						 * 		<button className="light">수정하기</button>
+						 */}
 					</div>
 				</Content>
 			</TablePageWrapper>

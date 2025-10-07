@@ -6,15 +6,9 @@ import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import Hamburger from '@/components/Hamburger';
 import Carousel from '@/components/Carousel';
 
-import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
-import ChevronRight from '@/assets/icons/chevronRightGrey.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 import ThreeDots from '@/assets/icons/threeDotsVertical.svg?react';
-
-import image1 from '@/assets/mock/images/image1.png';
-import image2 from '@/assets/mock/images/image2.png';
-import image3 from '@/assets/mock/images/image3.png';
-import image4 from '@/assets/mock/images/image4.png';
-import image5 from '@/assets/mock/images/image5.png';
 
 function ProdDetail() {
 	const { prodId } = useParams();
@@ -51,59 +45,6 @@ function ProdDetail() {
                     어쩌구 저쩌구 자축~~~~~`,
 		},
 	];
-	const imageList = {
-		isSuccess: true,
-		code: '200',
-		message: 'OK',
-		result: [
-			{
-				photoAlbumId: 0,
-				amateurShowName: '실종',
-				place: 'string',
-				imageUrl: image1,
-			},
-			{
-				photoAlbumId: 2,
-				amateurShowName: '카포네 트릴로지',
-				place: 'string',
-				imageUrl: image2,
-			},
-
-			{
-				photoAlbumId: 3,
-				amateurShowName: '킬링시저',
-				place: 'string',
-				imageUrl: image3,
-			},
-			{
-				photoAlbumId: 4,
-				amateurShowName: '카포네 트릴로지',
-				place: 'string',
-				imageUrl: image4,
-			},
-
-			{
-				photoAlbumId: 5,
-				amateurShowName: '킬링시저',
-				place: 'string',
-				imageUrl: image5,
-			},
-			{
-				photoAlbumId: 6,
-				amateurShowName: '카포네 트릴로지',
-				place: 'string',
-				imageUrl: image4,
-			},
-
-			{
-				photoAlbumId: 7,
-				amateurShowName: '킬링시저',
-				place: 'string',
-				imageUrl: image5,
-			},
-		],
-	};
-
 	return (
 		<>
 			<Mobile>
@@ -145,7 +86,7 @@ function ProdDetail() {
 				<SideBar />
 				<Container>
 					<Production>
-						<ChevronLeft onClick={goBack}/>
+						<ChevronLeftGray onClick={goBack} />
 						<h3 className="productionName">{picData?.result.performerName}</h3>
 					</Production>
 					<Intro>
@@ -157,7 +98,7 @@ function ProdDetail() {
 							<div className="titleBar">
 								<div className="titleArea">
 									<h3 className="title">{AlbumData?.result.amateurShowName}</h3>
-									<ChevronRight />
+									<ChevronRightGray />
 								</div>
 								<ThreeDots />
 							</div>
@@ -197,6 +138,13 @@ function ProdDetail() {
 }
 
 export default ProdDetail;
+
+const ChevronLeftGray = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.gray400};
+`;
+const ChevronRightGray = styled(ChevronRight)`
+	color: ${({ theme }) => theme.colors.gray400};
+`;
 
 const Mobile = styled.div`
 	padding: 0 20px 20px 20px;

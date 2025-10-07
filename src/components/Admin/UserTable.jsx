@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
 
 const UserTable = ({
@@ -85,7 +85,7 @@ const UserTable = ({
 					onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
 					disabled={currentPage === 1}
 				>
-					<ChevronLeft height={16} />
+					<ChevronLeftGray />
 				</PageBtn>
 
 				{Array.from({ length: totalPages }, (_, i) => (
@@ -104,7 +104,7 @@ const UserTable = ({
 					}
 					disabled={currentPage === totalPages}
 				>
-					<ChevronRight height={16} />
+					<ChevronRightGray />
 				</PageBtn>
 			</Pagination>
 		</Wrapper>
@@ -113,6 +113,14 @@ const UserTable = ({
 
 export default UserTable;
 
+const ChevronLeftGray = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 16px;
+`;
+const ChevronRightGray = styled(ChevronRight)`
+	fill: ${({ theme }) => theme.colors.gray400};
+	height: 16px;
+`;
 const Wrapper = styled.div`
 	font-family: Pretendard;
 `;

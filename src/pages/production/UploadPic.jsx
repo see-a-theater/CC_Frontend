@@ -13,7 +13,7 @@ import TopBar from '@/components/TopBar';
 import Modal from '@/components/Production/Modal';
 import CalendarPeriod from '@/components/CalendarPeriod';
 
-import ChevronDown from '@/assets/icons/chevronDownGrey.svg?react';
+import ChevronDown from '@/assets/icons/chevronDown.svg?react';
 
 function UploadPic() {
 	const data = [
@@ -196,7 +196,7 @@ function UploadPic() {
 								<SelectedInfo>
 									<SelectedInfoWrapper>
 										<Title>{selected.title}</Title>
-										<ChevronDown
+										<ChevronDownGray
 											onClick={() => {
 												setSelected(null);
 												setInputValue('');
@@ -275,7 +275,9 @@ function UploadPic() {
 }
 
 export default UploadPic;
-
+const ChevronDownGray = styled(ChevronDown)`
+	color: ${({ theme }) => theme.colors.gray400};
+`;
 const Mobile = styled.div`
 	width: 100vw;
 	height: 100vh;

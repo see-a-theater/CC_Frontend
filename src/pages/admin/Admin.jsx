@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import HomeIconMenu from '@/components/HomeIconMenu';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import ChevronUp from '@/assets/icons/ChevronUpWhite.svg?react';
+import ChevronUp from '@/assets/icons/ChevronUp.svg?react';
 import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
@@ -49,7 +49,7 @@ function Admin() {
 					>
 						소극장 공연 관리
 						{!openSubMenu ? (
-							<ChevronUp
+							<ChevronUpWhite
 								style={{
 									transform: 'rotate(180deg)',
 									transition: 'transform 0.3s',
@@ -59,7 +59,7 @@ function Admin() {
 								}}
 							/>
 						) : (
-							<ChevronUp
+							<ChevronUpWhite
 								style={{ transition: 'transform 0.3s' }}
 								onClick={() => {
 									setOpenSubMenu(!openSubMenu);
@@ -132,6 +132,10 @@ function Admin() {
 	);
 }
 export default Admin;
+const ChevronUpWhite = styled(ChevronUp)`
+	fill: ${({ theme }) => theme.colors.grayWhite};
+	height: 13px;
+`;
 const Top = styled.div`
 	background: ${({ theme }) => theme.colors.grayWhite};
 	position: fixed;

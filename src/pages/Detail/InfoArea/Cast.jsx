@@ -3,7 +3,7 @@ import Staff from '@/components/Detail/Staff';
 
 import styled from 'styled-components';
 
-import ChevronRight from '@/assets/icons/chevronRightGray.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 function Cast(props) {
@@ -18,7 +18,7 @@ function Cast(props) {
 				<Title>극단</Title>
 				<ContentH onClick={goPerformer}>
 					<Text>{props?.data.result.performerName}</Text>
-					<ChevronRight height={15} />
+					<ChevronRightGray />
 				</ContentH>
 			</Content>
 
@@ -47,7 +47,10 @@ function Cast(props) {
 }
 
 export default Cast;
-
+const ChevronRightGray = styled(ChevronRight)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 15px;
+`;
 const Container = styled.div`
 	width: 100%;
 

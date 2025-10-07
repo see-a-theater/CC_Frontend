@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
 import TopBarWeb from '@/components/TopBarWeb';
 import Select from 'react-select';
-import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
+import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
 
 const details = {
 	title: '실종',
@@ -158,6 +158,10 @@ function RegisteredDetail() {
 	);
 }
 export default RegisteredDetail;
+const ChevronRightGray = styled(ChevronRight)`
+	fill: ${({ theme }) => theme.colors.gray400};
+	height: 14px;
+`;
 const Wrapper = styled.div`
 	padding: 20px;
 	width: 100%;

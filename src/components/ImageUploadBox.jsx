@@ -74,9 +74,6 @@ function ImageUploadBox({
 					<IconWrapper>
 						<img src={Camera} alt="camera icon" />
 					</IconWrapper>
-					<IconWrapper>
-						<img src={Camera} alt="camera icon" />
-					</IconWrapper>
 				</>
 			)}
 			<input type="file" accept="image/*" onChange={handleImageChange} />
