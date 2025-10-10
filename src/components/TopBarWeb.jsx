@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ChevronLeft from '@/assets/icons/ChevronLeft.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 function TopBarWeb({ children, gap = '92px' }) {

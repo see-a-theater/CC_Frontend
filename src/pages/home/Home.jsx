@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import HomeIconMenu from '@/components/HomeIconMenu';
 import Hr from '@/components/Hr';
 import Ranking from '@/components/Ranking';
-import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 import BoardPreviewCardList from '@/components/BoardPreviewCardList';
 import BoardPreviewList from '@/components/BoardPreviewList';
 import BoardPreviewCardWeb from '@/components/BoardPreviewCardWeb';
