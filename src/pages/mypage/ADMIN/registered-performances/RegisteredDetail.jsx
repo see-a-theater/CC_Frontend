@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
 import TopBarWeb from '@/components/TopBarWeb';
 import Select from 'react-select';
-import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 
 const details = {
 	title: '실종',

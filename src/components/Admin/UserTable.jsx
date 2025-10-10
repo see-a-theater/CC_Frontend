@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
-import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 
 const UserTable = ({
 	data,

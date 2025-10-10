@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import HomeIconMenu from '@/components/HomeIconMenu';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import ChevronUp from '@/assets/icons/ChevronUp.svg?react';
+import ChevronUp from '@/assets/icons/chevronUp.svg?react';
 import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
