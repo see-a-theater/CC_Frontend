@@ -136,8 +136,8 @@ function AdminPlayReview() {
 		},
 	];
 
-    const { playId } = useParams();
-    console.log(playId)
+	const { playId } = useParams();
+	console.log(playId);
 	const navigate = useNavigate();
 	const goRegister = () => {
 		navigate(`/admin/plays/${playId}/register`);
