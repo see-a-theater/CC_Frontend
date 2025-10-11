@@ -6,7 +6,8 @@ import Select from 'react-select';
 import useAxios from '@/utils/hooks/useAxios';
 import { getPresignedUrl } from '@/utils/apis/getPresignedUrl';
 import { uploadImageToS3 } from '@/utils/apis/uploadImageToS3';
-import useCustomFetch from '@/utils/hooks/useAxios';
+//import useCustomFetch from '@/utils/hooks/useAxios';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import ImageUploadBox from '@/components/ImageUploadBox2';
 import TopBar from '@/components/TopBar';
@@ -22,6 +23,7 @@ function UploadPic() {
 		{ title: '킬링시저', date: '25.06.10~25.06.13' },
 	];
 
+	const [file, setFile] = useState(null);
 	const [selected, setSelected] = useState(null);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showModal, setShowModal] = useState(false);
@@ -31,31 +33,46 @@ function UploadPic() {
 	const [textContent, setTextContent] = useState('');
 	const isFormValid = Boolean(selected?.title && selected?.date && file);
 
-	const baseOptions = data.map((item) => ({
-		value: `${item.title}-${item.date}`,
+	const searchInput = encodeURIComponent(inputValue);
+	const {
+		data: searchData,
+		error: searchError,
+		loading: searchLoading,
+	} = useCustomFetch(`/search?keyword=${searchInput}&page=0&size=10`);
+	//console.log('입력값:', inputValue);
+	//console.log(searchInput);
+	//console.log('결과:', searchData);
+	//console.log(searchLoading);
+	//console.log('선택된 항목:', selected)
+
+	const searchOptions = (searchData?.result?.content || []).map((item) => ({
+		value: item.showId,
 		title: item.title,
-		date: item.date,
+		date: item.schedule,
 		label: (
 			<LabelWrapper>
-				<Title>{item.title}</Title>
-				<Date>{item.date}</Date>
+				{item.posterImageUrl && (
+					<img
+						src={item.posterImageUrl}
+						alt={item.title}
+						style={{ width: 30, height: 40, marginRight: 8, borderRadius: 4 }}
+					/>
+				)}
+				<div>
+					<Title>{item.title}</Title>
+					<Date>{item.schedule}</Date>
+				</div>
 			</LabelWrapper>
 		),
 	}));
 
 	const options = [
-		...baseOptions,
-		...customOptions,
+		...searchOptions,
 		{
 			value: 'custom',
 			label: <Title>직접 입력</Title>,
 		},
 	];
-
-	const filteredOptions = baseOptions.filter(
-		(option) =>
-			option.title.includes(inputValue) || option.date.includes(inputValue),
-	);
 
 	const handleSelectChange = (option) => {
 		if (option.value === 'custom') {
@@ -124,26 +141,31 @@ function UploadPic() {
 			const extension = file.name.split('.').pop().toLowerCase();
 
 			const { uploadUrl, publicUrl, keyName } = await getPresignedUrl(
+				axiosClient,
 				extension,
 				'photoAlbum',
 			);
 
-			console.log('✅ S3 응답:', uploadUrl); // 디버깅용
-			console.log('✅ keyName:', keyName); // 디버깅용
-			console.log('✅ publicUrl:', publicUrl); // 디버깅용
+			console.log('S3 응답:', uploadUrl); // 디버깅용
+			console.log('keyName:', keyName); // 디버깅용
+			console.log('publicUrl:', publicUrl); // 디버깅용
 
-			const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
-			await uploadImageToS3(axiosClient, extension, url);
+			//const url = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
+			await uploadImageToS3(axiosClient, extension, uploadUrl);
 
 			const postBody = {
-				//추후 ID 수정
-				amateurShowId: 4,
+				amateurShowId: selected.value,
 				content: textContent,
-				imageRequestDTOs: [{ keyName, imageUrl: publicUrl }],
+				imageRequestDTOs: [{ keyName: keyName, imageUrl: publicUrl }],
 			};
+			console.log(postBody);
 
 			const res = await fetchData('/photoAlbums', 'POST', postBody);
-			if (!res.ok) throw new Error(`서버 응답 오류: ${res.status}`);
+			//console.log(postBody)
+			if (res.status !== 200 && res.status !== 201) {
+				throw new Error(`서버 응답 오류: ${res.status}`);
+			}
+			console.log('응답 데이터:', res.data);
 			alert('등록 완료!');
 		} catch (err) {
 			console.error(err);
@@ -216,7 +238,7 @@ function UploadPic() {
 									/>
 									{menuOpen && (
 										<Dropdown>
-											{filteredOptions.map((option, idx) => (
+											{options.map((option, idx) => (
 												<OptionItem
 													key={idx}
 													onClick={() => {
