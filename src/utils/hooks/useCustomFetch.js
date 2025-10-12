@@ -24,7 +24,7 @@ const useCustomFetch = (url, method = 'GET', body = null) => {
 				data: customBody,
 			});
 			setData(response.data);
-			return response.data;
+			return response;
 		} catch (err) {
 			setError(true);
 			return { isSuccess: false, message: 'API 요청 실패', error: err };
