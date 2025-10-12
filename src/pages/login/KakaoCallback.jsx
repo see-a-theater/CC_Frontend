@@ -43,7 +43,7 @@ function KakaoCallback() {
 				localStorage.setItem('accessToken', accessToken);
 				localStorage.setItem('refreshToken', refreshToken);
 
-				sessionStorage.removeItem('selectedRole');
+				// sessionStorage.removeItem('selectedRole');
 
 				navigate('/home');
 			} catch (error) {
