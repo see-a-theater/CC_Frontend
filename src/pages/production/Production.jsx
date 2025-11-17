@@ -23,16 +23,17 @@ function Production() {
 		error: playError,
 		loading: playLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}/shows?page=0&size=20`);
+	console.log('playData:', playData);
 
-	const token = 'producer';
-	localStorage.setItem('token', token);
+	const roleToken = sessionStorage.getItem('selectedRole');
+	console.log(roleToken);
 
 	const {
 		data: picData,
 		error: picError,
 		loading: picLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
-	console.log(picData);
+	console.log('picData:', picData);
 
 	const [activeTab, setActiveTab] = useState('plays');
 	const navigate = useNavigate();
@@ -80,7 +81,7 @@ function Production() {
 					{activeTab === 'plays' && (
 						<>
 							<SubText>{playData?.result.totalCount}개의 연극</SubText>
-							{token && (
+							{roleToken == 'PERFORMER' && (
 								<FixedProdButton>
 									<ProdButton>
 										<Ticket height={28} />
@@ -106,7 +107,7 @@ function Production() {
 							<SubText>
 								{picData.result.singlePhotoAlbumDTOs.length}개의 사진첩
 							</SubText>
-							{token && (
+							{roleToken == 'PERFORMER' && (
 								<FixedProdButton>
 									<ProdButton onClick={navigateToUpload}>
 										<Gallery height={28} />
@@ -128,8 +129,10 @@ function Production() {
 							<ChevronLeftGray onClick={goBack} />
 							<h3 className="production">{picData?.result.performerName}</h3>
 						</div>
-						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
-						{token && activeTab === 'gallery' && (
+						{roleToken == 'PERFORMER' && activeTab === 'plays' && (
+							<Button>공연 등록</Button>
+						)}
+						{roleToken == 'PERFORMER' && activeTab === 'gallery' && (
 							<Button onClick={navigateToUpload}>사진 등록</Button>
 						)}
 					</Theatre>
