@@ -1,46 +1,44 @@
 import styled from 'styled-components';
+
 import LineChart from '@/components/Admin/LineChart';
 import Table from '@/components/Admin/Table';
-
 import Search from '@/assets/icons/searchBlack.svg?react';
 
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
+
 function Dashboard() {
-	const mock_stat = [
-		{ year: "'24년", month: '8월', data: 100 },
-		{ year: "'24년", month: '9월', data: 150 },
-		{ year: "'24년", month: '10월', data: 120 },
-		{ year: "'24년", month: '11월', data: 80 },
-		{ year: "'24년", month: '12월', data: 90 },
-		{ year: "'25년", month: '1월', data: 130 },
-		{ year: "'25년", month: '2월', data: 100 },
-		{ year: "'25년", month: '3월', data: 110 },
-	];
+	const {
+		data: MonthVisitsData,
+		error: MonthError,
+		loading: MonthLoading,
+	} = useCustomFetch(`/admin/dashboard/visits/monthly`);
 
-	const mock_req = [
-		{ theatre: '소극장', date: '날짜/시간', num: '인원수' },
-		{ theatre: '여신님이 보고 게셔', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '지킬 앤 하이드', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: 25 },
-	];
-	const mock_res = [
-		{ theatre: '소극장', date: '날짜/시간', num: '현황' },
-		{ theatre: '여신님이 보고 게셔', date: '2025-01-09 / 14:00', num: '25/25' },
-		{ theatre: '지킬 앤 하이드', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-		{ theatre: '알라딘', date: '2025-01-09 / 14:00', num: '20/25' },
-	];
+	const {
+		data: HourlyVisitsData,
+		error: HourlyError,
+		loading: HourlyLoading,
+	} = useCustomFetch(`/admin/dashboard/visits/monthly`);
 
-	const statLabels = mock_stat.map((item) => `${item.year} ${item.month}`);
-	const statData = mock_stat.map((item) => item.data);
+	const monthLabels = MonthVisitsData?.result.map((item) => item.month);
+	const monthData = MonthVisitsData?.result.map((item) => item.count);
+
+	const hourlyLabels = HourlyVisitsData?.result.map((item) => item.month);
+	const hourlyData = HourlyVisitsData?.result.map((item) => item.count);
+
+	const {
+		data: approvalData,
+		error: approvalError,
+		loading: approvalLoading,
+	} = useCustomFetch(`/admin/dashboard/approval?page=0&size=10`);
+	//페이지네이션 등 데이터 더 필요하면 주소 수정 필요
+
+	const {
+		data: reservationData,
+		error: reservationError,
+		loading: reservationLoading,
+	} = useCustomFetch(`/admin/dashboard/reservation?page=0&size=10`);
+
+	console.log(approvalData);
 
 	return (
 		<Container>
@@ -49,16 +47,16 @@ function Dashboard() {
 					<ChartWrapper>
 						<SectionTitle>통계 {'>'}</SectionTitle>
 						<LineChart
-							labels={statLabels}
-							dataPoints={statData}
+							labels={monthLabels}
+							dataPoints={monthData}
 							color="${({ theme }) => theme.colors.grayMain};"
 						/>
 					</ChartWrapper>
 					<ChartWrapper>
 						<SectionTitle>하루 방문자 수 {'>'}</SectionTitle>
 						<LineChart
-							labels={statLabels}
-							dataPoints={statData}
+							labels={hourlyLabels}
+							dataPoints={hourlyData}
 							color="${({ theme }) => theme.colors.grayMain};"
 						/>
 					</ChartWrapper>
@@ -67,12 +65,26 @@ function Dashboard() {
 				<BoardArea>
 					<ChartWrapper>
 						<SectionTitle>등록 요청 {'>'} </SectionTitle>
-						<Table data={mock_req} />
+						<Table
+							data={approvalData?.result.content}
+							header={[
+								{ label: '소극장', key: 'showName' },
+								{ label: '날짜/시간', key: 'dateTime' },
+								{ label: '인원수', key: 'capacity' },
+							]}
+						/>
 					</ChartWrapper>
 
 					<ChartWrapper>
 						<SectionTitle>예약 현황 {'>'} </SectionTitle>
-						<Table data={mock_res} />
+						<Table
+							data={reservationData?.result.content}
+							header={[
+								{ label: '소극장', key: 'showName' },
+								{ label: '날짜/시간', key: 'performanceDateTime' },
+								{ label: '현황', key: 'totalTicket' },
+							]}
+						/>
 					</ChartWrapper>
 				</BoardArea>
 			</Content>

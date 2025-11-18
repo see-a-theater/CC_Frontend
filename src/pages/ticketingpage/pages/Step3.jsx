@@ -1,8 +1,8 @@
 
 import React from 'react';
-import ActionButton from '../components/ActionButton';
-import { SuccessMessage } from '../styles/commonStyles';
-import useResponsive from '../hooks/useResponsive';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
+import { SuccessMessage } from '@/pages/ticketingpage/styles/commonStyles';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const Step3 = ({ ticketing: { viewReservation } }) => {
   const isPC = useResponsive();

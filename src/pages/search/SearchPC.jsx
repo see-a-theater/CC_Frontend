@@ -31,7 +31,7 @@ const SearchPC = () => {
       try {
         setIsInitialLoading(true);
         const response = await searchAPI.getShowIncoming(fetchData);
-        const showData = response.isSuccess ? response.result : response;
+        const showData = response.data.isSuccess ? response.data.result : response.data;
         
         if (showData && Array.isArray(showData)) {
           // API 응답을 임박한 공연 형태로 변환 (상위 4개만)
@@ -77,7 +77,7 @@ const SearchPC = () => {
     try {
       setIsLoading(true);
       const response = await searchAPI.searchShows(fetchData, keyword.trim());
-      const searchData = response.isSuccess ? response.result : response;
+      const searchData = response.data.isSuccess ? response.data.result : response.data;
       
       if (searchData && searchData.content && Array.isArray(searchData.content)) {
         // API 응답을 기존 형태로 변환
@@ -88,7 +88,7 @@ const SearchPC = () => {
           venue: item.hallName,
           date: item.schedule,
           status: getStatusText(item.status),
-          isActive: item.status === '판매중' || item.status === 'APPROVED_ONGOING' || item.status === '예매 진행 중',
+          isActive: item.status === 'ONGOING',
           posterImageUrl: item.posterImageUrl
         }));
         
@@ -134,10 +134,9 @@ const SearchPC = () => {
   // API 상태 텍스트 변환 함수
   const getStatusText = (status) => {
     const statusMap = {
-      '예매 진행 중': '판매중',
-      '판매중' : '판매중',
-      '예정': '판매예정',
-      'APPROVED_ENDED': '공연종료',
+      'ONGOING': '판매중',
+      'YET': '판매예정',
+      'ENDED': '공연종료',
       'WAITING_APPROVAL': '승인대기',
       'REJECTED': '반려'
     };

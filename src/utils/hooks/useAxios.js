@@ -1,46 +1,62 @@
-// yarn add axios
+import { useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '@/utils/apis/axiosInstance';
 
-import { useEffect, useState } from 'react';
-import { axiosInstance } from '../apis/axiosInstance';
+const useAxios = () => {
+	const navigate = useNavigate();
 
-const useCustomFetch = (url, method = 'GET', body = null) => {
-	const [data, setData] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
-
-	const fetchData = async (
-		customUrl = url,
-		customMethod = method,
-		customBody = body,
-	) => {
-		if (!customUrl) return;
-		setLoading(true);
-		setError(false);
-		try {
-			const token = localStorage.getItem('accessToken');
-			const response = await axiosInstance({
-				method: customMethod,
-				url: customUrl,
-				data: customBody,
-				headers: token ? { Authorization: `Bearer ${token}` } : {},
-			});
-			setData(response.data);
-			return response.data;
-		} catch (err) {
-			setError(true);
-			return { isSuccess: false, message: 'API 요청 실패' };
-		} finally {
-			setLoading(false);
+	const requestInterceptor = useCallback((config) => {
+		const accessToken = localStorage.getItem('accessToken');
+		if (accessToken) {
+			config.headers.Authorization = `Bearer ${accessToken}`;
 		}
-	};
+		return config;
+	}, []);
+
+	const responseInterceptor = useCallback(
+		async (error) => {
+			const originalRequest = error.config;
+
+			// accessToken 만료 시
+			if (error.response?.status === 401 && !originalRequest._retry) {
+				originalRequest._retry = true;
+				const refreshToken = localStorage.getItem('refreshToken');
+
+				if (!refreshToken) {
+					console.error('refreshToken 없음 → 로그인 페이지로 이동');
+					navigate('/login', { replace: true });
+					return Promise.reject(error);
+				}
+
+				try {
+					originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
+					return axiosInstance(originalRequest);
+				} catch (refreshError) {
+					console.error('refreshToken도 만료 → 로그인 페이지로 이동');
+					navigate('/login', { replace: true });
+					return Promise.reject(refreshError);
+				}
+			}
+
+			return Promise.reject(error);
+		},
+		[navigate],
+	);
 
 	useEffect(() => {
-		if (url && method === 'GET') {
-			fetchData();
-		}
-	}, [url, method]);
+		const req = axiosInstance.interceptors.request.use(requestInterceptor);
+		const res = axiosInstance.interceptors.response.use(
+			(response) => response,
+			responseInterceptor,
+		);
 
-	return { data, loading, error, fetchData };
+		return () => {
+			axiosInstance.interceptors.request.eject(req);
+			axiosInstance.interceptors.response.eject(res);
+		};
+	}, [requestInterceptor, responseInterceptor]);
+
+	return axiosInstance;
 };
 
-export default useCustomFetch;
+export default useAxios;

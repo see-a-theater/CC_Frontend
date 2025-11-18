@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { PosterContainer, Poster, EventTitle, EventVenue } from '../styles/commonStyles';
-import PosterImg from './icons/PosterImg.svg';
-import useResponsive from '../hooks/useResponsive';
+import { PosterContainer, Poster, EventTitle, EventVenue } from '@/pages/ticketingpage/styles/commonStyles';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const PosterInfo = ({ eventInfo }) => {
   const { title, venue, posterUrl } = eventInfo;
@@ -10,7 +9,13 @@ const PosterInfo = ({ eventInfo }) => {
 
   return (
     <PosterContainer>
-      <Poster src={posterUrl || PosterImg} alt={`${title} 포스터`} />
+      {posterUrl ? (
+        <Poster src={posterUrl} alt={`${title} 포스터`} />
+      ) : (
+        <Poster as="div" style={{ backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          포스터 로딩 중...
+        </Poster>
+      )}
       {!isPC && (
         <>
         <EventTitle>{title}</EventTitle>

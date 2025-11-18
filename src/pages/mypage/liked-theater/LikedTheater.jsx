@@ -1,47 +1,57 @@
-import TopBar from '../../../components/TopBar';
-import Poster from '../../../assets/images/test-poster2.png';
+import TopBar from '@/components/TopBar';
+import Poster from '@/assets/images/test-poster2.png';
 import styled from 'styled-components';
 import HeartFull from '@/assets/icons/heart-full.svg?react';
-import TopBarWeb from '../../../components/TopBarWeb';
+import TopBarWeb from '@/components/TopBarWeb';
+import useCustomFetch from '@/utils/hooks/useAxios';
+
+import TheaterCard from '@/components/TheaterCard';
 function LikedTheater() {
-	const theaters = [
-		{
-			id: 1,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-		{
-			id: 2,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-		{
-			id: 3,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-		{
-			id: 4,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-		{
-			id: 5,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-		{
-			id: 6,
-			imgSrc: Poster,
-			name: '홍익극연구회',
-			isLiked: true,
-		},
-	];
+	// const theaters = [
+	// 	{
+	// 		id: 1,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// 	{
+	// 		id: 6,
+	// 		imgSrc: Poster,
+	// 		name: '홍익극연구회',
+	// 		isLiked: true,
+	// 	},
+	// ];
+
+	const {
+		data,
+		// loading, error
+	} = useCustomFetch('/member-like/likes');
+	console.log('좋아요한 극단', data?.result);
+
 	return (
 		<LikedTheaterWrapper>
 			<div className="only-mobile">
@@ -52,14 +62,8 @@ function LikedTheater() {
 			</div>
 			<Wrapper>
 				<CardWrapper>
-					{theaters.map((theater) => (
-						<Card>
-							<img src={theater.imgSrc} />
-							<div>
-								<p>{theater.name}</p>
-								<HeartFull />
-							</div>
-						</Card>
+					{data?.result?.map((theater) => (
+						<TheaterCard data={theater} />
 					))}
 				</CardWrapper>
 			</Wrapper>

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { RegisterWrapper } from '../../Register/Register.style.js';
+import { RegisterWrapper } from '@/pages/register/Register.style.js';
 import styled from 'styled-components';
-function TicketCancelComplete({ onNext }) {
+function TicketCancelComplete() {
 	const navigate = useNavigate();
 	return (
 		<>

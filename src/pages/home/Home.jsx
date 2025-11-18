@@ -1,42 +1,86 @@
 import styled from 'styled-components';
-import HomeIconMenu from '../../components/HomeIconMenu';
-import Hr from '../../components/Hr';
-import Ranking from '../../components/Ranking';
-import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
-import BoardPreviewCardList from '../../components/BoardPreviewCardList';
-import BoardPreviewList from '../../components/BoardPreviewList';
-import BoardPreviewCardWeb from '../../components/BoardPreviewCardWeb';
-import SearchBar from '../../components/SearchBar';
-import CarouselWeb from '../../components/CarouselWeb';
-import CarouselMobile from '../../components/CarouselMobile';
-import Hamburger from '../../components/Hamburger';
-import Poster from '../../assets/images/test-poster2.png';
+import HomeIconMenu from '@/components/HomeIconMenu';
+import Hr from '@/components/Hr';
+import Ranking from '@/components/Ranking';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
+import BoardPreviewCardList from '@/components/BoardPreviewCardList';
+import BoardPreviewList from '@/components/BoardPreviewList';
+import BoardPreviewCardWeb from '@/components/BoardPreviewCardWeb';
+import SearchBar from '@/components/SearchBar';
+import CarouselWeb from '@/components/CarouselWeb';
+import CarouselMobile from '@/components/CarouselMobile';
+import Hamburger from '@/components/Hamburger';
+import Poster from '@/assets/images/test-poster2.png';
+
+import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
+
 /* 코드 가독성 이슈로 추후 리팩토링 해야할듯 */
 const banners = [
 	{
-		id: 1,
-		imgSrc: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
-		title: '실종',
-		location: '홍익대학교 학생회관 3층 소극장',
-		date: '2024.10.03 (목) 19:00',
+		amateurShowId: 1,
+		posterImageUrl: Poster, // 이미지 경로 (필요하면 각각 다른 이미지도 넣으세요)
+		name: '실종',
+		place: '홍익대학교 학생회관 3층 소극장',
+		schedule: '2024.10.03 (목) 19:00',
 	},
 	{
-		id: 2,
-		imgSrc: Poster,
-		title: '공연2',
-		location: '장소2',
-		date: '2024.11.15 (금) 20:00',
+		amateurShowId: 2,
+		posterImageUrl: Poster,
+		name: '공연2',
+		place: '장소2',
+		schedule: '2024.11.15 (금) 20:00',
 	},
 	{
-		id: 3,
-		imgSrc: Poster,
-		title: '공연3',
-		location: '장소3',
-		date: '2024.12.01 (일) 18:30',
+		amateurShowId: 3,
+		posterImageUrl: Poster,
+		name: '공연3',
+		place: '장소3',
+		schedule: '2024.12.01 (일) 18:30',
+	},
+	{
+		amateurShowId: 4,
+		posterImageUrl: Poster,
+		name: '공연4',
+		place: '장소4',
+		schedule: '2024.12.01 (일) 18:30',
+	},
+	{
+		amateurShowId: 5,
+		posterImageUrl: Poster,
+		name: '공연5',
+		place: '장소5',
+		schedule: '2024.12.01 (일) 18:30',
 	},
 ];
 
 function Home() {
+	const {
+		data: dataClosing,
+		/*
+		loading: loadingClosing,
+		error: errorClosing,
+		*/
+	} = useCustomFetch('/amateurs/closing');
+
+	// const {
+	// 	data: dataRanking,
+	// 	loading: loadingRanking,
+	// 	error: errorRanking,
+	// } = useCustomFetch('/amateurs/ranking');
+
+	const {
+		data: dataHotBoard,
+		// loading: loadingHotBoard,
+		// error: errorHotBoard,
+	} = useCustomFetch('/boards/hot');
+
+	const {
+		data: dataBoard,
+		// loading: loadingBoard,
+		// error: errorBoard,
+	} = useCustomFetch('/boards?boardType=NORMAL&page=0&size=5');
+
+	console.log(dataClosing?.result);
 	return (
 		<HomeWrapper>
 			<SideMenuWrapper>
@@ -71,7 +115,7 @@ function Home() {
 					<h1>
 						<span className="only-web-inline">✨</span>소극장 공연 랭킹
 					</h1>
-					<Ranking />
+					<Ranking data={banners} />
 					<div style={{ paddingRight: '20px' }}>
 						<button className="light only-mobile" style={{ marginTop: '26px' }}>
 							소극장 공연 보러가기
@@ -88,13 +132,14 @@ function Home() {
 						<ChevronRight />
 					</Bar>
 					<div className="only-mobile">
-						<BoardPreviewCardList />
+						<BoardPreviewCardList data={dataHotBoard?.content} />
 					</div>
 					<div className="only-web" style={{ paddingRight: '60px' }}>
-						<BoardPreviewCardWeb />
+						<BoardPreviewCardWeb data={dataHotBoard?.content} />
 					</div>
+					⚠ 게시글 전체조회 필요 (현재는 일반/홍보 각각만 가능)
 					<div style={{ paddingRight: '20px' }}>
-						<BoardPreviewList />
+						<BoardPreviewList data={dataBoard?.content} />
 					</div>
 					<div style={{ paddingRight: '20px', marginTop: '28px' }}>
 						<button className="light only-mobile">게시판 보러가기</button>
@@ -149,6 +194,9 @@ const Wrapper = styled.div`
 		@media (min-width: 768px) {
 			font-size: ${({ theme }) => theme.font.fontSize.headline20} !important;
 		}import { Hamburger } from '@/components/Hamburger';
+import { useCustomFetch } from '@/utils/hooks/useAxios';
+import { useCustomFetch } from '@/utils/hooks/useCustomFetch';
+import useCustomFetch from './../../utils/hooks/useCustomFetch';
 
 	}
 	button {

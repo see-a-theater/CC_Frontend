@@ -1,78 +1,52 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Hamburger from '@/components/Hamburger';
-import Masonry from '@/components/Masonry';
-import MasonryWeb from '@/components/MasonryWeb';
+import ProdGall from '@/components/Production/ProdGall';
 import ProdPlayCard from '@/components/ProdPlayCard';
+import LikedButton from '@/components/LikedButton';
 
-import image1 from '@/assets/mock/images/image1.png';
-import image2 from '@/assets/mock/images/image2.png';
-import image3 from '@/assets/mock/images/image3.png';
-import image4 from '@/assets/mock/images/image4.png';
-import image5 from '@/assets/mock/images/image5.png';
-import poster from '@/assets/mock/images/실종.png';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import Heart from '@/assets/icons/Heart.svg?react';
+import HeartFull from '@/assets/icons/heart-full.svg?react';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import Gallery from '@/assets/icons/Gallery.svg?react';
-import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 
 function Production() {
-	const imageList = [
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-		{ src: image1, text: '실종' },
-		{ src: image2, text: '카포네 트릴로지' },
-		{ src: image3, text: '실종' },
-		{ src: image4, text: '실종' },
-		{ src: image5, text: '킬링시저' },
-	];
-	const playList = [
-		{
-			title: '실종',
-			src: poster,
-			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-			activeNow: true,
-		},
-		{
-			title: '실종',
-			src: poster,
-			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-			activeNow: false,
-		},
-		{
-			title: '실종',
-			src: poster,
-			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-			activeNow: false,
-		},
-		{
-			title: '실종',
-			src: poster,
-			location: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00 ~ 2024.10.05(토) 14:00',
-			activeNow: false,
-		},
-	];
+	const { prodId } = useParams();
+
+	const {
+		data: playData,
+		error: playError,
+		loading: playLoading,
+	} = useCustomFetch(`/photoAlbums/member/${prodId}/shows?page=0&size=20`);
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
+	const {
+		data: picData,
+		error: picError,
+		loading: picLoading,
+	} = useCustomFetch(`/photoAlbums/member/${prodId}`);
+	console.log(picData);
+
 	const [activeTab, setActiveTab] = useState('plays');
 	const navigate = useNavigate();
+
 	const navigateToDetail = () => {
-		navigate('/production/1');
+		navigate(`/production/${prodId}/detail`);
+		window.scrollTo(0, 0);
 	};
 	const navigateToUpload = () => {
 		navigate('/production/upload_photo');
+		window.scrollTo(0, 0);
+	};
+	const goBack = () => {
+		navigate(-1);
 		window.scrollTo(0, 0);
 	};
 
@@ -83,9 +57,9 @@ function Production() {
 
 				<Theatre>
 					<h3 className="production" onClick={navigateToDetail}>
-						홍익극연구회
+						{picData?.result.performerName}
 					</h3>
-					<Heart />
+					<LikedButton performerId={prodId} />
 				</Theatre>
 				<TabBar>
 					<TabItem
@@ -105,7 +79,7 @@ function Production() {
 				<ContentArea>
 					{activeTab === 'plays' && (
 						<>
-							<SubText>{playList.length}개의 연극</SubText>
+							<SubText>{playData?.result.totalCount}개의 연극</SubText>
 							{token && (
 								<FixedProdButton>
 									<ProdButton>
@@ -115,15 +89,23 @@ function Production() {
 								</FixedProdButton>
 							)}
 							<CardArea>
-								{playList?.map((data) => (
-									<ProdPlayCard data={data} />
+								{playData?.result.shows.map((data) => (
+									<ProdPlayCard
+										detailAddress={data.detailAddress}
+										posterImageUrl={data.posterImageUrl}
+										showId={data.showId}
+										status={data.status}
+										title={data.title}
+									/>
 								))}
 							</CardArea>
 						</>
 					)}
 					{activeTab === 'gallery' && (
 						<>
-							<SubText>{imageList.length}개의 사진첩</SubText>
+							<SubText>
+								{picData.result.singlePhotoAlbumDTOs.length}개의 사진첩
+							</SubText>
 							{token && (
 								<FixedProdButton>
 									<ProdButton onClick={navigateToUpload}>
@@ -132,7 +114,7 @@ function Production() {
 									</ProdButton>
 								</FixedProdButton>
 							)}
-							<Masonry imageData={imageList} />
+							<ProdGall imageData={picData} />
 						</>
 					)}
 				</ContentArea>
@@ -143,10 +125,8 @@ function Production() {
 				<Container>
 					<Theatre>
 						<div className="theatreName">
-							<ChevronLeft />
-							<h3 className="production" onClick={navigateToDetail}>
-								홍익극연구회
-							</h3>
+							<ChevronLeftGray onClick={goBack} />
+							<h3 className="production">{picData?.result.performerName}</h3>
 						</div>
 						{token && activeTab === 'plays' && <Button>공연 등록</Button>}
 						{token && activeTab === 'gallery' && (
@@ -171,18 +151,26 @@ function Production() {
 					<ContentArea>
 						{activeTab === 'plays' && (
 							<>
-								<SubText>{playList.length}개의 연극</SubText>
+								<SubText>{playData?.result.totalCount}개의 연극</SubText>
 								<CardArea>
-									{playList?.map((data) => (
-										<ProdPlayCard data={data} />
+									{playData?.result.shows.map((data) => (
+										<ProdPlayCard
+											detailAddress={data.detailAddress}
+											posterImageUrl={data.posterImageUrl}
+											showId={data.showId}
+											status={data.status}
+											title={data.title}
+										/>
 									))}
 								</CardArea>
 							</>
 						)}
 						{activeTab === 'gallery' && (
 							<>
-								<SubText>{imageList.length}개의 사진첩</SubText>
-								<MasonryWeb imageData={imageList} />
+								<SubText>
+									{picData.result.singlePhotoAlbumDTOs.length}개의 사진첩
+								</SubText>
+								<ProdGall imageData={picData} />
 							</>
 						)}
 					</ContentArea>
@@ -194,6 +182,9 @@ function Production() {
 
 export default Production;
 
+const ChevronLeftGray = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.gray400};
+`;
 const Mobile = styled.div`
 	padding: 0 20px;
 
@@ -231,7 +222,7 @@ const Theatre = styled.div`
 		.theatreName {
 			display: flex;
 			align-items: center;
-			gap: 15px;
+			gap: 18px;
 		}
 		.production {
 			font-size: ${({ theme }) => theme.font.fontSize.headline24};

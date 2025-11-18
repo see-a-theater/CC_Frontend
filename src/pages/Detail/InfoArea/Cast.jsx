@@ -1,73 +1,36 @@
 import CastCard from '@/components/Detail/CastCard';
 import Staff from '@/components/Detail/Staff';
 
-import profile from '@/assets/mock/images/프로필.png';
 import styled from 'styled-components';
 
-function Cast(props) {
-	const mockdata = [
-		{
-			path: profile,
-			id: 1,
-			name: '이지후',
-			role: '7급',
-		},
-		{
-			path: profile,
-			id: 2,
-			name: '권혁진',
-			role: '5급',
-		},
-		{
-			path: profile,
-			id: 3,
-			name: '이승재',
-			role: '6급',
-		},
-		{
-			path: profile,
-			id: 4,
-			name: '임유빈',
-			role: '학생1',
-		},
-	];
-	const staffData = [
-		{
-			role: '원작',
-			name: '최문애',
-		},
-		{
-			role: '연출/ 각색',
-			name: '서준서',
-		},
-		{
-			role: '조연출',
-			name: '권혁진, 이보미',
-		},
-	];
-	
-	console.log('props:', props);
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
+import { useNavigate } from 'react-router-dom';
 
+function Cast(props) {
+	const navigate = useNavigate();
+	const goPerformer = () => {
+		navigate(`/production/${props?.data.result.memberId}`);
+		window.scrollTo(0, 0);
+	};
 	return (
 		<Container>
 			<Content>
 				<Title>극단</Title>
-				{/*props?.result.casting.actorName*/}
-				<p>홍익극연구회</p>
+				<ContentH onClick={goPerformer}>
+					<Text>{props?.data.result.performerName}</Text>
+					<ChevronRightGray />
+				</ContentH>
 			</Content>
 
 			<Content>
 				<Title>출연진</Title>
 				<Casts>
-					{/*props?.result.casting.castingImageUrl*/}
-					{/*props?.result.casting.actorName*/}
-					{/*props?.result.casting.castingName*/}
-					{mockdata.map((data) => (
+					{props?.data.result.casting.map((data) => (
 						<CastCard
-							key={data.id}
-							path={data.path}
-							name={data.name}
-							role={data.role}
+							//key={data.id}
+							path={data.castingImageUrl}
+							name={data.actorName}
+							role={data.castingName}
 						/>
 					))}
 				</Casts>
@@ -75,8 +38,8 @@ function Cast(props) {
 
 			<Content>
 				<Title>감독 및 스태프</Title>
-				{staffData.map((data) => (
-					<Staff name={data.name} role={data.role} />
+				{props?.data.result.staff.map((data) => (
+					<Staff name={data.staffName} role={data.position} />
 				))}
 			</Content>
 		</Container>
@@ -84,7 +47,10 @@ function Cast(props) {
 }
 
 export default Cast;
-
+const ChevronRightGray = styled(ChevronRight)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 15px;
+`;
 const Container = styled.div`
 	width: 100%;
 
@@ -92,12 +58,27 @@ const Container = styled.div`
 	flex-direction: column;
 	gap: 32px;
 
-    padding: 20px 0;
+	padding: 20px 0;
 `;
 const Content = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+`;
+const ContentH = styled.div`
+	display: flex;
+	align-items: center;
+`;
+const Text = styled.div`
+	font-size: ${({ theme }) => theme.font.fontSize.body13};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.grayMain};
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.medium};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
 `;
 const Title = styled.div`
 	font-size: ${({ theme }) => theme.font.fontSize.body16};

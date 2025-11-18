@@ -1,24 +1,43 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-function NowShowing(props) {
+function NowShowing({ name, posterImageUrl, place, schedule, amateurShowId }) {
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${amateurShowId}`);
+		window.scrollTo(0, 0);
+	};
 	return (
 		<Container>
-			<img src={props?.data.src} alt="포스터" className="poster" />
+			<img
+				src={posterImageUrl}
+				alt="포스터"
+				className="poster"
+				onClick={goDetail}
+			/>
 			<TextArea>
-				<h3 className="Title">{props?.data.title}</h3>
-				<p className="Location">{props?.data.place}</p>
+				<h3 className="Title">{name}</h3>
+				<p className="Location">{place}</p>
 				<p className="Date">
-					{props?.data?.date
+					{schedule
 						? (() => {
-								const [before, after] = props.data.date.split('~');
+								const parts = schedule.split('~');
+								const before = parts[0]?.trim() ?? '';
+								const after = parts[1]?.trim() ?? '';
 								return (
 									<>
-										{before.trim()} ~<br />
-										{after.trim()}
+										{before}
+										{after && (
+											<>
+												{' ~'}
+												<br />
+												{after}
+											</>
+										)}
 									</>
 								);
 							})()
-						: null}
+						: '날짜 정보 없음'}
 				</p>
 			</TextArea>
 		</Container>

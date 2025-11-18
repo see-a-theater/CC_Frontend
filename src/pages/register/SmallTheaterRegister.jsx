@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import TopBar from '../../components/TopBar';
+import TopBar from '@/components/TopBar';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-
-/* 현재 step 번호 계산
- /small-theater/register/step1~step5 */
+import { useState } from 'react';
+/* 현재 step 번호 계산*/
 
 function SmallTheaterRegister() {
 	const navigate = useNavigate();
@@ -19,18 +18,67 @@ function SmallTheaterRegister() {
 	const prevStep = () =>
 		navigate(`/small-theater/register/step${Math.max(currentStep - 1, 1)}`);
 
+	/* /small-theater/register/step1~step5 */
+	const [formData, setFormData] = useState({
+		name: '',
+
+		schedule: '',
+		runtime: '',
+		account: '',
+		contact: '',
+		hashtag: '',
+		summary: '',
+		notice: {
+			content: '',
+			noticeImageUrl: '',
+			timeInfo: '',
+		},
+		casting: [
+			{
+				actorName: '',
+				castingName: '',
+				castingImageUrl: '',
+			},
+		],
+		tickets: [
+			{
+				discountName: '일반',
+				price: '',
+			},
+			{ discountName: '', price: '' },
+		],
+		staff: [
+			{
+				position: '',
+				staffName: '',
+			},
+		],
+		rounds: [
+			{
+				roundNumber: 1,
+				performanceDateTime: '',
+				totalTicket: 0,
+			},
+		],
+		posterImageRequestDTO: {
+			keyName: '',
+			imageUrl: '',
+		},
+	});
 	return (
 		<Wrapper>
-			<TopBar onPrev={prevStep} onNext={nextStep}>
-				{currentStep !== 5 && '공연 등록'}
-			</TopBar>
+			{currentStep !== 4 && currentStep !== 5 && (
+				<TopBar onPrev={prevStep} onNext={nextStep}>
+					공연 등록
+				</TopBar>
+			)}
 
 			<div className="only-mobile">
 				{currentStep !== 5 && <ProgressBar percentage={currentStep / 4} />}
 			</div>
 
 			<ContentWrapper>
-				<Outlet context={{ nextStep, prevStep }} />
+				<Outlet context={{ nextStep, prevStep, formData, setFormData }} />
 			</ContentWrapper>
 		</Wrapper>
 	);
@@ -44,7 +92,7 @@ const Wrapper = styled.div`
 	height: 100vh;
 	overflow: auto;
 	@media (min-width: 768px) {
-		padding: 0px 160px;
+		padding: 0px 25%;
 	}
 `;
 

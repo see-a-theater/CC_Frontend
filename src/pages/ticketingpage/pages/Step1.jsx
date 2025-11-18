@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import PosterInfo from '../components/PosterInfo';
-import ActionButton from '../components/ActionButton';
-import { FormSection, SectionTitle, EventTitle, EventVenue, EventPeriod, EventInfo, EventLink } from '../styles/commonStyles';
+import PosterInfo from '@/pages/ticketingpage/components/PosterInfo';
+import ActionButton from '@/pages/ticketingpage/components/ActionButton';
+import { FormSection, SectionTitle, EventTitle, EventVenue, EventPeriod, EventInfo, EventLink } from '@/pages/ticketingpage/styles/commonStyles';
 import {
   Input,
   Label,
@@ -13,10 +13,10 @@ import {
   DropdownItem,
   PersonSelectionContainer,
   PersonInput
-} from '../styles/formStyles';
-import SelectorIcon from '../components/icons/SelectorIcon.svg';
-import ShowMore from '../components/icons/ShowMore.svg';
-import useResponsive from '../hooks/useResponsive';
+} from '@/pages/ticketingpage/styles/formStyles';
+import SelectorIcon from '@/pages/ticketingpage/components/icons/SelectorIcon.svg';
+import ShowMore from '@/pages/ticketingpage/components/icons/ShowMore.svg';
+import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 
 const Step1 = ({ 
   ticketing: { 
@@ -27,7 +27,9 @@ const Step1 = ({
     nextActive, 
     setDateTime,
     setPeople, 
-    goToNextStep 
+    goToNextStep,
+    loading,
+    error 
   } 
 }) => {
   const [showDateTimeDropdown, setShowDateTimeDropdown] = useState(false);
@@ -38,6 +40,34 @@ const Step1 = ({
   const peopleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const isPC = useResponsive();
+
+  // 날짜/시간 선택 핸들러
+  const handleDateTimeSelect = (roundId) => {
+    setDateTime(roundId);
+    setShowDateTimeDropdown(false);
+  };
+
+  // 인원 선택 핸들러
+  const handlePersonSelect = (num) => {
+    setPeople(num);
+    setShowPersonDropdown(false);
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px' }}>
+        <p>공연 정보를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center', padding: '50px', color: '#F67676' }}>
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -51,7 +81,7 @@ const Step1 = ({
           <>
             <EventInfo>
               <EventTitle>{eventInfo.title}</EventTitle>
-              <EventLink src={ShowMore} alt=">" /*onClick={ 추후추가 }*/ />
+              <EventLink src={ShowMore} alt=">" />
             </EventInfo>
             <EventVenue>{eventInfo.venue}</EventVenue>
             <EventPeriod>{eventInfo.period}</EventPeriod>
@@ -68,17 +98,20 @@ const Step1 = ({
             </DateInput>
             {showDateTimeDropdown && (
               <DropdownList>
-                {dateTimeOptions.map((option) => (
-                  <DropdownItem
-                    key={option.value}
-                    onClick={() => {
-                      setDateTime(option.value);
-                      setShowDateTimeDropdown(false);
-                    }}
-                  >
-                    {option.display}
+                {dateTimeOptions.length > 0 ? (
+                  dateTimeOptions.map((option) => (
+                    <DropdownItem
+                      key={option.value}
+                      onClick={() => handleDateTimeSelect(option.value)}
+                    >
+                      {option.display}
+                    </DropdownItem>
+                  ))
+                ) : (
+                  <DropdownItem>
+                    회차 정보가 없습니다
                   </DropdownItem>
-                ))}
+                )}
               </DropdownList>
             )}
           </DatePickerContainer>
@@ -88,7 +121,7 @@ const Step1 = ({
           <Label>인원</Label>
           <PersonSelectionContainer>
             <PersonInput>
-              {people || '선택'}
+              {people ? `${people}명` : '선택'}
               <ArrowIcon src={SelectorIcon} alt="▼" onClick={togglePersonDropdown}/>
             </PersonInput>
             {showPersonDropdown && (
@@ -96,10 +129,7 @@ const Step1 = ({
                 {peopleOptions.map((num) => (
                   <DropdownItem
                     key={num}
-                    onClick={() => {
-                      setPeople(num);
-                      setShowPersonDropdown(false);
-                    }}
+                    onClick={() => handlePersonSelect(num)}
                   >
                     {num}명
                   </DropdownItem>

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import ChevronLeft from '@/assets/icons/chevronLeftGrey.svg?react';
-import ChevronRight from '@/assets/icons/ChevronRight.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
 
 const UserTable = ({
 	data,
@@ -15,11 +15,9 @@ const UserTable = ({
 
 	const allHeaders = Object.keys(data[0]);
 
-	const handleDetailClick = (link, id) => {
-		navigate(link+id);
+	const handleDetailClick = (link) => {
+		navigate(link);
 	};
-	//현재 페이지에서 링크, id를 받아오는 형식
-	//나중에 데이터 확인 후 사용자/사진첩 관리에 따라서 내부에서 링크 설정 가능하게 할 듯 
 
 	return (
 		<Wrapper>
@@ -39,15 +37,43 @@ const UserTable = ({
 							{allHeaders.map((key) => {
 								if (!visibleColumns.includes(key) && key !== 'manage')
 									return null;
-								return key === 'manage' ? (
-									<td key={key}>
-										<DetailButton onClick={() => handleDetailClick(user.manage, user.id)}>
-											상세
-										</DetailButton>
-									</td>
-								) : (
-									<td key={key}>{user[key]}</td>
-								);
+
+								if (key === 'manage') {
+									return (
+										<StyledTd key={key}>
+											<DetailButton
+												onClick={() => handleDetailClick(user.manage)}
+											>
+												상세
+											</DetailButton>
+										</StyledTd>
+									);
+								}
+
+								if (key === 'situation') {
+									const situation = user[key];
+									let text = '';
+									let color = '';
+
+									if (situation === 'WAITING_APPROVAL') {
+										text = '확인전';
+										color = 'pink600';
+									} else if (situation === 'REJECTED') {
+										text = '반려';
+										color = 'gray400';
+									} else {
+										text = '등록';
+										color = 'grayMain';
+									}
+
+									return (
+										<StyledTd key={key} $color={color}>
+											{text}
+										</StyledTd>
+									);
+								}
+
+								return <StyledTd key={key}>{user[key]}</StyledTd>;
 							})}
 						</tr>
 					))}
@@ -59,7 +85,7 @@ const UserTable = ({
 					onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
 					disabled={currentPage === 1}
 				>
-					<ChevronLeft height={16} />
+					<ChevronLeftGray />
 				</PageBtn>
 
 				{Array.from({ length: totalPages }, (_, i) => (
@@ -78,7 +104,7 @@ const UserTable = ({
 					}
 					disabled={currentPage === totalPages}
 				>
-					<ChevronRight height={16} />
+					<ChevronRightGray />
 				</PageBtn>
 			</Pagination>
 		</Wrapper>
@@ -87,6 +113,14 @@ const UserTable = ({
 
 export default UserTable;
 
+const ChevronLeftGray = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 16px;
+`;
+const ChevronRightGray = styled(ChevronRight)`
+	fill: ${({ theme }) => theme.colors.gray400};
+	height: 16px;
+`;
 const Wrapper = styled.div`
 	font-family: Pretendard;
 `;
@@ -99,18 +133,31 @@ const StyledTable = styled.table`
 		height: 31px;
 	}
 	th {
-		border: 1px solid #e6e6e6;
-		background-color: #f5f5f5;
+		border: 1px solid #000;
 		text-align: center;
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.extraBold};
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
 	td {
-		border: 1px solid #e6e6e6;
+		border: 1px solid #000;
 		text-align: center;
 		font-size: ${({ theme }) => theme.font.fontSize.body14};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+`;
+
+const StyledTd = styled.td`
+	color: ${({ theme, $color }) =>
+		theme.colors[$color] || theme.colors.grayMain};
+	&.situation-pink {
+		color: ${({ theme }) => theme.colors.pink600};
+	}
+	&.situation-gray400 {
+		color: ${({ theme }) => theme.colors.gray400};
+	}
+	&.situation-default {
 		color: ${({ theme }) => theme.colors.grayMain};
 	}
 `;

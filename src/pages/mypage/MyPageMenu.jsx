@@ -1,20 +1,40 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Hamburger from '../../components/Hamburger';
-import HomeIconMenu from '../../components/HomeIconMenu';
+import Hamburger from '@/components/Hamburger';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 function MyPageMenu() {
 	const navigate = useNavigate();
 	const role = localStorage.getItem('role');
+
+	const {
+		data,
+		// loading, error
+	} = useCustomFetch('/member/myPage', 'GET');
+
+	const {
+		data: image,
+		// loading: imgloading,
+		// error: imgerror,
+	} = useCustomFetch('/images/2');
+
+	console.log('image', image?.result?.imageUrl);
+
+	const { name } = data?.result || {};
+	if (data) {
+		console.log(data?.result);
+	}
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', flex: '1' }}>
 			<div className="only-mobile">
 				<Hamburger />
 			</div>
+
 			<Wrapper>
 				<LeftWrapper>
 					<h1 className="title">마이페이지</h1>
 					<h1 className="color-pink only-web" style={{ marginTop: '62px' }}>
-						QWERS<span className="bold">님</span>
+						{name}
+						<span className="bold">님</span>
 					</h1>
 					<button style={{ marginTop: '22px' }}>로그아웃</button>
 				</LeftWrapper>
@@ -31,7 +51,8 @@ function MyPageMenu() {
 					</button>
 
 					<h1 className="color-pink only-mobile">
-						QWERS<span className="bold">님</span>
+						{name}
+						<span className="bold">님</span>
 					</h1>
 					<section>
 						<h1>MY</h1>
@@ -40,8 +61,6 @@ function MyPageMenu() {
 								<li onClick={() => navigate('registered-performances')}>
 									등록한 공연
 								</li>
-								<li>나의 사진첩</li>
-								<li onClick={() => navigate('booking-history')}>예매 내역</li>
 							</ul>
 						)}
 						{role === 'user' && (
@@ -138,7 +157,7 @@ const Wrapper = styled.div`
 		align-items: center;
 		gap: 20px;
 		border-radius: 3px;
-		background: ${({ theme }) => theme.colors.gray200};
+		border: 1px solid ${({ theme }) => theme.colors.grayOutline};
 	}
 	.extra {
 		color: ${({ theme }) => theme.colors.gray400};
