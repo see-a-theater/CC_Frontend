@@ -11,7 +11,7 @@ import Withdrawal from './pages/withdrawal/Withdrawal';
 import SmallTheaterRoutes from './routes/SmallTheaterRoutes.jsx';
 
 import Home from './pages/home/Home';
-// import TicketingPage from './pages/ticketingpage/TicketingPage.jsx';
+import TicketingPage from './pages/ticketingpage/TicketingPage.jsx';
 import Board from './pages/board/Board';
 import Gallery from './pages/gallery/Gallery';
 import Info from './pages/info/Info';
@@ -41,8 +41,8 @@ function App() {
 
 			<Route path="/small-theater/*" element={<SmallTheaterRoutes />} />
 
-			{/*<Route path="/ticketing" element={<TicketingPage />} />*/}
-			<Route path="/board" element={<Board />} />
+			<Route path="/ticketing/:playId" element={<TicketingPage />} />
+			<Route path="/board/*" element={<Board />} />
 			<Route path="/gallery" element={<Gallery />} />
 			<Route path="/info" element={<Info />} />
 
