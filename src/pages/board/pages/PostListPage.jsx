@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import {
   Container,
   ContentArea,
@@ -28,6 +29,7 @@ const PostListPage = () => {
   const [searchLoading, setSearchLoading] = useState(false);
   const isPC = useResponsive();
   const contentAreaRef = useRef(null);
+  const navigate = useNavigate();
 
   // useAxios 훅으로 토큰 관리
   useAxios();
@@ -136,7 +138,7 @@ const PostListPage = () => {
           <Header 
             title="board" 
             onMenuClick={() => console.log('메뉴 클릭')}
-            onSearchClick={() => console.log('검색 클릭')}
+            onSearchClick={() => navigate("/search")}
           />
         )}
         

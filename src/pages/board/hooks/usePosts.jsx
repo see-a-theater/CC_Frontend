@@ -42,7 +42,7 @@ const usePosts = () => {
         
         // sessionStorage에서 role 가져오기 (로그인 시 저장된 값)
         const savedRole = sessionStorage.getItem('selectedRole');
-        console.log('Role from sessionStorage:', savedRole);
+        // console.log('Role from sessionStorage:', savedRole);
         
         if (savedRole === 'PERFORMER') {
           setUserType('performer'); // 공연 등록자 (홍보 게시판 작성 가능)
@@ -152,7 +152,7 @@ const usePosts = () => {
 
   // 글작성 권한확인 (sessionStorage 기반)
   const canCreatePost = useCallback((category) => {
-    console.log('Checking post creation permission:', { category, userType });
+    // console.log('Checking post creation permission:', { category, userType });
     
     // 일반 게시판: 로그인한 모든 사용자 작성 가능
     if (category === 'general' || category === 'hot') {

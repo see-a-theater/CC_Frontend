@@ -6,7 +6,7 @@ import {
   HotIcon,
   CreateBtnContainer,
 } from '@/pages/board/styles/commonStyles';
-import SearchBarTop from '@/pages/board/components/SearchBarTop'
+import SearchPC from '@/pages/search/SearchPC';
 import FloatingButton from '@/pages/board/components/FloatingButton';
 import useResponsive from '@/pages/board/hooks/useResponsive'
 
@@ -25,7 +25,7 @@ const TabBar = ({ activeTab, onTabChange, showFloatingButton }) => {
 
   return (
     <>
-      {isPC && ( <SearchBarTop onSearch={handleSearch} /> )}
+      {isPC && ( <div style={{margin: '60px 100px 60px 60px'}}><SearchPC/></div> )}
       {isPC && ( <div style={{marginLeft: '60px', fontSize: '24px', fontWeight: 'bold', marginBottom: '12px'}}>게시판</div> )}
       <CreateBtnContainer>
         <TabContainer>
