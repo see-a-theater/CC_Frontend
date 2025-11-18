@@ -22,7 +22,7 @@ function AdminGallery() {
 	}
 
 	const [searchTerm, setSearchTerm] = useState('');
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(0);
 	const itemsPerPage = 20;
 
 	const headerRow = {
@@ -37,7 +37,7 @@ function AdminGallery() {
 		error,
 		loading,
 	} = useCustomFetch(
-		`/admin/photoAlbum?page=${currentPage - 1}&size=${itemsPerPage}`,
+		`/admin/photoAlbum?page=${currentPage}&size=${itemsPerPage}`,
 	);
 
 	console.log('error:', error);
@@ -59,13 +59,20 @@ function AdminGallery() {
 
 	const totalPages = Math.ceil((photo_data.length - 1) / itemsPerPage);
 
-	const paginatedData = photo_data
+	{
+		/*const paginatedData = photo_data
 		.slice(0, 1)
 		.concat(
 			photo_data
 				.slice(1)
 				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
-		);
+		);*/
+	}
+
+	const paginatedData = useMemo(() => {
+		const start = currentPage * itemsPerPage;
+		return photo_data.slice(start, start + itemsPerPage);
+	}, [photo_data, currentPage]);
 
 	return (
 		<Container>
@@ -89,7 +96,7 @@ function AdminGallery() {
 					</div>
 					<UserTable
 						data={paginatedData}
-						currentPage={currentPage}
+						currentPage={currentPage + 1}
 						setCurrentPage={setCurrentPage}
 						totalPages={totalPages}
 						visibleColumns={visibleColumns}

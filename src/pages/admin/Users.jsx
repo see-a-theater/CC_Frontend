@@ -23,7 +23,10 @@ function Users() {
 		data: userData,
 		error: userError,
 		loading: userLoading,
-	} = useCustomFetch(`/admin/member/list?page=${currentPage}&size=${itemsPerPage}`);
+	} = useCustomFetch(
+		`/admin/member/list?page=${currentPage}&size=${itemsPerPage}`,
+	);
+	console.log(userData?.result);
 
 	const apiRows = useMemo(() => {
 		if (!userData || !userData.result) return [];
@@ -114,7 +117,7 @@ function Users() {
 
 					<UserTable
 						data={[headerRow, ...paginatedData]}
-						currentPage={currentPage}
+						currentPage={currentPage + 1}
 						setCurrentPage={setCurrentPage}
 						totalPages={totalPages}
 						visibleColumns={visibleColumns}

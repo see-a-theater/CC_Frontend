@@ -50,12 +50,12 @@ const UserTable = ({
 									);
 								}
 
-								if (key === 'situation') {
+								if (key === 'amateurShowStatus') {
 									const situation = user[key];
 									let text = '';
 									let color = '';
 
-									if (situation === 'WAITING_APPROVAL') {
+									if (situation === 'WAITING_APPROVAL' || situation === 'YET') {
 										text = '확인전';
 										color = 'pink600';
 									} else if (situation === 'REJECTED') {
@@ -91,7 +91,7 @@ const UserTable = ({
 				{Array.from({ length: totalPages }, (_, i) => (
 					<PageBtn
 						key={i}
-						onClick={() => setCurrentPage(i + 1)}
+						onClick={() => setCurrentPage(i)}
 						active={currentPage === i + 1}
 					>
 						{i + 1}
@@ -118,7 +118,7 @@ const ChevronLeftGray = styled(ChevronLeft)`
 	height: 16px;
 `;
 const ChevronRightGray = styled(ChevronRight)`
-	fill: ${({ theme }) => theme.colors.gray400};
+	color: ${({ theme }) => theme.colors.gray400};
 	height: 16px;
 `;
 const Wrapper = styled.div`
@@ -151,17 +151,7 @@ const StyledTable = styled.table`
 const StyledTd = styled.td`
 	color: ${({ theme, $color }) =>
 		theme.colors[$color] || theme.colors.grayMain};
-	&.situation-pink {
-		color: ${({ theme }) => theme.colors.pink600};
-	}
-	&.situation-gray400 {
-		color: ${({ theme }) => theme.colors.gray400};
-	}
-	&.situation-default {
-		color: ${({ theme }) => theme.colors.grayMain};
-	}
 `;
-
 const DetailButton = styled.button`
 	width: 39px;
 	height: 20px;

@@ -72,6 +72,8 @@ function AdminPlays() {
 
 	const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+	console.log(paginatedData);
+
 	return (
 		<Container>
 			<Content>
@@ -88,7 +90,7 @@ function AdminPlays() {
 
 					<UserTable
 						data={[headerRow, ...paginatedData]}
-						currentPage={currentPage}
+						currentPage={currentPage + 1}
 						setCurrentPage={setCurrentPage}
 						totalPages={totalPages}
 						visibleColumns={visibleColumns}
