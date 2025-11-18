@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import useResponsive from '@/pages/board/hooks/useResponsive';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
@@ -12,7 +11,12 @@ const usePosts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
-  const [userType, setUserType] = useState('normalUser');
+  const [userType, setUserType] = useState(() => {
+    const savedRole = sessionStorage.getItem('selectedRole');
+    if (savedRole === 'PERFORMER') return 'performer';
+    if (savedRole === 'AUDIENCE') return 'audience';
+    return 'normalUser';
+  });
   const isPC = useResponsive();
   
   // useCustomFetch 훅 사용
@@ -26,12 +30,33 @@ const usePosts = () => {
   const loadCurrentUser = useCallback(async () => {
     try {
       const userInfo = await authApi.getCurrentUser(fetchDataRef.current);
-      if (userInfo) {
-        setCurrentUser(userInfo);
-        setUserType('registerUser');
+      
+      // Api응답구조 처리 (result 안에 실제 데이터가 있는 경우)
+      let actualUserData = userInfo;
+      if (userInfo?.isSuccess && userInfo?.result) {
+        actualUserData = userInfo.result;
+      }
+      
+      if (actualUserData) {
+        setCurrentUser(actualUserData);
+        
+        // sessionStorage에서 role 가져오기 (로그인 시 저장된 값)
+        const savedRole = sessionStorage.getItem('selectedRole');
+        console.log('Role from sessionStorage:', savedRole);
+        
+        if (savedRole === 'PERFORMER') {
+          setUserType('performer'); // 공연 등록자 (홍보 게시판 작성 가능)
+        } else if (savedRole === 'AUDIENCE') {
+          setUserType('audience'); // 예매자 (일반 게시판만 작성 가능)
+        } else if (actualUserData.id || actualUserData.memberId) {
+          // 혹시 role 정보가 없지만 로그인은 된 경우 (기본: 예매자)
+          setUserType('audience');
+        }
       }
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
+      // 로그인하지 않은 경우
+      setUserType('normalUser');
     }
   }, []); 
 
@@ -42,6 +67,14 @@ const usePosts = () => {
 
   // API 응답 데이터 변환
   const transformBoardData = useCallback((apiBoard) => {
+    // 이미지 처리: imgUrls (배열) 우선, 없으면 imgUrl (단일)을 배열로 변환
+    let imageArray = [];
+    if (apiBoard.imgUrls && Array.isArray(apiBoard.imgUrls)) {
+      imageArray = apiBoard.imgUrls;
+    } else if (apiBoard.imgUrl) {
+      imageArray = [apiBoard.imgUrl];
+    }
+
     return {
       id: apiBoard.boardId,
       title: apiBoard.title,
@@ -56,7 +89,7 @@ const usePosts = () => {
       comments: apiBoard.commentCount,
       category: apiBoard.boardType.toLowerCase() === 'normal' ? 'general' : 'promotion',
       isHot: apiBoard.likeCount >= 10,
-      image: apiBoard.imgUrls || [],
+      image: imageArray,
       userId: apiBoard.memberId,
       createdAt: apiBoard.createdAt,
       updatedAt: apiBoard.updatedAt,
@@ -64,23 +97,25 @@ const usePosts = () => {
     };
   }, []);
 
+  const cleanContent = (text) => {
+    if (typeof text !== "string") return text;
+    // 문자열 앞뒤에 큰따옴표가 있을 때 제거 (Update 응답이 큰따옴표로 감싸져서 옴)
+    return text.replace(/^"(.*)"$/, "$1");
+  };
   // 댓글 데이터 변환
   const transformCommentData = useCallback((apiComment, boardId, depth = 0) => {
+    const rawContent = apiComment.deleted ? "삭제된 댓글입니다." : apiComment.content;
+    const fixedContent = cleanContent(rawContent);  // // "" 제거 content 
     const transformed = {
       id: apiComment.commentId,
       boardId: boardId,
       author: apiComment.writer,
-      content: apiComment.deleted ? '삭제된 댓글입니다.' : apiComment.content,
-      date: apiComment.createdAt ? 
-        new Date(apiComment.createdAt).toLocaleDateString('ko-KR', { 
-          month: '2-digit', 
-          day: '2-digit' 
-        }) : 
-        new Date().toLocaleDateString('ko-KR', { 
-          month: '2-digit', 
-          day: '2-digit' 
-        }),
-      userId: apiComment.memberId || 'unknown',
+      content: fixedContent,   
+      date: new Date().toLocaleDateString('ko-KR', { 
+        month: '2-digit', 
+        day: '2-digit' 
+      }),
+      userId: apiComment.memberId,
       replyLevel: depth,
       parentId: apiComment.parentId,
       likes: apiComment.likeCount || 0,
@@ -115,12 +150,21 @@ const usePosts = () => {
     return result;
   }, []);
 
-  // 글작성 권한확인
+  // 글작성 권한확인 (sessionStorage 기반)
   const canCreatePost = useCallback((category) => {
-    if (category === 'promotion') {
-      return userType === 'registerUser';
+    console.log('Checking post creation permission:', { category, userType });
+    
+    // 일반 게시판: 로그인한 모든 사용자 작성 가능
+    if (category === 'general' || category === 'hot') {
+      return userType !== 'normalUser'; // 로그인만 되어 있으면 OK
     }
-    return true;
+    
+    // 홍보 게시판: PERFORMER만 작성 가능
+    if (category === 'promotion') {
+      return userType === 'performer';
+    }
+    
+    return false;
   }, [userType]);
 
   // 게시글 목록 로드
@@ -134,12 +178,14 @@ const usePosts = () => {
 
       if (category === 'hot') {
         const res = await boardApi.getHotBoards(fetchDataRef.current);
-        const hotBoardsData = res.isSuccess ? res.result : res;
+        // useCustomFetch가 axios response를 반환하므로 .data 추출
+        const hotBoardsData = res.data || (res.isSuccess ? res.result : res);
         incomingPosts = hotBoardsData.map(transformBoardData);
         setHasMore(false);
       } else {
         const res = await boardApi.getBoardList(fetchDataRef.current, category, pageNum, pageSize);
-        const boardData = res.isSuccess ? res.result : res;
+        // useCustomFetch가 axios response를 반환하므로 .data 추출
+        const boardData = res.data || (res.isSuccess ? res.result : res);
         incomingPosts = boardData.content.map(transformBoardData);
         setHasMore(!boardData.last);
       }
@@ -172,7 +218,8 @@ const usePosts = () => {
   const getPost = useCallback(async (id) => {
     try {
       const response = await boardApi.getBoardDetail(fetchDataRef.current, id);
-      const postData = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const postData = response.data || (response.isSuccess ? response.result : response);
       return transformBoardData(postData);
     } catch (error) {
       console.error('게시글 상세 조회 실패:', error);
@@ -184,7 +231,8 @@ const usePosts = () => {
   const getComments = useCallback(async (postId) => {
     try {
       const response = await boardApi.getComments(fetchDataRef.current, postId);
-      const commentsData = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const commentsData = response.data || (response.isSuccess ? response.result : response);
       const transformedComments = commentsData.map(comment => transformCommentData(comment, postId));
       return flattenComments(transformedComments, postId);
     } catch (error) {
@@ -224,7 +272,8 @@ const usePosts = () => {
       const response = await boardApi.createBoard(fetchDataRef.current, boardData);
       console.log('게시글 작성 완료:', response);
       
-      const createdPostData = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const createdPostData = response.data || (response.isSuccess ? response.result : response);
       return transformBoardData(createdPostData);
     } catch (error) {
       console.error('게시글 작성 실패:', error);
@@ -256,7 +305,8 @@ const usePosts = () => {
       const response = await boardApi.updateBoard(fetchDataRef.current, postId, boardData);
       console.log('게시글 수정 완료:', response);
       
-      const updatedPostData = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const updatedPostData = response.data || (response.isSuccess ? response.result : response);
       return transformBoardData(updatedPostData);
     } catch (error) {
       console.error('게시글 수정 실패:', error);
@@ -294,14 +344,22 @@ const usePosts = () => {
         parentCommentId: commentData.parentId || null
       });
       
-      const commentResult = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const commentResult = response.data || (response.isSuccess ? response.result : response);
+      
+      // currentUser에서 ID 추출
+      let myUserId = 'currentUser';
+      if (currentUser) {
+        myUserId = currentUser.memberId || currentUser.id;
+      }
+      
       return {
         id: commentResult.commentId,
         boardId: commentResult.boardId,
         author: commentResult.writer,
         content: commentResult.content,
         date: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
-        userId: currentUser?.id || 'currentUser',
+        userId: myUserId,
         replyLevel: commentData.replyLevel || 0,
         parentId: commentResult.parentId,
         likes: 0,
@@ -317,7 +375,8 @@ const usePosts = () => {
   const updateComment = useCallback(async (postId, commentId, updates) => {
     try {
       const response = await boardApi.updateComment(fetchDataRef.current, postId, commentId, updates.content);
-      const commentResult = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const commentResult = response.data || (response.isSuccess ? response.result : response);
       return {
         id: commentResult.commentId,
         content: commentResult.content,
@@ -344,7 +403,8 @@ const usePosts = () => {
   const toggleCommentLike = useCallback(async (postId, commentId) => {
     try {
       const result = await boardApi.toggleCommentLike(fetchDataRef.current, postId, commentId);
-      const likeResult = result.isSuccess ? result.result : result;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const likeResult = result.data || (result.isSuccess ? result.result : result);
       return { 
         success: true, 
         liked: likeResult === 1,
@@ -362,7 +422,8 @@ const usePosts = () => {
       setLoading(true);
       const searchSize = size || (isPC ? 6 : 20);
       const response = await boardApi.searchBoards(fetchDataRef.current, keyword, category, page, searchSize);
-      const searchData = response.isSuccess ? response.result : response;
+      // useCustomFetch가 axios response를 반환하므로 .data 추출
+      const searchData = response.data || (response.isSuccess ? response.result : response);
       const searchResults = searchData.content.map(transformBoardData);
       
       setPosts(searchResults);
@@ -378,11 +439,21 @@ const usePosts = () => {
 
   // 내 게시글/댓글인지 확인하는 헬퍼 함수들
   const isMyPost = useCallback((post) => {
-    return currentUser && post?.userId === currentUser?.id;
+    if (!currentUser || !post) return false;
+    
+    // currentUser에서 ID 추출
+    const myId = currentUser.memberId || currentUser.id;
+    
+    return myId === post.userId;
   }, [currentUser]);
 
   const isMyComment = useCallback((comment) => {
-    return currentUser && comment?.userId === currentUser?.id;
+    if (!currentUser || !comment) return false;
+    
+    // currentUser에서 ID 추출
+    const myId = currentUser.memberId || currentUser.id;
+    
+    return myId === comment.userId;
   }, [currentUser]);
 
   return {

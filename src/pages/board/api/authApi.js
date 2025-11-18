@@ -5,10 +5,9 @@ import { API_ENDPOINTS } from './apiConfig.js';
 export const getCurrentUser = async (fetchData) => {
   try {
     const response = await fetchData(API_ENDPOINTS.MY_PAGE, 'GET');
-    if (response.isSuccess) {
-      return response.result;
-    }
-    return null;
+    // useCustomFetch가 axios response를 반환하므로 .data 먼저 추출
+    const data = response.data || (response.isSuccess ? response.result : response);
+    return data;
   } catch (error) {
     console.error('사용자 정보 조회 실패:', error);
     return null;
