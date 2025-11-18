@@ -1,71 +1,17 @@
 import styled from 'styled-components';
-import SearchBar from '../../../components/SearchBar';
+import SearchBar from '@/components/SearchBar';
 import SearchBoxBlack from '@/assets/icons/SearchBoxBlack.svg?react';
 import SearchBarBlack from '../../../components/SearchBarBlack';
 import SearchOptionBar from '../../../components/Admin/SearchOptionBar';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AdminListPage } from '../STYLE/admin.style';
+import { AdminListPage } from '@/pages/admin/STYLE/admin-list.style';
 import Pagination from 'react-js-pagination';
 function RegisterRequests() {
 	const navigate = useNavigate();
-	const requests = [
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
-		{
-			id: 'diama8843',
-			name: '전시연',
-			email: 'junsiyeon123654@gmail.com',
-			phone: '010-1234-1234',
-			title: '실종',
-			status: '등록',
-		},
+
+	const testRequests = [
 		{
 			id: 'diama8843',
 			name: '전시연',
@@ -75,25 +21,38 @@ function RegisterRequests() {
 			status: '등록',
 		},
 	];
-	const [stockList, setStockList] = useState(requests);
-	const [page, setPage] = useState(1);
-	const itemsPerPage = 3;
+
+	const { data, loading, error } = useCustomFetch(
+		'/admin/approval/showList?page=0&size=20',
+	);
+
 	const changePageHandler = (page) => {
 		setPage(page);
 	};
-	const [currentList, setCurrentList] = useState(stockList);
+	const [stockList, setStockList] = useState([]);
+	const [currentList, setCurrentList] = useState([]);
 
+	useEffect(() => {
+		if (data) {
+			setStockList(data?.result?.content || data); // data 구조 맞게
+		}
+	}, [data]);
+
+	const [page, setPage] = useState(1);
+	const itemsPerPage = 10;
 	const indexOfLastItem = page * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
 	useEffect(() => {
-		setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		if (Array.isArray(stockList)) {
+			setCurrentList(stockList.slice(indexOfFirstItem, indexOfLastItem));
+		}
 	}, [page, stockList]);
 
 	return (
 		<>
 			<AdminListPage>
-				<h1>등록 요청 관리</h1>
+				<SectionTitle>등록 요청 관리</SectionTitle>
 				<SearchOptionBar />
 				<table>
 					<thead>
@@ -108,16 +67,24 @@ function RegisterRequests() {
 						</tr>
 					</thead>
 					<tbody>
+						{console.log(currentList)}
 						{currentList.map((request, index) => (
-							<tr key={request.id || index}>
-								<td>{request.id}</td>
-								<td>{request.name}</td>
+							<tr key={request.showId || index}>
+								<td>{request.showId}</td>
+								<td>{request.username}</td>
 								<td>{request.email}</td>
 								<td>{request.phone}</td>
-								<td>{request.title}</td>
-								<td>등록</td>
+								<td>{request.showName}</td>
+								<td>{request.amateurStatus}</td>
 								<td>
-									<button onClick={() => navigate('1')}>상세</button>
+									<button
+										onClick={() => {
+											localStorage.setItem('detail', JSON.stringify(request));
+											navigate(`${request.showId}`);
+										}}
+									>
+										상세
+									</button>
 								</td>
 							</tr>
 						))}
@@ -136,3 +103,10 @@ function RegisterRequests() {
 	);
 }
 export default RegisterRequests;
+
+const SectionTitle = styled.h3`
+	font-size: ${({ theme }) => theme.font.fontSize.headline24};
+	font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	color: ${({ theme }) => theme.colors.pink600};
+	margin-bottom: 12px;
+`;

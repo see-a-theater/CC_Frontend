@@ -1,12 +1,19 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-function WebPlayCard(props) {
+function WebPlayCard({ name, posterImageUrl, place, schedule, amateurShowId }) {
+	const navigate = useNavigate();
+	const goDetail = () => {
+		navigate(`detail/${amateurShowId}`);
+		window.scrollTo(0, 0);
+	};
+
 	return (
-		<Card image={props?.data.src}>
+		<Card image={posterImageUrl} onClick={goDetail}>
 			<TextArea>
-				<Text className="Title">{props?.data.title}</Text>
-				<Text className="Date">{props?.data.date}</Text>
-				<Text className="Location">{props?.data.place}</Text>
+				<Text className="Title">{name}</Text>
+				<Text className="Date">{schedule}</Text>
+				<Text className="Location">{place}</Text>
 			</TextArea>
 		</Card>
 	);
@@ -30,14 +37,12 @@ const TextArea = styled.div`
 	position: absolute;
 	left: 28px;
 	bottom: 28px;
-	
+
 	display: flex;
 	flex-direction: column;
 `;
 const Text = styled.div`
 	color: ${({ theme }) => theme.colors.grayWhite};
-
-	//스타일링 적용 안 됨, 수정 필요
 
 	.Title {
 		font-size: ${({ theme }) => theme.font.fontSize.headline24};

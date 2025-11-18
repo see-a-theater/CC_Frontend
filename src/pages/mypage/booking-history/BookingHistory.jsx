@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import TopBar from '../../../components/TopBar';
-import TopBarWeb from '../../../components/TopBarWeb';
+import TopBar from '@/components/TopBar';
+import TopBarWeb from '@/components/TopBarWeb';
 import { useNavigate } from 'react-router-dom';
 import Poster from '@/assets/images/test-poster1.png';
 function BookingHistory() {

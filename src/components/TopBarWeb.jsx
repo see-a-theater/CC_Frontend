@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 function TopBarWeb({ children, gap = '92px' }) {
@@ -20,7 +20,10 @@ function TopBarWeb({ children, gap = '92px' }) {
 }
 
 export default TopBarWeb;
-
+const ChevronLeftGray = styled(ChevronLeft)`
+	fill: ${({ theme }) => theme.colors.gray400};
+	height: 20px;
+`;
 const Container = styled.div`
 	display: flex;
 	flex-direction: row;

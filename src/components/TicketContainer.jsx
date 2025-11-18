@@ -1,53 +1,80 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChevronRightGray from '@/assets/icons/ChevronRightGray.svg?react';
-function TicketContainer({ header, details }) {
+import ChevronRight from '@/assets/icons/chevronRight.svg?react';
+function TicketContainer({ header, details, isPerformer }) {
 	const navigate = useNavigate();
 	const {
-		title,
-		count,
-		bookingDate,
-		place,
-		performanceDate,
+		ticketId,
+		showTitle,
+		name,
+		posterImageUrl,
+		detailAddress,
+		performanceDateTime,
+		quantity,
+		reserveDateTime,
+		reservationStatus,
 		cancelDeadline,
-		status,
-		imgSrc,
-		navLink,
 	} = details;
 
-	const isExpired = status === '공연 종료';
+	const isExpired = reservationStatus === '공연 종료';
 
+	const statusLabel = {
+		CANCELLED: '예매 취소',
+		RESERVED: '예매 완료',
+	};
+
+	const formatDateTime = (isoString) => {
+		const d = new Date(isoString);
+		const week = ['일', '월', '화', '수', '목', '금', '토'];
+
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+			d.getDate(),
+		).padStart(2, '0')} (${week[d.getDay()]}) ${String(d.getHours()).padStart(
+			2,
+			'0',
+		)}:${String(d.getMinutes()).padStart(2, '0')}`;
+	};
 	return (
-		<Wrapper isExpired={isExpired} onClick={() => navigate(navLink)}>
+		<Wrapper
+			id={ticketId}
+			isExpired={isExpired}
+			onClick={() => navigate(`${ticketId}`)}
+		>
 			<div className="only-web">
-				<img src={imgSrc} style={{ width: '140px', height: '200px' }} />
+				<img src={posterImageUrl} style={{ width: '140px', height: '200px' }} />
 			</div>
 			<div>
 				<Title>
-					{title} {count}매
+					{showTitle || name} {quantity} {isPerformer === false && <>매</>}
 				</Title>
 				<Table>
 					<tbody>
 						<tr>
 							<th>{header[0]}</th>
-							<td>{bookingDate}</td>
+							<td>{reserveDateTime?.split('T')[0] ?? 'null'}</td>
 						</tr>
 						<tr>
 							<th>{header[1]}</th>
-							<td>{place}</td>
+							<td>{detailAddress ?? 'null'}</td>
 						</tr>
 						<tr>
 							<th>{header[2]}</th>
-							<td>{performanceDate}</td>
+							<td>
+								{performanceDateTime
+									? formatDateTime(performanceDateTime)
+									: 'null'}
+							</td>
 						</tr>
-						<tr className="only-web">
-							<th>취소가능일시</th>
-							<td>{cancelDeadline}</td>
-						</tr>
+						{header[4] && (
+							<tr className="only-web">
+								<th>{header[4]}</th>
+								<td>{cancelDeadline ?? 'null'}</td>
+							</tr>
+						)}
+
 						<tr>
 							<th>{header[3]}</th>
-							<StatusTD>{status}</StatusTD>
+							<StatusTD>{statusLabel[reservationStatus] ?? 'null'}</StatusTD>
 						</tr>
 					</tbody>
 				</Table>
@@ -68,6 +95,13 @@ function TicketContainer({ header, details }) {
 }
 
 export default TicketContainer;
+
+const ChevronRightGray = styled(ChevronRight)`
+	color: ${({ theme }) => theme.colors.gray400};
+	height: 28px;
+	width: auto;
+`;
+
 const Wrapper = styled.div`
 	margin: 20px 0;
 	padding: 10px 22px;
@@ -106,6 +140,7 @@ const Table = styled.table`
 
 	th {
 		width: 88px;
+		min-width: 50px;
 		text-align: left;
 		color: ${({ theme }) => theme.colors.gray400};
 		font-size: ${({ theme }) => theme.font.fontSize.body12};

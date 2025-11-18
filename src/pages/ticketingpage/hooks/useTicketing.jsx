@@ -1,4 +1,4 @@
-// src/pages/ticketingpage/hooks/useTicketing.jsx
+
 import { useState, useEffect, useRef } from 'react';
 import useResponsive from '@/pages/ticketingpage/hooks/useResponsive';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
@@ -49,7 +49,8 @@ const useTicketing = (amateurShowId) => {
     setLoading(true);
     try {
       const response = await ticketingAPI.getShowSimple(fetchDataRef.current, amateurShowId);
-      const showData = response.isSuccess ? response.result : response;
+      const apiResponse = response.data || response;
+      const showData = apiResponse.result || apiResponse; // axios 응답에서 data.result 추출
       
       setEventInfo({
         title: showData.name || '',
@@ -72,8 +73,8 @@ const useTicketing = (amateurShowId) => {
     setLoading(true);
     try {
       const response = await ticketingAPI.getShowRounds(fetchDataRef.current, amateurShowId);
-      // API 응답에서 result 추출
-      const rounds = response.isSuccess ? response.result : response;
+      const apiResponse = response.data || response;
+      const rounds = apiResponse.result || apiResponse; // axios 응답에서 data.result 추출
       
       // 배열인지 확인
       if (!Array.isArray(rounds)) {
@@ -101,7 +102,8 @@ const useTicketing = (amateurShowId) => {
     setLoading(true);
     try {
       const response = await ticketingAPI.getTicketTypes(fetchDataRef.current, amateurShowId);
-      const tickets = response.isSuccess ? response.result : response;
+      const apiResponse = response.data || response;
+      const tickets = apiResponse.result || apiResponse;  // axios 응답에서 data.result 추출
       
       // 배열인지 확인
       if (!Array.isArray(tickets)) {
@@ -257,8 +259,9 @@ const useTicketing = (amateurShowId) => {
         requestData
       );
 
-      // API 응답에서 memberTicketId 추출
-      const ticketData = reserveResponse.isSuccess ? reserveResponse.result : reserveResponse;
+      // axios 응답에서 data.result 추출
+      const apiResponse1 = reserveResponse.data || reserveResponse;
+      const ticketData = apiResponse1.result || apiResponse1;
       const memberTicketId = ticketData.memberTicketId;
 
       if (!memberTicketId) {
@@ -267,7 +270,8 @@ const useTicketing = (amateurShowId) => {
 
       // 2단계: 카카오페이 결제 준비
       const paymentResponse = await ticketingAPI.prepareKakaoPayment(fetchDataRef.current, memberTicketId);
-      const paymentData = paymentResponse.isSuccess ? paymentResponse.result : paymentResponse;
+      const apiResponse2 = paymentResponse.data || paymentResponse;
+      const paymentData = apiResponse2.result || apiResponse2;  // axios 응답에서 data.result 추출
 
       // 결제 데이터 저장 (결제 완료 후 사용)
       setReservationData({

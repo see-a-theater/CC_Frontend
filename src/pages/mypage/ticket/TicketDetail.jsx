@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../../components/TopBar';
+import TopBar from '@/components/TopBar';
 import styled from 'styled-components';
 import Poster from '@/assets/images/test-poster2.png';
-import ChevronLeftGray from '@/assets/icons/ChevronLeftGray.svg?react';
-import TopBarWeb from '../../../components/TopBarWeb';
-import Alert from './TicketCancel';
-import React, { useState, useEffect } from 'react';
 
-const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
+import TopBarWeb from '@/components/TopBarWeb';
+
+import { useState } from 'react';
+import useCustomFetch from '@/utils/hooks/useCustomFetch.js';
+import { useParams } from 'react-router-dom';
+// const ticketHeaders = ['예매일', '장소', '관람일시', '상태', '취소가능일시'];
+/*
 const details = {
 	title: '실종',
 	imgSrc: Poster,
@@ -27,38 +29,75 @@ const details = {
 		],
 	},
 };
-
+*/
 function TicketDetail() {
 	const navigate = useNavigate();
+	const { ticketId } = useParams();
+
+	const { data, loading, error } = useCustomFetch(
+		`/myTickets/${ticketId}/getMyTicket`,
+	);
+
+	console.log('ticket detail', data);
 	// 모달창 관련 함수
-	const [showAlert, setShowAlert] = useState(false);
-	const handleCancelClick = () => setShowAlert(true);
-	const handleCloseAlert = () => setShowAlert(false);
-	const handleConfirmCancel = () => {
-		console.log('예매 취소 완료');
-		setShowAlert(false);
-		navigate('cancel/complete');
+	// const [showAlert, setShowAlert] = useState(false);
+
+	const [isChecked, setIsChecked] = useState(false);
+	const handleCancelClick = () => {
+		if (!isChecked) {
+			alert('취소 수수료 동의에 체크해주세요.');
+			return;
+		}
+		navigate('cancel');
 	};
 	function onPrev() {
 		navigate(-1);
 	}
-	const onCancelClick = () => {
-		navigate('cancel', {
-			state: { backgroundLocation: location }, // ✅ 중요!
-		});
+	if (loading) return <div>로딩중...</div>;
+	if (error) return <div>에러 발생: {error.message}</div>;
+	if (!data?.result) return <div>데이터가 없습니다.</div>;
+
+	let showTitle,
+		quantity,
+		posterImageUrl,
+		reserveDateTime,
+		performanceDateTime,
+		cancelAvailableUntil,
+		detailAddress,
+		reservationStatus;
+	if (data?.result) {
+		({
+			showTitle,
+			quantity,
+			posterImageUrl,
+			reserveDateTime,
+			performanceDateTime,
+			cancelAvailableUntil,
+			detailAddress,
+			reservationStatus,
+		} = data.result);
+	}
+	const basicUrl = import.meta.env.VITE_REACT_APP_BASIC_URL;
+
+	// const detail = data?.result;
+	// const header = ticketHeaders;
+
+	const formatDateTime = (isoString) => {
+		const d = new Date(isoString);
+		const week = ['일', '월', '화', '수', '목', '금', '토'];
+
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+			d.getDate(),
+		).padStart(2, '0')} (${week[d.getDay()]}) ${String(d.getHours()).padStart(
+			2,
+			'0',
+		)}:${String(d.getMinutes()).padStart(2, '0')}`;
 	};
 
-	const {
-		bookingDate,
-		place,
-		performanceDate,
-		status,
-		cancelDeadline,
-		imgSrc,
-	} = details;
-	const header = ticketHeaders;
-
-	//
+	const statusLabel = {
+		CANCELLED: '예매 취소',
+		RESERVED: '예매 완료',
+	};
 	return (
 		<>
 			<MyTicketsWrapper>
@@ -84,45 +123,58 @@ function TicketDetail() {
 								alignItems: 'center',
 							}}
 						>
-							<img src={imgSrc} />
-							<h1>실종 2매</h1>
-							<p className="color-pink">예매 완료</p>
+							{posterImageUrl ? (
+								<img
+									src={`https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/posters/hamlet.jpg`}
+								/>
+							) : (
+								<div style={{ width: '157px', height: '220px' }}></div>
+							)}
+
+							<h1>
+								{showTitle ?? 'null'} {quantity ?? 'null'}매
+							</h1>
+							<p className="color-pink">{statusLabel[reservationStatus]}</p>
 						</div>
 					</div>
 					{/*웹 포스터*/}
-					<div className="only-web">
-						<img src={imgSrc} />
-					</div>
+					<WebPoster className="only-web">
+						<img />
+						<p>{basicUrl + posterImageUrl}</p>
+					</WebPoster>
 					{/*티켓 정보 */}
 					<DetailWrapper>
 						<Table>
 							<tbody>
 								<tr>
 									<th>예매일</th>
-									<td>{bookingDate}</td>
+									<td>{reserveDateTime?.split('T')[0] ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>장소</th>
-									<td>{place}</td>
+									<td>{detailAddress ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>관람일시</th>
-									<td>{performanceDate}</td>
+									<td>{formatDateTime(performanceDateTime) ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>상태</th>
-									<td>{status}</td>
+									<td>{statusLabel[reservationStatus] ?? 'null'}</td>
 								</tr>
 								<tr>
 									<th>취소가능일시</th>
 									<td>
-										{cancelDeadline.deadline}
+										{cancelAvailableUntil ?? 'null'}
+										{/*
+											{cancelDeadline.deadline}
 										{cancelDeadline?.extra?.map((e) => (
 											<div style={{ display: 'flex' }}>
 												<span>{e.date}</span>
 												<span className="color-pink">{e.fee}</span>
 											</div>
 										))}
+										*/}
 									</td>
 								</tr>
 							</tbody>
@@ -148,26 +200,45 @@ function TicketDetail() {
 								있습니다.
 							</span>
 						</div>
-						<div
-							className="checkbox"
-							style={{
-								marginBottom: '60px',
-							}}
-						>
-							<label
+						{reservationStatus === 'CANCELLED' ? (
+							<></>
+						) : (
+							<div
+								className="checkbox"
 								style={{
-									textAlign: 'center',
-									display: 'flex',
-									justifyContent: 'center',
+									marginBottom: '60px',
 								}}
 							>
-								취소 수수료를 확인하였으며, 이에 동의합니다
-								<input type="checkbox" />
-							</label>
-						</div>
-						<button className="btn-light" onClick={() => navigate('cancel')}>
-							예매 취소
-						</button>
+								<label
+									style={{
+										textAlign: 'center',
+										display: 'flex',
+										justifyContent: 'center',
+									}}
+								>
+									취소 수수료를 확인하였으며, 이에 동의합니다
+									<input
+										type="checkbox"
+										checked={isChecked}
+										onChange={(e) => setIsChecked(e.target.checked)}
+									/>
+								</label>
+							</div>
+						)}
+
+						{reservationStatus === 'CANCELLED' ? (
+							<button
+								className="btn-light"
+								onClick={handleCancelClick}
+								disabled={true}
+							>
+								취소 완료된 티켓입니다
+							</button>
+						) : (
+							<button className="btn-light" onClick={handleCancelClick}>
+								예매 취소
+							</button>
+						)}
 					</DetailWrapper>
 				</Wrapper>
 			</MyTicketsWrapper>
@@ -227,16 +298,11 @@ const Wrapper = styled.div`
 	}
 
 	img {
-		max-width: 157px;
-		max-height: 220px;
-		background: gainsboro;
-		margin-bottom: 20px;
-
-		@media (min-width: 768px) {
-			max-width: 500px;
-			max-height: 700px;
-			flex-shrink: 0;
-			border-radius: 5px;
+		@media (max-width: 768px) {
+			max-width: 157px;
+			max-height: 220px;
+			background: gainsboro;
+			margin-bottom: 20px;
 		}
 	}
 `;
@@ -306,5 +372,20 @@ const DetailWrapper = styled.div`
 	@media (min-width: 768px) {
 		max-width: 430px;
 		min-width: 360px;
+	}
+`;
+const WebPoster = styled.div`
+	display: flex;
+	flex: 1;
+	max-width: 500px;
+	max-height: 700px;
+	position: relative;
+
+	> img {
+		width: 100%;
+		min-width: 157px;
+
+		height: auto;
+		object-fit: cover;
 	}
 `;

@@ -8,7 +8,7 @@ import {
   FormSection2, SelectionSection, SectionTitle, 
   EventTitle, EventVenue, EventPeriod, EventInfo, 
   EventLink, PcLayout, SummarySection, BackButton } from '@/pages/ticketingpage/styles/commonStyles';
-import { SummaryRow } from '../styles/summaryStyles';
+import { SummaryRow } from '@/pages/ticketingpage/styles/summaryStyles';
 import { 
   Divider, Label, AdditionalInputField,
   BankInfo, PaymentNotice, CheckboxContainer,

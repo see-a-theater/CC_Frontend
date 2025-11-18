@@ -3,18 +3,19 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from 'styled-components';
-import Poster from '../assets/images/test-poster2.png';
+import Poster from '@/assets/images/test-poster2.png';
 
 /*배너 넘어갈 때 border-radius 깜빡거리는 오류 있음 */
 
 function CarouselWeb({ banners }) {
 	let sliderRef = useRef(null);
+	/*
 	const play = () => {
 		sliderRef.slickPlay();
 	};
 	const pause = () => {
 		sliderRef.slickPause();
-	};
+	};*/
 	const settings = {
 		dots: true,
 		infinite: true,
@@ -25,20 +26,22 @@ function CarouselWeb({ banners }) {
 		autoplaySpeed: 2000,
 		arrows: false,
 	};
+	console.log('banners', banners);
 	return (
 		<Wrapper>
 			<div className="slider-container">
 				<Slider ref={sliderRef} {...settings}>
-					{banners.map((banner) => (
-						<Banner key={banner.id}>
-							<img src={banner.imgSrc} alt={banner.title} />
-							<Text>
-								<p className="title">{banner.title}</p>
-								<p>{banner.location}</p>
-								<p>{banner.date}</p>
-							</Text>
-						</Banner>
-					))}
+					{banners &&
+						banners.map((banner) => (
+							<Banner key={banner.amateurShowId}>
+								<img src={banner.posterImageUrl} alt={banner.name} />
+								<Text>
+									<p className="title">{banner.name}</p>
+									<p>{banner.place}</p>
+									<p>{banner.schedule}</p>
+								</Text>
+							</Banner>
+						))}
 				</Slider>
 			</div>
 		</Wrapper>

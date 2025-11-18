@@ -1,40 +1,38 @@
 import styled from 'styled-components';
-import ChevronPink from '../assets/icons/ChevronPink.svg';
-import { useNavigate } from 'react-router-dom';
+
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
+
 function TopBar({ onPrev, onNext, children }) {
-	const navigate = useNavigate();
-	function onPrev() {
-		navigate(-1);
-	}
 	return (
-		<>
+		<div style={{ height: '120px' }}>
 			<Top>
-				<img
-					src={ChevronPink}
-					onClick={onPrev}
-					style={{ height: '16px', width: '16px' }}
-				/>
+				<ChevronLeftPink />
 				<p>{children}</p>
-				<button onClick={onNext}>(다음)</button>
+				<button onClick={onNext}></button>
 			</Top>
-		</>
+		</div>
 	);
 }
 
 export default TopBar;
-
+const ChevronLeftPink = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.pink600};
+	height: 16px;
+`;
 const Top = styled.div`
 	display: flex;
+	flex: 1;
 	gap: 12px;
 	align-items: center;
+	justify-content: space-between;
 	width: 100%;
 	padding: 20px 24px;
 	padding-top: 76px;
+	@media (min-width: 768px) {
+		height: 140px;
+	}
 
 	p {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
 		color: ${({ theme }) => theme.colors.grayMain};
 		text-align: center;
 
@@ -45,8 +43,6 @@ const Top = styled.div`
 		margin: 0px;
 	}
 	button {
-		position: absolute;
-		right: 10%;
 		color: gray;
 		/*visibility: hidden;*/
 	}

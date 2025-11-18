@@ -8,62 +8,81 @@ import WebPlayCard from '@/components/Detail/WebPlayCard';
 import WebListCard from '@/components/Detail/WebListCard';
 import Ticket from '@/assets/icons/Ticket.svg?react';
 import SearchBar from '@/components/SearchBar';
+import HomeIconMenu from '@/components/HomeIconMenu';
+import Footer from '@/components/Footer';
+
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
 import SamplePoster from '@/assets/mock/images/실종.png';
 
 function Playlist() {
-	const sampleList = [1, 2, 3, 4, 5];
-	const mockList = [
-		{
-			src: SamplePoster,
-			title: '실종',
-			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
-			id: 1,
-		},
-		{
-			src: SamplePoster,
-			title: '실종',
-			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
-			id: 2,
-		},
-		{
-			src: SamplePoster,
-			title: '실종',
-			place: '홍익대학교 학생회관 3층 소극장',
-			date: '2024.10.03 (목) 19:00',
-			id: 3,
-		},
-	];
 	const [current, setCurrent] = useState(0);
 
 	const token = 'producer';
 	localStorage.setItem('token', token);
 
+	const {
+		data: todayData,
+		error: todayError,
+		loading: todayLoading,
+	} = useCustomFetch(`/amateurs/today`);
+	console.log('todayData:', todayData);
+
+	const {
+		data: rankData,
+		error: rankError,
+		loading: rankLoading,
+	} = useCustomFetch(`/amateurs/ranking`);
+	console.log('rankData:', rankData);
+
+	const {
+		data: ongoingData,
+		error: ongoingError,
+		loading: ongoingLoading,
+	} = useCustomFetch(`/amateurs/ongoing`);
+	console.log('ongoing:', ongoingData);
+
 	return (
 		<Container>
 			<Web>
-				<Sidebar />
+				<SideMenuWrapper>
+					<HomeIconMenu isWeb={true} selectedMenu="plays" />
+				</SideMenuWrapper>
 				<WebContent>
 					<SearchBar />
 					<WebHot>
 						<h3 className="Todays">요즘 🔥HOT한 소극장 연극</h3>
 						<CardWrapper>
-							{mockList.map((data) => (
-								<WebPlayCard data={data} key={data.id} />
+							{rankData?.result.map((data) => (
+								<WebPlayCard
+									key={data.amateurShowId}
+									name={data.name}
+									place={data.place}
+									posterImageUrl={data.posterImageUrl}
+									schedule={data.schedule}
+									amateurShowId={data.amateurShowId}
+								/>
 							))}
 						</CardWrapper>
 					</WebHot>
 					<WebOnGoing>
 						<h3>현재 진행중인 소극장 연극</h3>
 						<BoxWrapper>
-							{mockList.map((data) => (
-								<WebListCard data={data} key={data.id} />
+							{ongoingData?.result.content.map((data) => (
+								<WebListCard
+									key={data.amateurShowId}
+									name={data.name}
+									place={data.place}
+									posterImageUrl={data.posterImageUrl}
+									schedule={data.schedule}
+									amateurShowId={data.amateurShowId}
+								/>
 							))}
 						</BoxWrapper>
 					</WebOnGoing>
 				</WebContent>
+
+				<Footer />
 			</Web>
 
 			<Mobile>
@@ -77,16 +96,22 @@ function Playlist() {
 
 						<CarouselWrapper>
 							<CarouselTrack $current={current}>
-								{sampleList.map((item, idx) => (
-									<Slide key={idx}>
-										<PlayCard />
+								{todayData?.result.map((data, idx) => (
+									<Slide key={data.amateurShowId}>
+										<PlayCard
+											key={data.amateurShowId}
+											name={data.name}
+											place={data.place}
+											posterImageUrl={data.posterImageUrl}
+											schedule={data.schedule}
+											amateurShowId={data.amateurShowId}
+										/>
 									</Slide>
 								))}
 							</CarouselTrack>
 						</CarouselWrapper>
-
 						<IndicatorWrapper>
-							{sampleList.map((_, idx) => (
+							{todayData?.result.map((_, idx) => (
 								<Dot
 									key={idx}
 									className={idx === current ? 'active' : ''}
@@ -99,9 +124,16 @@ function Playlist() {
 				<Now>
 					<h3 className="onGoing"> 현재 진행중 </h3>
 					<MappingArea>
-						<NowShowing />
-						<NowShowing />
-						<NowShowing />
+						{ongoingData?.result.content.map((data) => (
+							<NowShowing
+								key={data.amateurShowId}
+								name={data.name}
+								place={data.place}
+								posterImageUrl={data.posterImageUrl}
+								schedule={data.schedule}
+								amateurShowId={data.amateurShowId}
+							/>
+						))}
 					</MappingArea>
 				</Now>
 				{token && (
@@ -120,14 +152,10 @@ function Playlist() {
 export default Playlist;
 
 const Container = styled.div`
-	width: 100%;
-	padding: 20px;
-	overflow: hidden;
-
-	@media (min-width: 768px) {
-		display: flex;
-		padding: 0;
-	}
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 `;
 const Web = styled.div`
 	display: none;
@@ -135,12 +163,14 @@ const Web = styled.div`
 	@media (min-width: 768px) {
 		display: flex;
 
+		flex-direction: column;
 		width: 100%;
 	}
 `;
 const WebContent = styled.div`
 	display: flex;
 	padding: 60px 100px 100px 60px;
+	margin-left: 100px;
 	flex-direction: column;
 	gap: 40px;
 
@@ -163,20 +193,26 @@ const WebHot = styled.div`
 const WebOnGoing = styled.div``;
 const BoxWrapper = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	gap: 80px;
 `;
-const Sidebar = styled.div`
-	display: block;
-	flex-shrink: 0;
-	width: 100px;
+const SideMenuWrapper = styled.div`
+	width: 101px;
 	height: 100vh;
-	background-color: ${({ theme }) => theme.colors.gray200};
-	position: sticky;
+	position: fixed;
 	top: 0;
+	left: 0;
+	flex-shrink: 0;
+	display: none;
+	background-color: white;
+	@media (min-width: 768px) {
+		display: block;
+	}
 `;
 
 const Mobile = styled.div`
 	display: flex;
+	padding: 20px;
 	flex-direction: column;
 	@media (min-width: 768px) {
 		display: none;

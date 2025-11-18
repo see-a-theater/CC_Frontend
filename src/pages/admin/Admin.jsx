@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import HomeIconMenu from '../../components/HomeIconMenu';
+import HomeIconMenu from '@/components/HomeIconMenu';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import ChevronUp from '@/assets/icons/ChevronUpWhite.svg?react';
-import ChevronDown from '@/assets/icons/ChevronDown.svg?react';
+import ChevronUp from '@/assets/icons/chevronUp.svg?react';
 import Search from '@/assets/icons/SearchBlack.svg?react';
 function Admin() {
 	const navigate = useNavigate();
-	const role = localStorage.getItem('role');
 
 	const [selectedMenu, setSelectedMenu] = useState('dashboard');
 	const [openSubMenu, setOpenSubMenu] = useState(false);
@@ -45,19 +43,28 @@ function Admin() {
 					<li
 						className={selectedMenu === 'performances' ? 'selected' : ''}
 						onClick={() => {
-							setOpenSubMenu(!openSubMenu);
+							//setOpenSubMenu(!openSubMenu);
+							handleMenuClick('performances', '/admin/plays');
 						}}
 					>
 						소극장 공연 관리
 						{!openSubMenu ? (
-							<ChevronUp
+							<ChevronUpWhite
 								style={{
 									transform: 'rotate(180deg)',
 									transition: 'transform 0.3s',
 								}}
+								onClick={() => {
+									setOpenSubMenu(!openSubMenu);
+								}}
 							/>
 						) : (
-							<ChevronUp style={{ transition: 'transform 0.3s' }} />
+							<ChevronUpWhite
+								style={{ transition: 'transform 0.3s' }}
+								onClick={() => {
+									setOpenSubMenu(!openSubMenu);
+								}}
+							/>
 						)}
 					</li>
 					{openSubMenu && (
@@ -125,6 +132,10 @@ function Admin() {
 	);
 }
 export default Admin;
+const ChevronUpWhite = styled(ChevronUp)`
+	fill: ${({ theme }) => theme.colors.grayWhite};
+	height: 13px;
+`;
 const Top = styled.div`
 	background: ${({ theme }) => theme.colors.grayWhite};
 	position: fixed;

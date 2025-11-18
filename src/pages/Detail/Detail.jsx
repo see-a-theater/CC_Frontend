@@ -1,16 +1,34 @@
-//import styled from 'styled-components';
+import Summary from '@/pages/Detail/Summary';
+import Info from '@/pages/Detail/Info';
+import { useParams } from 'react-router-dom';
+import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
-import Summary from './summary';
-import Info from './Info';
+import EyeRollingSVG from '@/components/EyeRollingSVG.jsx';
 
 function Detail() {
+	const { playId } = useParams();
+
+	const {
+		data: playData,
+		error,
+		loading,
+	} = useCustomFetch(`/amateurs/${playId}`);
+
+	console.log('error:', error);
+	console.log('loading:', loading);
+	console.log('SummData:', playData);
+
+	if (loading || !playData?.result) {
+		return <EyeRollingSVG />;
+	}
+
 	return (
 		<>
 			{/*스크롤 전 요약 화면*/}
-			<Summary />
+			<Summary playData={playData} />
 
 			{/*스크롤 후 상세 화면*/}
-			<Info />
+			<Info playData={playData} />
 		</>
 	);
 }

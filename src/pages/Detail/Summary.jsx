@@ -1,64 +1,51 @@
 import styled from 'styled-components';
-
-import sampleImg from '@/assets/mock/images/실종.png';
 import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 import ChevronDown from '@/assets/icons/chevronDown.svg?react';
 
-function Summary() {
-	const mockGenre = [
-		{ label: '극중극' },
-		{ label: '드라마' },
-		{ label: '구덩이' },
-	];
+function Summary({ playData }) {
+	const displayGenre = playData?.result.hashtag
+		.split('#')
+		.map((tag) => tag.trim())
+		.filter((tag) => tag.length > 0)
+		.map((tag) => ({ label: tag }));
+
+	const posterImg = playData?.result.posterImageUrl;
 
 	return (
 		<Container>
-			<Mobile>
+			<Mobile sampleImg={posterImg}>
 				<Content>
 					<Top>
 						<ChevronLeft height={15} alt="뒤로가기" />
 					</Top>
-
-					<h1>실종</h1>
+					<h1>{playData?.result.name}</h1>
 
 					<TagList>
-						{mockGenre.map((genre, index) => (
+						{displayGenre.map((genre, index) => (
 							<Tag key={index}>{genre.label}</Tag>
 						))}
 					</TagList>
 
-					<p className="summary">
-						1998년 가을,
-						<br />
-						<br />
-						‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을
-						추구하는 사회에서 학생은 적응하지 못한다.
-					</p>
+					<p className="summary">{playData?.result.summary}</p>
 					<ChevronDown height={7} alt="스크롤" className="chevronDown" />
 				</Content>
 			</Mobile>
 
-			<Web>
+			<Web sampleImg={posterImg}>
 				<Content>
 					<Top>
 						<ChevronLeft height={19} alt="뒤로가기" />
 					</Top>
 
-					<h1>실종</h1>
+					<h1>{playData?.result.name}</h1>
 
 					<TagList>
-						{mockGenre.map((genre, index) => (
+						{displayGenre.map((genre, index) => (
 							<Tag key={index}>{genre.label}</Tag>
 						))}
 					</TagList>
 
-					<p className="summary">
-						1998년 가을,
-						<br />
-						<br />
-						‘아무 국가기관'의 업무 보조를 하게 된 학생 모두가 동일한 것을
-						추구하는 사회에서 학생은 적응하지 못한다.
-					</p>
+					<p className="summary">{playData?.result.summary}</p>
 					<ChevronDown height={28} alt="스크롤" className="chevronDown" />
 				</Content>
 			</Web>
@@ -72,7 +59,8 @@ const Container = styled.div``;
 const Mobile = styled.div`
 	display: flex;
 	padding: 0 20px 0 20px;
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0.75)), url('${sampleImg}');
+	background: ${({ sampleImg }) =>
+		`linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(${sampleImg})`};
 	background-size: cover;
 
 	h1 {
@@ -147,7 +135,8 @@ const Web = styled.div`
 		display: flex;
 		width: 100%;
 		padding: 100px 100px 0px 160px;
-		background: linear-gradient(0deg, rgba(0, 0, 0, 0.75)), url('${sampleImg}');
+		background: ${({ sampleImg }) =>
+			`linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(${sampleImg})`};
 		background-size: cover;
 
 		h1 {

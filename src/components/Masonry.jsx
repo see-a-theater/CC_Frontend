@@ -1,24 +1,37 @@
 import styled from 'styled-components';
 
-function Masonry(props) {
+function Masonry({ imageData }) {
+	const hasImages = imageData?.photoAlbumDTOs?.length > 0;
+
 	return (
 		<>
-			<ImageArea>
-				{props.imageData?.map((data, idx) => (
-					<Item key={idx}>
-						<img src={data?.src} alt="공연사진" className="pic" />
-						<Text>
-							<p className="title">{data?.text}</p>
-							{data.theatre && <p className="theatre">{data.theatre}</p>}
-						</Text>
-					</Item>
-				))}
-			</ImageArea>
+			{hasImages ? (
+				<ImageArea>
+					{imageData?.photoAlbumDTOs?.map((data, idx) => (
+						<Item key={idx}>
+							<img src={data?.imageUrl} alt="공연사진" className="pic" />
+							<Text>
+								<p className="title">{data?.amateurShowName}</p>
+								{data?.place && <p className="theatre">{data.place}</p>}
+							</Text>
+						</Item>
+					))}
+				</ImageArea>
+			) : (
+				<EmptyMessage>사진이 없습니다.</EmptyMessage>
+			)}
 		</>
 	);
 }
 
 export default Masonry;
+
+const EmptyMessage = styled.div`
+	text-align: center;
+	padding: 50px;
+	color: ${({ theme }) => theme.colors.grayMain};
+	font-size:  ${({ theme }) => theme.font.fontSize.body10};
+`;
 
 const ImageArea = styled.div`
 	//고정 너비에서 수정 필요

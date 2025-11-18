@@ -1,125 +1,108 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import location from '@/assets/icons/location.svg';
-import time from '@/assets/icons/time.svg';
-import price from '@/assets/icons/price.svg';
+import Location from '@/assets/icons/location.svg?react';
+import Time from '@/assets/icons/time.svg?react';
+import Price from '@/assets/icons/price.svg?react';
 
-import ChevronLeftPink from '@/assets/icons/chevronLeftPink.svg?react';
-
-import poster from '@/assets/mock/images/실종.png';
+import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 
 import Cast from './InfoArea/Cast';
 import Perform from './InfoArea/Perform';
 import Gallery from './InfoArea/Gallery';
 
-function Info() {
-	const mockInfo = [
-		{
-			icon: location,
-			rows: [
-				{
-					value: '홍익대학교 학생회관 3층 소극장',
-					valueType: 'default',
-				},
-			],
-		},
-		{
-			icon: time,
-			rows: [
-				{
-					values: [
-						{
-							value: '2025.10.03 (목) ~ 2025.10.05 (토)',
-							valueType: 'default',
-						},
-						{ value: '60분', valueType: 'highlight' },
-					],
-				},
-				{ value: '10.03 (목) 17:00', valueType: 'deem' },
-				{ value: '10.04 (금) 17:00', valueType: 'deem' },
-				{ value: '10.05 (토) 17:00', valueType: 'deem' },
-			],
-		},
-		{
-			icon: price,
-			rows: [
-				{
-					label: '일반예매',
-					value: '10,000원',
-					labelType: 'deem',
-					valueType: 'default',
-				},
-				{
-					label: '홍대생',
-					value: '7,000원',
-					labelType: 'deem',
-					valueType: 'default',
-				},
-			],
-		},
-	];
-	const mockGenre = [
-		{ label: '극중극' },
-		{ label: '드라마' },
-		{ label: '구덩이' },
-	];
-
+function Info({ playData }) {
 	const [activeTab, setActiveTab] = useState('perform');
+
+	console.log('InfoData:', playData);
+
+	const displayGenre = playData.result.hashtag
+		.split('#')
+		.map((tag) => tag.trim())
+		.filter((tag) => tag.length > 0)
+		.map((tag) => ({ label: tag }));
+
+	function formatDateTime(dateString) {
+		const date = new Date(dateString);
+
+		// 월, 일
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+
+		// 요일
+		const days = ['일', '월', '화', '수', '목', '금', '토'];
+		const dayOfWeek = days[date.getDay()];
+
+		// 시간, 분
+		const hours = String(date.getHours()).padStart(2, '0');
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+
+		return `${month}.${day} (${dayOfWeek}) ${hours}:${minutes}`;
+	}
 
 	return (
 		<Container>
 			<Mobile>
 				<Top>
-					<ChevronLeftPink height={15} alt="이전" className="back" />
-					<p className="title">실종</p>
+					<ChevronLeftPink alt="이전" />
+					<p className="title">{playData?.result.name}</p>
 				</Top>
-				<img src={poster} height={220} alt="포스터 이미지" className="poster" />
-				<h3 className="title">실종</h3>
+				<img
+					src={playData?.result.posterImageUrl}
+					height={220}
+					alt="포스터 이미지"
+					className="poster"
+				/>
+				<h3 className="title">{playData?.result.name}</h3>
 				<TagList>
-					{mockGenre.map((genre, index) => (
+					{displayGenre.map((genre, index) => (
 						<Tag key={index}>{genre.label}</Tag>
 					))}
 				</TagList>
 
 				<InfoList>
-					{mockInfo.map((section, idx) => (
-						<InfoBlock key={idx}>
-							<IconWrapper>
-								<img src={section.icon} height={24} alt="icon" />
-							</IconWrapper>
+					<InfoBlock>
+						<IconWrapper>
+							<Location height={24} />
+						</IconWrapper>
+						<p className="blackTxt">
+							{playData?.result.hallName} {playData?.result.detailAddress}
+						</p>
+					</InfoBlock>
+					<InfoBlock>
+						<IconWrapper>
+							<Time height={24} />
+						</IconWrapper>
 
-							<InfoContent>
-								{section.rows.map((row, rIdx) => (
-									<Row key={rIdx}>
-										{row.label && (
-											<StyledText
-												className={row.labelType ?? row.vaslueType ?? 'default'}
-											>
-												{row.label}
-											</StyledText>
-										)}
+						<div className="gap10">
+							<div>
+								<span className="blackTxt">{playData?.result.schedule}</span>
+								<span className="pinkTxt">{playData?.result.runtime}</span>
+							</div>
 
-										{Array.isArray(row.values) ? (
-											row.values.map((item, i) => (
-												<StyledText
-													key={i}
-													className={item.valueType ?? 'default'}
-													style={i === 0 ? { marginRight: 'auto' } : undefined}
-												>
-													{item.value}
-												</StyledText>
-											))
-										) : (
-											<StyledText className={row.valueType ?? 'default'}>
-												{row.value}
-											</StyledText>
-										)}
-									</Row>
+							<div className="gap8">
+								{playData?.result.rounds.map((data) => (
+									<p className="grayTxt">
+										{data.roundNumber}회차 {data.performanceDateTime}
+									</p>
 								))}
-							</InfoContent>
-						</InfoBlock>
-					))}
+							</div>
+						</div>
+					</InfoBlock>
+					<InfoBlock>
+						<IconWrapper>
+							<Price height={24} />
+						</IconWrapper>
+
+						<div className="gap10">
+							{playData?.result.tickets.map((data) => (
+								<div className="ticket">
+									<p className="grayTxt discountName">{data.discountName}</p>
+									<p className="blackTxt">{data.price}</p>
+								</div>
+							))}
+						</div>
+					</InfoBlock>
 				</InfoList>
 
 				<TabBar>
@@ -144,68 +127,76 @@ function Info() {
 				</TabBar>
 
 				<ContentArea>
-					{activeTab === 'perform' && <Perform />}
-					{activeTab === 'cast' && <Cast />}
-					{activeTab === 'gallery' && <Gallery />}
+					{activeTab === 'perform' && <Perform data={playData} />}
+					{activeTab === 'cast' && <Cast data={playData} />}
+					{activeTab === 'gallery' && <Gallery data={playData} />}
 				</ContentArea>
 
 				<BookBtn>예매하러 가기</BookBtn>
 			</Mobile>
 
 			<Web>
-				<h3 className="title">실종</h3>
+				<h3 className="title">{playData?.result.name}</h3>
 				<WebContent>
 					<WebLeft>
 						<WebInfo>
 							<img
-								src={poster}
+								src={playData?.result.posterImageUrl}
 								height={220}
 								alt="포스터 이미지"
 								className="poster"
 							/>
 
 							<InfoList>
-								{mockInfo.map((section, idx) => (
-									<InfoBlock key={idx}>
-										<IconWrapper>
-											<img src={section.icon} height={24} alt="icon" />
-										</IconWrapper>
+								<InfoBlock>
+									<IconWrapper>
+										<Location height={24} />
+									</IconWrapper>
 
-										<InfoContent>
-											{section.rows.map((row, rIdx) => (
-												<Row key={rIdx}>
-													{row.label && (
-														<StyledText
-															className={
-																row.labelType ?? row.vaslueType ?? 'default'
-															}
-														>
-															{row.label}
-														</StyledText>
-													)}
+									<p className="blackTxt">
+										{playData?.result.hallName} {playData?.result.detailAddress}
+									</p>
+								</InfoBlock>
+								<InfoBlock>
+									<IconWrapper>
+										<Time height={24} />
+									</IconWrapper>
 
-													{Array.isArray(row.values) ? (
-														row.values.map((item, i) => (
-															<StyledText
-																key={i}
-																className={item.valueType ?? 'default'}
-																style={
-																	i === 0 ? { marginRight: 'auto' } : undefined
-																}
-															>
-																{item.value}
-															</StyledText>
-														))
-													) : (
-														<StyledText className={row.valueType ?? 'default'}>
-															{row.value}
-														</StyledText>
-													)}
-												</Row>
+									<div className="gap10">
+										<div>
+											<span className="blackTxt">
+												{playData?.result.schedule}
+											</span>
+											<span className="pinkTxt">
+												{playData?.result.runtime}
+											</span>
+										</div>
+										<div className="gap12">
+											{playData?.result.rounds.map((data) => (
+												<p className="grayTxt">
+													{data.roundNumber}회차{' '}
+													{formatDateTime(data.performanceDateTime)}
+												</p>
 											))}
-										</InfoContent>
-									</InfoBlock>
-								))}
+										</div>
+									</div>
+								</InfoBlock>
+								<InfoBlock>
+									<IconWrapper>
+										<Price height={24} />
+									</IconWrapper>
+
+									<div className="gap12">
+										{playData?.result.tickets.map((data) => (
+											<div className="ticket">
+												<p className="grayTxt discountName">
+													{data.discountName}
+												</p>
+												<p className="blackTxt">{data.price}</p>
+											</div>
+										))}
+									</div>
+								</InfoBlock>
 							</InfoList>
 						</WebInfo>
 
@@ -231,9 +222,9 @@ function Info() {
 						</TabBar>
 
 						<ContentArea>
-							{activeTab === 'perform' && <Perform />}
-							{activeTab === 'cast' && <Cast />}
-							{activeTab === 'gallery' && <Gallery />}
+							{activeTab === 'perform' && <Perform data={playData} />}
+							{activeTab === 'cast' && <Cast data={playData} />}
+							{activeTab === 'gallery' && <Gallery data={playData} />}
 						</ContentArea>
 					</WebLeft>
 
@@ -246,6 +237,12 @@ function Info() {
 
 export default Info;
 
+const ChevronLeftPink = styled(ChevronLeft)`
+	color: ${({ theme }) => theme.colors.pink600};
+	height: 15px;
+	position: absolute;
+	left: 0;
+`;
 const Container = styled.div`
 	background: ${({ theme }) => theme.colors.ivoryBg};
 `;
@@ -276,10 +273,6 @@ const Top = styled.div`
 	align-items: center;
 	justify-content: center;
 
-	.back {
-		position: absolute;
-		left: 0;
-	}
 	.title {
 		font-size: ${({ theme }) => theme.font.fontSize.body16};
 		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
@@ -305,56 +298,71 @@ const Tag = styled.div`
 
 const InfoList = styled.div`
 	margin-top: 20px;
-
 	width: 100%;
 	background: ${({ theme }) => theme.colors.pink100};
-	padding: 16px 20px;
+	padding: 20px;
 
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+
+	.blackTxt {
+		color: ${({ theme }) => theme.colors.grayMain};
+	}
+	.pinkTxt {
+		color: ${({ theme }) => theme.colors.pink600};
+		margin-left: 8px;
+	}
+	.grayTxt {
+		color: ${({ theme }) => theme.colors.gray400};
+	}
+	.discountName {
+		min-width: 80px;
+	}
+	.gap8 {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.gap10 {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.gap12 {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
 	@media (min-width: 768px) {
 		margin-top: 0px;
 	}
 `;
 
 const InfoBlock = styled.div`
+	font-size: ${({ theme }) => theme.font.fontSize.body14};
+	font-weight: ${({ theme }) => theme.font.fontWeight.normal};
+
 	display: flex;
 	gap: 32px;
-	margin-bottom: 20px;
+
+	.ticket {
+		display: flex;
+	}
+
+	@media (min-width: 768px) {
+		font-size: ${({ theme }) => theme.font.fontSize.title16};
+		font-weight: ${({ theme }) => theme.font.fontWeight.bold};
+	}
 `;
 
 const IconWrapper = styled.div`
 	height: 24px;
 	width: 24px;
 
-	img {
-		width: 100%;
-	}
-`;
-
-const InfoContent = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-`;
-
-const Row = styled.div`
 	display: flex;
 	align-items: center;
-	gap: 8px;
-`;
-
-const StyledText = styled.span`
-	font-size: ${({ theme }) => theme.font.fontSize.body14};
-	font-weight: ${({ theme }) => theme.font.fontWeight.medium};
-
-	&.default {
-		color: ${({ theme }) => theme.colors.gray900};
-	}
-	&.highlight {
-		color: ${({ theme }) => theme.colors.pink500};
-	}
-	&.deem {
-		color: ${({ theme }) => theme.colors.gray500};
-	}
+	justify-content: center;
 `;
 
 const TabBar = styled.div`
@@ -403,7 +411,7 @@ const ContentArea = styled.div`
 `;
 const BookBtn = styled.button`
 	width: 100%;
-	padding: 20px 128px;
+	padding: 20px 100px;
 	border-radius: 10px;
 
 	background: ${({ theme }) => theme.colors.pink600};

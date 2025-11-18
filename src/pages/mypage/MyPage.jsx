@@ -1,16 +1,9 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Hamburger from '../../components/Hamburger';
-import HomeIconMenu from '../../components/HomeIconMenu';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MyTickets from './ticket/MyTickets';
-import TicketDetail from './ticket/TicketDetail';
-import LikedTheater from './liked-theater/LikedTheater';
-import MyPageMenu from './MypageMenu';
+import HomeIconMenu from '@/components/HomeIconMenu';
+
 import { Outlet } from 'react-router-dom';
+
 function MyPage() {
-	const navigate = useNavigate();
-	const role = localStorage.getItem('role');
 	return (
 		<>
 			<SideMenuWrapper>
