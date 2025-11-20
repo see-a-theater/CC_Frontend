@@ -62,7 +62,7 @@ function RegisterStep3() {
 
 	// 배우 이미지 업로드
 	const handleActorImageUpload = (index, fileInfo) => {
-		handleActorChange(index, 'castingImageUrl', fileInfo.publicUrl);
+		handleActorChange(index, 'castingImageUrl', fileInfo.imageUrl);
 	};
 	return (
 		<RegisterWrapper>

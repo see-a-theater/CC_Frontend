@@ -63,7 +63,7 @@ function RegisterStep1() {
 			...prev,
 			posterImageRequestDTO: {
 				keyName: fileInfo?.keyName,
-				imageUrl: fileInfo?.publicUrl,
+				imageUrl: fileInfo?.imageUrl,
 			},
 		}));
 		console.log('포스터 등록 확인', formData);
@@ -71,21 +71,35 @@ function RegisterStep1() {
 	};
 
 	const handleRoundChange = (index, field, value) => {
-		setFormData((prev) => {
-			const updatedRounds = [...prev.rounds];
-			if (!updatedRounds[index]) {
-				updatedRounds[index] = { roundNumber: index + 1 };
-			}
-			updatedRounds[index][field] = value;
-			return { ...prev, rounds: updatedRounds };
-		});
-		setFormDataChanged(true);
+		const updatedRounds = [...formData.rounds];
+		updatedRounds[index] = {
+			...updatedRounds[index],
+			[field]: value,
+		};
+
+		// 날짜만 정렬용으로 배열 만들기
+		const validDates = updatedRounds
+			.map((r) => r.performanceDateTime)
+			.filter((d) => d); // 빈 값 제외
+
+		let start = formData.start;
+		let end = formData.end;
+
+		if (validDates.length > 0) {
+			// 오름차순 정렬
+			const sorted = [...validDates].sort((a, b) => new Date(a) - new Date(b));
+
+			start = sorted[0];
+			end = sorted[sorted.length - 1];
+		}
+
+		setFormData((prev) => ({
+			...prev,
+			rounds: updatedRounds,
+			start,
+			end,
+		}));
 	};
-	/*	const handleNextStep = () => {
-		localStorage.setItem('formData', JSON.stringify(formData));
-		nextStep();
-	};
- */
 
 	const changedRef = useRef(false);
 	const formDataRef = useRef(formData);
