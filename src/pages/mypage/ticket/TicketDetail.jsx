@@ -251,7 +251,7 @@ const Wrapper = styled.div`
 
 	@media (min-width: 768px) {
 		flex-direction: row;
-		gap: clamp(40px, 15vw, 220px);
+		gap: clamp(40px, 15vw, 150px);
 		padding: 30px 110px;
 	}
 
@@ -374,8 +374,8 @@ const DetailWrapper = styled.div`
 const WebPoster = styled.div`
 	display: flex;
 	flex: 1;
-	max-width: 500px;
-	max-height: 700px;
+	width: 300px;
+	height: 390px;
 	position: relative;
 
 	> img {
