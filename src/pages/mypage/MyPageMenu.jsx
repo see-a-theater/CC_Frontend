@@ -44,6 +44,7 @@ function MyPageMenu() {
 					<button style={{ marginTop: '22px' }}>로그아웃</button>
 				</LeftWrapper>
 				<RightWrapper>
+					{/*}
 					<button
 						onClick={() => {
 							const current = localStorage.getItem('role');
@@ -53,15 +54,14 @@ function MyPageMenu() {
 						}}
 					>
 						역할 변경 버튼 (현재: {localStorage.getItem('role')})
-					</button>
-
+					</button>*/}
 					<h1 className="color-pink only-mobile">
 						{name}
 						<span className="bold">님</span>
 					</h1>
 					<section>
 						<h1>MY</h1>
-						{role === 'producer' && (
+						{role === 'performer' && (
 							<ul>
 								<li onClick={() => navigate('registered-performances')}>
 									등록한 공연
