@@ -3,7 +3,7 @@ import { RegisterWrapper } from './Register.style.js';
 import { useOutletContext } from 'react-router-dom';
 function RegisterStep4() {
 	const { nextStep, formData, _setFormData } = useOutletContext();
-
+	const accessToken = localStorage.getItem('accessToken');
 	const handleEnroll = async (e) => {
 		e.preventDefault(); // 폼 제출 기본 동작 막기
 		console.log('폼데이터', formData);
@@ -15,7 +15,7 @@ function RegisterStep4() {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
-						Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_ACCESS_TOKEN}`,
+						Authorization: `Bearer ${accessToken}`,
 					},
 					body: JSON.stringify(formData),
 				},

@@ -52,7 +52,7 @@ function RegisterStep2() {
 			...prev,
 			notice: {
 				...prev.notice, // ✅ 기존 notice만 펼치기
-				noticeImageUrl: fileInfo?.publicUrl || '', // ✅ imageUrl 반영
+				noticeImageUrl: fileInfo?.imageUrl || '', // ✅ imageUrl 반영
 			},
 		}));
 		console.log('포스터 등록 확인', formData);

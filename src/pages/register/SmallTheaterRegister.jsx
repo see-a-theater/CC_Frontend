@@ -22,7 +22,8 @@ function SmallTheaterRegister() {
 	const [formData, setFormData] = useState({
 		name: '',
 
-		schedule: '',
+		start: '',
+		end: '',
 		runtime: '',
 		account: '',
 		contact: '',

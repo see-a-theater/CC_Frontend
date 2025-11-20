@@ -78,7 +78,7 @@ function Home() {
 		data: dataBoard,
 		// loading: loadingBoard,
 		// error: errorBoard,
-	} = useCustomFetch('/boards?boardType=NORMAL&page=0&size=5');
+	} = useCustomFetch('/boards/all&page=0&size=5');
 
 	console.log(dataClosing?.result);
 	return (
@@ -137,7 +137,7 @@ function Home() {
 					<div className="only-web" style={{ paddingRight: '60px' }}>
 						<BoardPreviewCardWeb data={dataHotBoard?.content} />
 					</div>
-					⚠ 게시글 전체조회 필요 (현재는 일반/홍보 각각만 가능)
+
 					<div style={{ paddingRight: '20px' }}>
 						<BoardPreviewList data={dataBoard?.content} />
 					</div>
