@@ -49,7 +49,9 @@ function Gallery() {
 					<SearchBar />
 					<TitleArea>
 						<h3>사진첩</h3>
-						{roleToken == 'PERFORMER' && <Button>사진 등록</Button>}
+						{roleToken == 'PERFORMER' && (
+							<Button onClick={navigateToUpload}>사진 등록</Button>
+						)}
 					</TitleArea>
 
 					<MasonryWeb imageData={picData?.result} />
