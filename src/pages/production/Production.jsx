@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Hamburger from '@/components/Hamburger';
 import ProdGall from '@/components/Production/ProdGall';
 import ProdPlayCard from '@/components/ProdPlayCard';
-import LikedButton from '@/components/LikedButton';
+import LikedButton from '@/components/Production/LikedButton';
 
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 
@@ -17,6 +17,8 @@ import ChevronLeft from '@/assets/icons/chevronLeft.svg?react';
 
 function Production() {
 	const { prodId } = useParams();
+	const roleToken = sessionStorage.getItem('selectedRole');
+	//console.log(roleToken);
 
 	const {
 		data: playData,
@@ -24,9 +26,6 @@ function Production() {
 		loading: playLoading,
 	} = useCustomFetch(`/photoAlbums/member/${prodId}/shows?page=0&size=20`);
 	console.log('playData:', playData);
-
-	const roleToken = sessionStorage.getItem('selectedRole');
-	console.log(roleToken);
 
 	const {
 		data: picData,
@@ -60,7 +59,7 @@ function Production() {
 					<h3 className="production" onClick={navigateToDetail}>
 						{picData?.result.performerName}
 					</h3>
-					<LikedButton performerId={prodId} />
+					<LikedButton prodId={prodId} />
 				</Theatre>
 				<TabBar>
 					<TabItem
