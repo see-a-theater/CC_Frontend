@@ -48,7 +48,7 @@ function TicketDetail() {
 			alert('취소 수수료 동의에 체크해주세요.');
 			return;
 		}
-		navigate('cancel');
+		// navigate('cancel');
 	};
 	function onPrev() {
 		navigate(-1);
@@ -124,9 +124,7 @@ function TicketDetail() {
 							}}
 						>
 							{posterImageUrl ? (
-								<img
-									src={`https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/posters/hamlet.jpg`}
-								/>
+								<img src={posterImageUrl} />
 							) : (
 								<div style={{ width: '157px', height: '220px' }}></div>
 							)}
@@ -139,8 +137,7 @@ function TicketDetail() {
 					</div>
 					{/*웹 포스터*/}
 					<WebPoster className="only-web">
-						<img />
-						<p>{basicUrl + posterImageUrl}</p>
+						<img src={posterImageUrl} />
 					</WebPoster>
 					{/*티켓 정보 */}
 					<DetailWrapper>
@@ -254,7 +251,7 @@ const Wrapper = styled.div`
 
 	@media (min-width: 768px) {
 		flex-direction: row;
-		gap: clamp(40px, 15vw, 220px);
+		gap: clamp(40px, 15vw, 150px);
 		padding: 30px 110px;
 	}
 
@@ -377,8 +374,8 @@ const DetailWrapper = styled.div`
 const WebPoster = styled.div`
 	display: flex;
 	flex: 1;
-	max-width: 500px;
-	max-height: 700px;
+	width: 300px;
+	height: 390px;
 	position: relative;
 
 	> img {
