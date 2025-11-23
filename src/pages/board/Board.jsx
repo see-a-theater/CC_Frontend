@@ -1,35 +1,22 @@
-import HomeIconMenu from '@/components/HomeIconMenu';
-import styled from 'styled-components';
-function Board() {
-	return (
-		<>
-			<SideMenuWrapper>
-				<HomeIconMenu isWeb={true} selectedMenu="board" />
-			</SideMenuWrapper>
-			<Wrapper>
-				<h1>게시판</h1>
-			</Wrapper>
-		</>
-	);
-}
-export default Board;
 
-const SideMenuWrapper = styled.div`
-	width: 101px;
-	height: 100vh;
-	position: fixed;
-	top: 0;
-	left: 0;
-	flex-shrink: 0;
-	display: none;
-	background: ${({ theme }) => theme.colors.grayWhite};
-	@media (min-width: 768px) {
-		display: block;
-	}
-`;
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import PostListPage from '@/pages/board/pages/PostListPage';
+import PostDetailPage from '@/pages/board/pages/PostDetailPage';
+import PostCreatePage from '@/pages/board/pages/PostCreatePage';
+import SuccessPage from '@/pages/board/pages/SuccessPage';
+//import PostEditPage from './pages/PostEditPage';
 
-const Wrapper = styled.div`
-	@media (min-width: 768px) {
-		padding-left: 100px;
-	}
-`;
+const BoardPage = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<PostListPage />} />
+      <Route path="/post/:id" element={<PostDetailPage />} />
+      <Route path="/create" element={<PostCreatePage />} />
+      <Route path="/create/success" element={<SuccessPage />} />
+      <Route path="/edit/:id" element={<PostCreatePage />} />
+    </Routes>
+  );
+};
+
+export default BoardPage;

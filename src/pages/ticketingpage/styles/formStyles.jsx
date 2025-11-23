@@ -39,7 +39,7 @@ export const DatePickerContainer = styled.div`
   border: 1px solid #FFD6D4;
   border-radius: 2px;
   position: absolute;
-  left: 100px;
+  left: 30%;
 `;
 
 export const DateInput = styled.div`
@@ -68,7 +68,7 @@ export const PersonSelectionContainer = styled.div`
   border: 1px solid #FFD6D4;
   border-radius: 2px;
   position: absolute;
-  left: 100px;
+  left: 30%;
 `;
 
 export const PersonInput = styled.div`
@@ -126,7 +126,7 @@ export const DropdownItem = styled.li`
 
 // 라디오 버튼 그룹 스타일
 export const RadioButtonGroup = styled.div`
-  margin-left: 48px;
+  margin-left: calc(30% - 56px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -187,7 +187,7 @@ export const RadioLabel = styled.label`
 export const Divider = styled.div`
   height: 4px;
   background-color: #FFF1EF;
-  width: 402px;
+  width: calc(100% + 40px);
   margin-left: -20px;
   margin-bottom: 20px;
 `;

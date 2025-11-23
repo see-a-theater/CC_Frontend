@@ -10,8 +10,8 @@ const media = {
 // 앱 전체 컨테이너
 export const AppContainer = styled.div`
   ${media.mobile} {
-    width: 402px;
-    height: 830px;
+    // min-width: 402px;
+    height: 100vh;
     margin: 0 auto;
     background-color: white;
     position: relative;
@@ -22,7 +22,7 @@ export const AppContainer = styled.div`
 
   ${media.pc} {
     width: 1440px;
-    height: 1024px;
+    height: 100vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -282,8 +282,7 @@ export const ActionButton = styled.button`
 
     &.bottom {
       position: absolute;
-      bottom: 30px;
-      width: 362px;
+      bottom: 0px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;

@@ -49,7 +49,7 @@ export const SummaryRow = styled.div`
 
   span {
     position: absolute;
-    left: 100px;
+    left: 30%;
     ${media.pc} { left: 120px; }
     &.discount {
       color: #ff6b6b;

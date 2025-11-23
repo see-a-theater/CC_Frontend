@@ -4,7 +4,7 @@ import Hamburger from '@/components/Hamburger';
 import useCustomFetch from '@/utils/hooks/useCustomFetch';
 function MyPageMenu() {
 	const navigate = useNavigate();
-	const role = localStorage.getItem('role');
+	const role = localStorage.getItem('token');
 
 	const {
 		data,
@@ -33,12 +33,18 @@ function MyPageMenu() {
 				<LeftWrapper>
 					<h1 className="title">마이페이지</h1>
 					<h1 className="color-pink only-web" style={{ marginTop: '62px' }}>
+						{role === 'producer' && 'performer'}
+						{role === 'user' && 'user'}
+					</h1>
+					<p></p>
+					<h1 className="color-pink only-web">
 						{name}
 						<span className="bold">님</span>
 					</h1>
 					<button style={{ marginTop: '22px' }}>로그아웃</button>
 				</LeftWrapper>
 				<RightWrapper>
+					{/*}
 					<button
 						onClick={() => {
 							const current = localStorage.getItem('role');
@@ -48,22 +54,21 @@ function MyPageMenu() {
 						}}
 					>
 						역할 변경 버튼 (현재: {localStorage.getItem('role')})
-					</button>
-
+					</button>*/}
 					<h1 className="color-pink only-mobile">
 						{name}
 						<span className="bold">님</span>
 					</h1>
 					<section>
 						<h1>MY</h1>
-						{role === 'admin' && (
+						{role === 'performer' && (
 							<ul>
 								<li onClick={() => navigate('registered-performances')}>
 									등록한 공연
 								</li>
 							</ul>
 						)}
-						{role === 'user' && (
+						{role === 'producer' && (
 							<ul>
 								<li onClick={() => navigate('/mypage/tickets')}>내 티켓</li>
 								<li>내가 쓴 글</li>

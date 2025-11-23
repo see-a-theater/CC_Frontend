@@ -13,6 +13,8 @@ function ImageUploadBox({
 }) {
 	const [imageSrc, setImageSrc] = useState(null);
 
+	const accessToken = localStorage.getItem('accessToken');
+	console.log('액세스토큰', accessToken);
 	const handleImageChange = async (e) => {
 		const file = e.target.files[0];
 		if (!file) return;
@@ -25,40 +27,38 @@ function ImageUploadBox({
 		reader.readAsDataURL(file);
 
 		try {
-			// 1) presigned URL 요청
-			const res = await axios.get(
-				'https://api.seeatheater.site/upload/s3/presignedUrl?imageExtension=png&filePath=amateurShow',
+			// presigned URL 요청 (🎉 여기 고침)
+			const res = await axios.post(
+				'https://api.seeatheater.site/s3/uploadUrls?filePath=amateurShow',
+				[file.type.split('/')[1]],
 				{
 					headers: {
-						Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_ACCESS_TOKEN}`,
+						Authorization: `Bearer ${accessToken}`,
 					},
 				},
 			);
+			console.log(res.config.url);
+			console.log(res.config.method);
 			console.log('요청한 url', res.data);
 
-			const { uploadUrl, publicUrl, keyName } = res.data;
-			// presigned URL은 key만 내려오니까 S3 도메인 붙여주기
+			const { imageUrl, keyName, uploadUrl } = res.data[0];
 
-			const FullUploadUrl = `https://ccbucket-0528.s3.ap-northeast-2.amazonaws.com/${uploadUrl}`;
-			// 2) File → ArrayBuffer 변환
-			const arrayBuffer = await file.arrayBuffer();
-
-			// 2) S3로 직접 업로드
-			await axios.put(FullUploadUrl, arrayBuffer, {
+			console.log('업로드url', uploadUrl);
+			console.log('파일타입', file.type);
+			await axios.put(uploadUrl, file, {
 				headers: {
-					'x-amz-meta-content-type': 'image/png',
-					'x-amz-meta-filetype': 'image/png',
+					'Content-Type': file.type, // image/png
 				},
 			});
 
-			// 3) 부모(RegisterStep1)로 전달 → formData.posterImageRequestDTO에 저장
 			if (onUploadSuccess) {
-				onUploadSuccess({ keyName, publicUrl });
+				onUploadSuccess({ keyName, imageUrl });
 			}
 		} catch (err) {
 			console.error('이미지 업로드 실패:', err);
 		}
 	};
+
 	return (
 		<Box
 			width={width}
